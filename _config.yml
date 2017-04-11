@@ -1,1 +1,58 @@
-theme: jekyll-theme-time-machine
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: 4U
+brief-intro: High Energy Physics
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://leeyeel.github.io/" # the base hostname & protocol for your site
+
+permalink: /:year/:month/:day/:title/
+
+# other links
+facebook_username: gaohaoyang.water
+github_username:  leeyeel
+email: mumuli52#gmail.com
+zhihu_username: lin-mou-6
+linkedIn_username: 
+dribbble_username:
+
+description_footer: 从高能物理到程序猿
+
+# comments
+# two ways to comment, only choose one, and use your own short name
+# 两种评论插件，选一个就好了，使用自己的 short_name
+duoshuo_shortname: #hygblog
+disqus_shortname: leeyeel
+
+# statistic analysis 统计代码
+# 百度统计 id，将统计代码替换为自己的百度统计id，即
+# hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxx";
+# xxxxx字符串
+baidu_tongji_id: c2eac43d1191d35d92d0e30f5a2a5a10
+google_analytics_id: # google 分析追踪id
+
+# Build settings
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# port
+# port: 1234
+
+# url
+category_dir: category/
+tag_dir: tag/
+
+# excerpt
+excerpt_separator: "\n\n\n\n"
+
+# paginate
+gems: [jekyll-paginate]
+paginate: 6

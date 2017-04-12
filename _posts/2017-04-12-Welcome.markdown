@@ -4,7 +4,7 @@ title:  "作为博客的开始"
 date:   2017-04-12 00:48:54
 categories: 杂谈
 tags: 杂谈
-excerpt: 学了好多年的物理，后来还是决定转行了。
+excerpt: 学了好多年的物理，后来还是决定转行了。    
 mathjax: true
 ---
 

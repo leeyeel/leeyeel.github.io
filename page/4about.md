@@ -12,7 +12,6 @@ type: page
 ## 关于我
 <iframe src="https://githubbadge.appspot.com/leeyeel" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
 高能物理实验硕士转行软件开发，  
-做了两年的暗物质探测卫星项目，  
 会一点c++跟python    
 目前是软件开发小白，   
 永远不要停止学习    

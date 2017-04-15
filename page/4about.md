@@ -11,10 +11,10 @@ type: page
 
 ## 关于我
 <iframe src="https://githubbadge.appspot.com/leeyeel" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
-高能物理实验硕士转行软件开发，  
-会一点c++跟python    
-目前是软件开发小白，   
-永远不要停止学习    
+中国科学院大学粒子物理与原子核物理专业，高能物理实验方向硕士转行软件开发        
+兴趣是c++跟python相关的开发    
+对统计学感兴趣，毕竟研究生期间做的高能物理实验数据分析的工作     
+
 
 ## 联系我
 

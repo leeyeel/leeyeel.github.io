@@ -18,9 +18,7 @@ mathjax: true
 至少要有两块网卡。计算节点(Compute Node)可以只有一个网卡。
 
 各节点的线路连接如图所示,    
-<img src="https://github.com/weLoser/free-acknowledge/blob/master/chrome_03.jpg" width = "350"  alt="chrome-02" align=center />
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Riffle_shuffle.jpg/320px-Riffle_shuffle.jpg)    
-![physical-assembly](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/physical_assembly.png)    
+![]({{site.url}}/assets/rocks/physical_assembly.png)    
 里面 Frontend Node 就是我们首先要配置的管理节点，它至少需要两个网卡，其中一个网卡(默认为eth1)连接公网，另一个网卡(默认为eth0)连接局域网,
 然后所有的计算节点网口也都连接在交换机(Ethernet Switch)上。红色短划线表示的特殊网络先不用管，一般情况下也用不到。这里需要说明一下，
 在图中eth1连接互联网，看起来好像是不能连接在交换机上的，实际上如果把连接外网的网线接到交换机上，然后再从交换机上引出一根线接到管理节点的eth1也是可以的。
@@ -38,7 +36,7 @@ kernel, base 是必须的，os 你可以选择自带的centos6.6, 也可以自�
 
 #### 安装管理节点
 插入rocks安装盘，选择计算机的第一启动项为DVD，成功启动之后会看到如下界面，每个版本的界面稍有不同，这里是6.2 Sidewinder 版本的界面。  
-![Sidewinder](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/Sidewinder.png)    
+![Sidewinder](https://leeyeel.github.io/assets/rocks/Sidewinder.png)    
 看到这个界面之后及时输入build, 这个截面无操作的话几秒钟就会自动进行下一步，变为计算节点的安装步骤了，如果没来得及，及时按 ctrl + alt + del 键重启。
 这一步也可以直接指定很多参数，不过ksdevice这个参数需要进入系统后才能获得，所以首次安装的话建议直接输入build。
 

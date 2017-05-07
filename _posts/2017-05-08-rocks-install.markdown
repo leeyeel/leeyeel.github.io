@@ -18,7 +18,7 @@ mathjax: true
 至少要有两块网卡。计算节点(Compute Node)可以只有一个网卡。
 
 各节点的线路连接如图所示,    
-![physical-assembly](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/physical_assembly.png)    
+<img src="https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/physical_assembly.png" width = "350"  alt="chrome-02" align=center />
 里面 Frontend Node 就是我们首先要配置的管理节点，它至少需要两个网卡，其中一个网卡(默认为eth1)连接公网，另一个网卡(默认为eth0)连接局域网,
 然后所有的计算节点网口也都连接在交换机(Ethernet Switch)上。红色短划线表示的特殊网络先不用管，一般情况下也用不到。这里需要说明一下，
 在图中eth1连接互联网，看起来好像是不能连接在交换机上的，实际上如果把连接外网的网线接到交换机上，然后再从交换机上引出一根线接到管理节点的eth1也是可以的。

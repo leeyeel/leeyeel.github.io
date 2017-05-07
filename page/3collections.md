@@ -17,10 +17,13 @@ type: page
 
     用于压缩 png 或 jpg 的在线工具
 
+- [在线切割PDF](http://www.ilovepdf.com/zh_cn/fencai_pdf)
+
+    用于对PDF切割、拼接、压缩、转换格式等多种操作。
+
 * [图床 https://sm.ms/](https://sm.ms/)
 
     有 API 可用。
-
 
 * [Unix 时间戳 Unix timestamp](http://tool.chinaz.com/Tools/unixtime.aspx)
 

@@ -19,6 +19,7 @@ mathjax: true
 
 各节点的线路连接如图所示,    
 <img src="https://github.com/weLoser/free-acknowledge/blob/master/chrome_03.jpg" width = "350"  alt="chrome-02" align=center />
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Riffle_shuffle.jpg/320px-Riffle_shuffle.jpg)    
 ![physical-assembly](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/physical_assembly.png)    
 里面 Frontend Node 就是我们首先要配置的管理节点，它至少需要两个网卡，其中一个网卡(默认为eth1)连接公网，另一个网卡(默认为eth0)连接局域网,
 然后所有的计算节点网口也都连接在交换机(Ethernet Switch)上。红色短划线表示的特殊网络先不用管，一般情况下也用不到。这里需要说明一下，

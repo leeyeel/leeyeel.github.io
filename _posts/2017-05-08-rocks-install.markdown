@@ -36,28 +36,28 @@ kernel, base 是必须的，os 你可以选择自带的centos6.6, 也可以自�
 
 #### 安装管理节点
 插入rocks安装盘，选择计算机的第一启动项为DVD，成功启动之后会看到如下界面，每个版本的界面稍有不同，这里是6.2 Sidewinder 版本的界面。  
-![Sidewinder](https://leeyeel.github.io/assets/rocks/Sidewinder.png)    
+![Sidewinder]({{site.url}}/assets/rocks/Sidewinder.png)    
 看到这个界面之后及时输入build, 这个截面无操作的话几秒钟就会自动进行下一步，变为计算节点的安装步骤了，如果没来得及，及时按 ctrl + alt + del 键重启。
 这一步也可以直接指定很多参数，不过ksdevice这个参数需要进入系统后才能获得，所以首次安装的话建议直接输入build。
 
 这个过程会需要一点时间，顺利的话会进入下面这个界面，这里跟手册或者官网的教程稍有不同，我在实际操作过程中没有遇到选择ipv4/ipv6等几个过程，如果你遇到跟我一样的情况，
 不要感到疑惑。
-![select01](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/select01.png)    
+![select01]({{site.url}}/assets/rocks/select01.png)    
 这时候点CD/DVD-base Roll,进入之后挑选自己需要的勾选。这里面有几个是必选的，其余根据自己情况选择，具体每个的用途官方手册都有详细介绍，如果实在懒，可以直接全部勾选即可。
 (注意如果你想要安装自己的系统，不要自带的centos6.6 的话这一步不要选择os，然后确认之后光盘会弹出来让你插入新的光盘，插入新的光盘后再点击continue 即可。系统会读取你新插入的光盘数据并让你确认新的os，
 勾选方框后点submit即可。)在summit之后，界面会列出你需要安装的项目列表，如下图所示:  
-![select02](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/select02.png)    
+![select02]({{site.url}}/assets/g/rocks/select02.png)    
 左侧是你选择的列表，这里只选择了3个，出现的多少跟选择的多少有关,如果你全部勾选了，就会出现所有你选择的项目。  
 点击next。
 
 进入下面这个界面后，根据自己情况填写相关内容。需要说明的是，*Fully-Qualified Host Name* 是必填的， 而且这个要更改一下，不要用默认的内容，否则后续安装计算节点的时候会出现麻烦。
 其他内容根据自己的实际情况选填。填好之后点击next。      
-![select03](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/select03.png)    
+![select03]({{site.url}}/assets/g/rocks/select03.png)    
 
 之后进入网络配置的界面，这里尤其需要注意，eth1默认是外网的配置，eth0默认是内网配置，你的机器只有两个网卡的时候，这是没问题的，如果你的机器有两个以上网卡，一定要确认你机器用来连接外网的那个网口，到底是哪个。
 填写时，如果你有独立的公网ip,按照你的上网方式填写eth1的ip地址，子网掩码等信息。如果你使用路由器来连接外网，需要给eht1分配一个ip地址，比如192.168.1.101，子网掩码255.255.255.0, 
 另外还需要在路由器上设置静态路由表，把eth1的mac地址跟设置的192.168.1.101这个ip绑定。具体ip地址填什么内容根据你自己设置的路由器的情况而定，如果不知道怎么设置静态路由,自己谷歌就好了。
-![ipSet01](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/ipSet01.png)    
+![ipSet01]({{site.url}}/assets/g/rocks/ipSet01.png)    
 设置好eth1后开始设置eth0,这一步如果没有特殊要求的话，直接默认设置就可以。
 之后是设置公网的网关跟DNS，如果是独立公网ip,按照你上网方式填写即可。如果是路由器上网，网关跟DNS都填网关地址就可以了，比如我的可以都填192.168.1.1。
 
@@ -65,7 +65,7 @@ kernel, base 是必须的，os 你可以选择自带的centos6.6, 也可以自�
 下一步选择分区方式，如果是新硬盘第一次安装，直接选择自动分区就可以了。如果有特殊要求，可以参考手册的分区方式。
 
 一路next,看到下面的界面，就只需等待就好了。中间光盘会弹出，不要有疑惑，拿出来就是了。安装结束后重启进入Linux。   
-![last](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/last.png)     
+![last]({{site.url}}/assets/g/rocks/last.png)     
 
 ### 安装计算节点
 计算节点的安装比管理节点简单的多，这里只介绍一种最简单的方式，其他方式可以参考官方手册。    
@@ -74,11 +74,11 @@ kernel, base 是必须的，os 你可以选择自带的centos6.6, 也可以自�
 # insert-ethers
 ```
 会看到如下界面:
-![insert-ethers-1](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/insert-ethers-1.png)     
+![insert-ethers-1]({{site.url}}/assets/g/rocks/insert-ethers-1.png)     
 选择computer,点OK。 然后设置计算节点开机启动项，选择从网络启动，不清楚网络启动是什么以及如何设置网络启动的可以自行谷歌，另外，使用这种方法的前提是你的计算节点支持网络启动（大部分机器都支持)。
 一切顺利的话，计算节点就会自动安装，且在管理节点上能看到如下图类似的界面，computer-0-0右侧括号内的\*符号是比不可少的，如果没有\*或其他错误提示，请检查计算节点bios设置是否从网络启动，
 网络启动是否已经开启，如果都没问题，请检查管理节点的网络设置是否正确。注意，计算节点是没有桌面的。
-![insert-ethers-5](https://github.com/leeyeel/leeyeel.github.io/blob/master/image/rocks/insert-ethers-5.png)     
+![insert-ethers-5]({{site.url}}/assets/g/rocks/insert-ethers-5.png)     
 
 用同样的方法逐个安装其他计算结点，一切顺利的话。访问你管理节点的ip/ganglia,比如我的管理节点设置的为192.168.1.101,在局域网的计算机上访问 *192.168.1.101/ganglia*可以看到各节点的信息以及使用情况。
 到这里，集群安装就已经结束了。    

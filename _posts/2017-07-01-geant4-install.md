@@ -84,13 +84,13 @@ make -j8
 make install -j8
 ```
 其中：
-`-DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/` 参数表示安装的位置
+`-DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/` 参数表示安装的位置  
 `-DGEANT4_USE_OPENGL_X11=ON  -DGEANT4_USE_RAYTRACER_X11=ON` 表示开启图形可视化  
-`-DGEANT4_USE_QT=ON` 表示开启Qt（不需要Qt界面的可以不加此参数）
-`GEANT4_BUILD_MULTITHREADED=ON` 为开启多线程
-`$HOME/geant4.10.03.p01` 表示源程序,如果下载的不同版本记得更改为解压后的文件夹名字.
+`-DGEANT4_USE_QT=ON` 表示开启Qt（不需要Qt界面的可以不加此参数）  
+`GEANT4_BUILD_MULTITHREADED=ON` 为开启多线程  
+`$HOME/geant4.10.03.p01` 表示源程序,如果下载的不同版本记得更改为解压后的文件夹名字.  
 `make -j8 or make install -j8`中的`-j8`表示八个线程运行．如果计算机有更多核心可用`-j16`或更多．
-cmake结束后，如果没有提示错误，终端出现类似如下
+cmake结束后，如果没有提示错误，终端出现类似如下:
 ```
 --Configuring done
 --Generating done
@@ -127,7 +127,8 @@ LinkingexampleB1
 ```
 表示编译成功
 然后终端输入命令：
-``` exampleB1
+```
+exampleB1
 ```
 运行最简单的栗子．
 

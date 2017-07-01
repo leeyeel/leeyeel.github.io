@@ -25,8 +25,8 @@ mathjax: true
 如果你的linux发行版是 Fedora 18, 19 and 20; Scientific Linux 5, 6; CentOS 6, 7 :
 
 ```
-sudo yum install git cmake gcc-c++ gcc binutils \ 
-         libX11-devel libXpm-devel libXft-devel libXext-devel gcc-gfortran openssl-devel pcre-devel \
+sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \  
+         libXpm-devel libXft-devel libXext-devel gcc-gfortran openssl-devel pcre-devel \
          mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mysql-devel \
          fftw-devel cfitsio-devel graphviz-devel \
          avahi-compat-libdns_sd-devel libldap-dev python-devel \
@@ -67,8 +67,7 @@ make -j8
 最后make 的过程可能比较久，视计算机性能而定，如果make的过程没有报错直到结束，则表示一切正常．　
 之后运行一下环境变量之后即可打开root．  
 ```
-source $HOME/build/bin/thisroot.sh
-
+source $HOME/build/bin/thisroot.sh  
 root
 ```
 

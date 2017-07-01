@@ -4,7 +4,7 @@ title:  "cern root 安装过程"
 date:   2017-07-01 01:07:54
 categories: 高能物理
 tags: cern root install 教程
-excerpt: cern root6的安装过程 
+excerpt: cern root6 的安装教程
 mathjax: true
 ---
 ### 说明
@@ -56,10 +56,10 @@ git clone https://github.com/root-project/root.git $HOME/root
 
 ### 使用CMAKE安装
 
-原理是首先常见一个build文件夹，然后进入build文件夹后使用cmake指定一些参数，最后make安装．跟`./configure && make `的方式稍有不同，好象是更科学．
+原理是首先创建一个root6-build文件夹，然后进入root6-build文件夹后使用cmake指定一些参数，最后make安装．跟`./configure && make `的方式稍有不同，好象是更科学．
 
 ```
-mkdir $HOME/build  && cd $HOME/build  
+mkdir $HOME/root6-build  && cd $HOME/root6-build  
 cmake ../root  
 make -j8
 ```
@@ -67,7 +67,7 @@ make -j8
 最后make 的过程可能比较久，视计算机性能而定，如果make的过程没有报错直到结束，则表示一切正常．　
 之后运行一下环境变量之后即可打开root．  
 ```
-source $HOME/build/bin/thisroot.sh  
+source $HOME/root6-build/bin/thisroot.sh  
 root
 ```
 
@@ -79,6 +79,6 @@ root
 ```
 echo
 echo '#ROOT'
-echo 'source $HOME/build/bin/thisroot.sh' >> $HOME/.bashrc
+echo 'source $HOME/root6-build/bin/thisroot.sh' >> $HOME/.bashrc
 ```
 详细安装说明请仔细阅读README.md以及README文件内的INSTALL

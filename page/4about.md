@@ -11,9 +11,14 @@ type: page
 
 ## 关于我
 <iframe src="https://githubbadge.appspot.com/leeyeel" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
-中国科学院大学粒子物理与原子核物理专业，高能物理实验方向硕士转行软件开发        
-兴趣是c++跟python相关的开发    
-对统计学感兴趣，毕竟研究生期间做的高能物理实验数据分析的工作     
+
+粒子物理转行软件开发        
+兴趣是c++跟python相关开发    
+对统计学感兴趣
+本行是高能物理数据分析 
+读研期间在DAMPE合作组做数据分析
+感谢DAMPE合作组的老师同学们让我学到了很多
+目前工作跟新能源汽车相关，主要做电池管理系统
 
 
 ## 联系我

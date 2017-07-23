@@ -79,7 +79,8 @@ $ sudo apt-get install qt4*
 ```
 $ mkidr geant4-build && cd geant4-build
 $ cmake  -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/  -DGEANT4_USE_OPENGL_X11=ON 
-\ -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON GEANT4_BUILD_MULTITHREADED=ON $HOME/geant4.10.03.p01
+\ -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON 
+\ GEANT4_BUILD_MULTITHREADED=ON $HOME/geant4.10.03.p01
 $ make -j8
 $ make install -j8
 ```

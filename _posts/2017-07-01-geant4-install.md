@@ -24,7 +24,7 @@ Geant4跟ROOT有很多共同的依赖，所以可以首先安装一下ROOT所需
 如果你的linux发行版是 Fedora 18, 19 and 20; Scientific Linux 5, 6; CentOS 6, 7 :
 (`$`符号是终端命令提示符，不要把这个符号复制到终端)  
 ```
-$sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \  
+$ sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \  
          libXpm-devel libXft-devel libXext-devel gcc-gfortran openssl-devel pcre-devel \
          mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mysql-devel \
          fftw-devel cfitsio-devel graphviz-devel \
@@ -34,7 +34,7 @@ $sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \
 如果你的linux发行版是 Ubuntu 10, 12 , 14 and 16:
 
 ```
-$sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev \
+$ sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev \
          libxft-dev libxext-dev
          gfortran libssl-dev libpcre3-dev \
          xlibmesa-glu-dev libglew1.5-dev libftgl-dev \
@@ -49,8 +49,8 @@ $sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev 
 `cmake --version`看一下cmake版本，如果版本太低的话需要手动安装一个高版本的cmake. X11跟图形显示有关系:
 
 ```
-$sudo apt-get install cmake libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev #安装需要的工具
-$sudo apt-get install qt4
+$ sudo apt-get install cmake libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev #安装需要的工具
+$ sudo apt-get install qt4
 ```
 #### 下载主程序
 Geant4需要下载主程序以及数据包，并且数据包要与主程序的版本对应．
@@ -58,9 +58,9 @@ Geant4需要下载主程序以及数据包，并且数据包要与主程序的�
 没错，就是只有三十几M,我第一次安装的时候还以为下载错了．．．下载之后解压到某目录，为了方便，我们直接放在用户home目录下，下载后解压．
 并且创建名为geant4-build的文件夹.上面这段可以用下面这段代码实现:
 ```
-$wget http://geant4.web.cern.ch/geant4/support/source/geant4.10.03.p01.tar.gz -O  $HOME/geant4.10.03.p01.tar.gz #下载源程序
-$cd $HOME
-$tar xvzf geant4.10.03.p01.tar.gz
+$ wget http://geant4.web.cern.ch/geant4/support/source/geant4.10.03.p01.tar.gz -O  $HOME/geant4.10.03.p01.tar.gz #下载源程序
+$ cd $HOME
+$ tar xvzf geant4.10.03.p01.tar.gz
 ```
 
 ### 下载data文件
@@ -73,14 +73,15 @@ data文件是geant4运行所需要的各种数据文件，用户可以在编译�
 原理是首先创建一个geant4-build文件夹，然后进入geant4-build文件夹后使用cmake指定一些参数，最后make安装.
 注意:如果先要qt界面，确保你的计算机内安装好了qt,懒得一个一个装可以直接:
 ```
-$sudo apt-get install qt4*
+$ sudo apt-get install qt4*
 ```
 下面为安装geant4过程:
 ```
-$mkidr geant4-build && cd geant4-build
-$cmake  -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/  -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON GEANT4_BUILD_MULTITHREADED=ON $HOME/geant4.10.03.p01
-$make -j8
-$make install -j8
+$ mkidr geant4-build && cd geant4-build
+$ cmake  -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/  -DGEANT4_USE_OPENGL_X11=ON 
+\ -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON GEANT4_BUILD_MULTITHREADED=ON $HOME/geant4.10.03.p01
+$ make -j8
+$ make install -j8
 ```
 其中：
 `-DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/` 参数表示安装的位置  
@@ -105,19 +106,17 @@ cmake结束后，如果没有提示错误，终端出现类似如下:
 2）进到刚才提到的geant4make文件夹,会看到名为geant4make.sh的文件。
 终端切换到目录并执行：
 ```
-$source geant4make.sh
+$ source geant4make.sh
 ```
 每次使用geant4都必须运行此环境变量，不想每次都运行可以把该命令写到.bashrc中．
 ```
-$echo
-$echo '#GEANT4'
-$echo 'source $HOME/geant4-install/share/Geant4-10.03.p01/geant4make/geant4make.sh' >> $HOME/.bashrc
+$ echo 'source $HOME/geant4-install/share/Geant4-10.03.p01/geant4make/geant4make.sh' >> $HOME/.bashrc
 ```
 3)运行栗子
 上面前两步执行成功后，可以切换到栗子目录，具体可以在源程序文件夹下找到，里面有有个examples文件夹.
 ```
-$cd $HOME/geant4.10.03.p01/examples/basic/B1
-$make -j8
+$ cd $HOME/geant4.10.03.p01/examples/basic/B1
+$ make -j8
 ```
 看到类似:
 ```
@@ -127,7 +126,7 @@ LinkingexampleB1
 表示编译成功
 然后终端输入命令：
 ```
-$exampleB1
+$ exampleB1
 ```
 运行最简单的栗子．
 
@@ -137,11 +136,11 @@ $exampleB1
 
 安装geant4最可能遇到的问题是X11 Xmu问题，这种问题，如果是Ubuntu 等就按照上面讲过的：
 ```
-$sudo apt-get install libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev
+$ sudo apt-get install libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev
 ```
 如果是sl,fedora,redhat等就执行 
 ```
-$sudo yum search X11 | grep Xmu
+$ sudo yum search X11 | grep Xmu
 ```
 一般会出现：
 ```
@@ -152,12 +151,12 @@ libXmu-devel.x86_64 : X.Org X11 libXmu development package
 ```
 如果你是64位系统，直接把有 x86_64的装上
 ```
-$sudo yum install libXmu.x86_64 libXmu-devel.x86_64 
+$ sudo yum install libXmu.x86_64 libXmu-devel.x86_64 
 ```
 即可解决问题，如果无效，可以尝试下面的方法。
 ```
-$sudo yum install expat-devel mesa* freeglut-devel
-$sudo yum groupinstall “X software Development”
+$ sudo yum install expat-devel mesa* freeglut-devel
+$ sudo yum groupinstall “X software Development”
 ```
 (此命令用来解决找不到X11的问题，scientificlinux 下使用 sudo yum install X*)
 

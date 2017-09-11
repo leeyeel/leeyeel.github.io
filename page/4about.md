@@ -25,7 +25,7 @@ type: page
 ## 联系我
 
 * GitHub：[leeyeel](https://github.com/leeyeel)
-* E-mail：liyao@klclear.com
+* E-mail：liyao#klclear.com
 * [知乎](https://www.zhihu.com/people/lin-mou-6)
 * [豆瓣](https://www.douban.com/people/freedom52/)
 

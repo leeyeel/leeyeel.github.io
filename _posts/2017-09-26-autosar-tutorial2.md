@@ -35,6 +35,12 @@ AUTOSAR使用VFB(virtural functional bus). 从SWC的角度来说，SWC所看到�
   * 调度
   * 内存
 
+了解对于每个SWC的硬件需求信息使得决定一个特殊的ECU放置在何处变得容易起来。如果有这种情形，两家供应商提供了功能相似的组件，
+但是稍微好的那家需要更高的硬件需求，并且必须要给系统增加另一个ECU，这时我们便可以据此决定怎么做。如果我们没办法增加ECU的数量，
+这时候我们只能使用性能差一点但是需求硬件资源低的那一个。
+
+在VFB层开发系统关注的中心是被称为SWC的基础构件块. 一个组件有用来与其他组件交流的端口，任何一个端口只能被分配到一个具体的组件上.
+组件实现的功能的复杂性随着端口数目的变化差异很大。AUTOSAR允许相同组分的多个实例化存在，为了存储实例特有的数据相同的实现有不同的内存空间.
 #### 端口
 
 SWC有两种端口，PPort 提供在接口中定义的数据，而 RPort 反而需求数据，对于发送者-接受者以及客户-服务器接口,AUTOSAR也存在服务版本。
@@ -66,7 +72,49 @@ n:1(n>=0, 1个服务器).调用服务器的操作使用客户端提供的参数�
 
 ##### 发送者-接收者
 
+当组分为发送者-接收者模式时，他们有自己的图形接口表示方法,如下所示:  
+![]({{site.url}}assets/autosar/graphical-s-r.png)
 
+##### 刻度
 
+当组分为刻度模式时，他们有自己的图形接口表示方法,如下所示:  
+![]({{site.url}}assets/autosar/graphical-c.png)
 
+#### 组分类型
+AUTOSAE有其中组分类型:
 
+##### 应用层组分(Application software component)
+应用层组分实现完整的功能或者仅仅部分功能。这部分是原子性不可再分且有访问所有AUTOSAR通讯及服务的权限。传感器-驱动器组建用来处理所有
+传感器与驱动器的相互作用.
+##### 传感器-驱动器(Sensor-actuator software component)
+所有传感器-驱动器相关的任务都由原子性的传感器-驱动器SWC处理，正是传感器与驱动器通过提供与硬件独立的接口，使得其他SWC使用传感器或者驱动器成为可能。
+为了实现这些它需要访问ECUAL的权限。
+##### 刻度参数组分(Calibration parameter component)
+它唯一的功能是为刻度所有连接的组分提供参数值.
+##### 混合(Composition)
+##### 服务组分(Service component)
+##### ECU抽象组分(ECU-abstraction component)
+##### 复杂设备驱动组分(Complex device driver component)
+
+### 运行实体
+一个运行实体是SWC内部最小的代码片段。正是这些运行实体映射到OS任务并且实施SWC的行为。需要这部分是因为SWC自己并不能意识到存在所有OS功能的BSW层。
+一个SWC可能有多个来运行某个任务的运行实体。
+
+有两类运行实体:
+
+* 类别1 是所有没有任何等待点的运行实体.也就是说，这些运行实体可以确认在有限时间内完成.类别1又分为两个子类别，1A仅能使用阴性定义的API，
+1B是1A的扩展，可以使用显性定义的API并且可以使用服务器提供的功能.
+
+* 类别2 中的运行实体包含至少一个等待点，除了极少数例外，所有类别2的运行实体严格映射到一个扩展任务，因为它是唯一提供等待状态的任务类型。
+
+RTE事件简称 RTEEvents,通过激活或者唤醒来触发运行实体的执行。
+| Name      | Communication restriction           | Description  |
+| ------------- |:-------------:| -----:|
+| TimingEvent      | None | Triggers a runnable periodically. |
+| DataReceiveEvent   | Sender-receiver only  | Triggers a runnable when new data has arrived.|
+| OperationInvokedEvent | Client-server only| Triggers a runnable when a client wants to use one of its services provided on a PPort. |
+| AsynchronousServerCallReturnsEvent | Client-server only      |   Triggers a runnable when an asynchronous call has returned.|
+
+### 映射到OS任务
+看下面这图就懂了.
+![]({{site.url}}assets/autosar/mapping.png)

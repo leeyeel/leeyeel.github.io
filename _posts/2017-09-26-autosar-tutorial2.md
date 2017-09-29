@@ -127,7 +127,10 @@ RTE事件简称 RTEEvents,通过激活或者唤醒来触发运行实体的执行
 </tr>
 <tr>
 <td>OperationInvokedEvent </td> 
-<td>Client-server only| Triggers a runnable when a client wants to use one of its services provided on a PPort. </td>
+<td>Client-server only</td>
+<td> Triggers a runnable when a client wants to use one of its services provided on a PPort. </td>
+</tr>
+<tr>
 <td>AsynchronousServerCallReturnsEvent </td>
 <td>Client-server only  </td>
 <td>Triggers a runnable when an asynchronous call has returned.</td>

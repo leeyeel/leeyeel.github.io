@@ -108,12 +108,31 @@ AUTOSAE有其中组分类型:
 * 类别2 中的运行实体包含至少一个等待点，除了极少数例外，所有类别2的运行实体严格映射到一个扩展任务，因为它是唯一提供等待状态的任务类型。
 
 RTE事件简称 RTEEvents,通过激活或者唤醒来触发运行实体的执行。
-| Name      | Communication restriction           | Description  |
-| ------------- |:-------------:| -----:|
-| TimingEvent      | None | Triggers a runnable periodically. |
-| DataReceiveEvent   | Sender-receiver only  | Triggers a runnable when new data has arrived.|
-| OperationInvokedEvent | Client-server only| Triggers a runnable when a client wants to use one of its services provided on a PPort. |
-| AsynchronousServerCallReturnsEvent | Client-server only      |   Triggers a runnable when an asynchronous call has returned.|
+
+<table border="1">
+<tr>
+<td> Name     </td>
+<td>Communication restriction </td>
+<td> Description </td>
+</tr>
+<tr>
+<td> TimingEvent  </td>
+<td> None </td>
+<td> Triggers a runnable periodically. </td>
+</tr>
+<tr>
+<td> DataReceiveEvent  </td>
+<td> Sender-receiver only  </td>
+<td> Triggers a runnable when new data has arrived.</td>
+</tr>
+<tr>
+<td>OperationInvokedEvent </td> 
+<td>Client-server only| Triggers a runnable when a client wants to use one of its services provided on a PPort. </td>
+<td>AsynchronousServerCallReturnsEvent </td>
+<td>Client-server only  </td>
+<td>Triggers a runnable when an asynchronous call has returned.</td>
+</tr>
+</table>
 
 ### 映射到OS任务
 看下面这图就懂了.

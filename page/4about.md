@@ -12,13 +12,9 @@ type: page
 ## 关于我
 <iframe src="https://githubbadge.appspot.com/leeyeel" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
 
-粒子物理转行软件开发   
+本行是粒子物理专业，高能物理实验方向    
 兴趣是c++跟python相关开发    
-对统计学感兴趣  
-本行是高能物理数据分析  
-读研期间在DAMPE合作组做数据分析  
-感谢DAMPE合作组的老师同学们让我学到了很多  
-目前工作与新能源汽车相关，主要做电池管理系统  
+目前新能源行业，工作方向为BMS  
 永远不要停止学习  
 
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "windows及linux平台下calibre使用http代理" 
+title:  "linux下calibre使用http代理" 
 date:   2017-11-02 12:12:12
 categories: 杂项
 tags: calibre linux ubuntu kindle 代理
@@ -10,15 +10,10 @@ mathjax: true
 前两部分已经设置过的读者直接跳到第三部分阅读即可.
 
 * [1. kindle以及amazon帐号设置](#1) 
-
 这部分主要是为calibre抓取新闻后可以直接推送到kindle,不需要推送到Kindle的用户可以略过此步骤。
-
 * [2.calibre的安装与基本应用](#2)
-
 这部分为calibre基本的应用
-
 * [3.windows以及Linux下代理设置](#3)
-
 这部分主要为如何获取一些被GFW屏蔽掉的内容
 
 <h2 id="1">1.kindle以及amazon帐号设置</h2>    
@@ -52,9 +47,11 @@ Linux下跟windows下类似，大家梯子大部分都用shadowsocks,但是ss是
 方法可以参考这篇博客[用polipo将shadowsocks转换为http代理](http://blog.csdn.net/zcq8989/article/details/50545078)。
 但是有一点需要注意，配置`http_proxy`这个环境变量时，写到.bashrc里我用ubuntu 16.04测试不可行。
 所以保险期间推荐直接写到系统环境变量中，在`/etc/profile`文件最后一行添加  
+
 ```
 http_proxy=http://127.0.0.1:8787
 ```
+
 后重启系统，使此环境变量生效。重启后启动ss以及polipo,再运行calibre,calibre会自动检测到环境变量生效。
-运行calibre后在**Preference**-**Miscellaneous**界面可以看到代理已生效。
+运行calibre后在**Preference**--**Miscellaneous**界面可以看到代理已生效。
 ![]({{site.url}}assets/calibre/calibre.png)

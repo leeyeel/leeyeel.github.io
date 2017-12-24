@@ -2,7 +2,7 @@
 layout: post
 title:  "AUTOSAR框架介绍（一）" 
 date:   2017-09-22 17:55:54
-categories: 新学习
+categories: 学习笔记
 tags: autosar 
 excerpt: 最近在自学AUTOSAR的一些内容，把学习中收集到的一些资料整理及心得总结一下，作为学习笔记，若有错误及建议，请一定要告诉我，不胜感激。    
 mathjax: true

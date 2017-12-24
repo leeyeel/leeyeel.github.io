@@ -16,11 +16,19 @@ mathjax: false
 
 ### OUTLINE
 这篇笔记我将会下面几个方面来帮助大家理解委托:    
-1. C#中的委托其实就是封装好的C/C++中的函数指针
-2. 委托是种类型，而不是函数
-3. 你看到的奇形怪状的委托，是因为调用委托有好几种方法
-4. C#为什么要使用委托
-### C#中的委托其实就是封装好的C/C++中的函数指针
+
+- [1. C#中的委托其实就是封装好的C/C++中的函数指针](#1)
+- [2. 委托是种类型，而不是方法](#2)
+- [3. 委托基本语法](#3)
+    - [3.1 声明委托类型](#3.1)
+    - [3.2 创建委托对象](#3.2)
+    - [3.3 委托的其他一些操作](#3.3)
+- [4. 匿名方法与Lambda表达式](#4)
+    - [4.1 匿名方法](#4.1)
+    - [4.2 Lambda表达式](#4.2)
+- [5. C#为什么要使用委托](#5)
+
+<h2 id="1">1.C#中的委托类似于C/C++中的函数指针</h2>
 
 这里我先来举个栗子，原栗子是*C#图解教程(第4版)*中介绍委托时用的栗子，这里我把它改造一下，用C/C++中的函数指针来实现，
 先看下面的代码:  
@@ -110,27 +118,106 @@ int main(){
     int randValue = rand() % 100;
 //声明一个函数指针
     MyDel del;
-    del = randValue > 50 ? printHigh : printLow;
+    del = randValue > 50 ? MyDel(printHigh) : MyDel(printLow);
     del(randValue);
     return 0;
 }
 
 ```
-到这里已经很明显了,C#中委托的声明`delegate void MyDel(int value);`,其实就是C++中定义一个函数指针类型`typedef void (*MyDel)(int);`.
+到这里已经很明显了,C#中委托的声明`delegate void MyDel(int value);`,类似于C++中定义一个函数指针类型`typedef void (*MyDel)(int);`.
 好了，知道这一点以后，我们再来讲解一下另一个让很多C/C++程序员第一次见到delegate时非常疑惑的原因:
 
-### 委托是种类型，而不是函数
+<h2 id="2"> 2. 委托是种类型，而不是方法</h2>
 
 其实从C++中的typedef中是可以发现的，C#中的delegate声明其实对应到C++中的话就是typedef,也就是说delegate是种专一的类型声明.
 初次接触C#中delegate的C++程序员很容易被它的外表欺骗认为它是个函数，因为它长的实在是太像函数了．　　　　
-好，到这里我们稍微总结一下: 
-**委托是种类型,而不是函数**
+最后让我们再重复一下这句话: 
+**委托是种类型,而不是方法**
 
-### 调用不同种类的委托，导致我们会看到各种各样的委托
+<h2 id="3"> 3. 委托基本语法 </h2>
 
-(这部分在*C#图解教程*第13章中有详细介绍，等有空再整理发过来，太累了，我先把下面一部分讲一下)
+(主要搬运自*C#图解教程*第13章中的内容，如果你有时间，墙裂推荐去翻一下这本书的第13章)   
+通过前面的讲解，我们知道委托类似于C/C++中的函数指针，但是委托并不等价于C/C++中的函数指针，否则也没必要单独做一个类型出来．委托类型具有函数指针很多不具有的功能．
+这一部分我会做一个辛勤的搬运工来讲解委托的用法.
 
-### C#中的委托，要比C/C++中的函数指针更加类型安全
+<h4 id="3.1"> 3.1 声明委托类型 </h4>
+```
+delegate void MyDel(int x);
+```
+C#中规定委托需要以delegate关键字开头，其余部分与方法的声明非常类似，有返回类型和签名，但切记，委托是类型，不是方法．还有一点需要注意，
+声明委托类型时的返回类型以及签名，必须要与它调用的方法的返回类型跟签名一致，否则就会报错．比如上面的栗子中，`printLow`是一个接受一个int型参数无返回值的方法，
+那么委托也只能声明为接受一个int型参数无返回值类型．
+
+<h4 id="3.2"> 3.2 创建委托对象 </h4>
+首先委托类型的声明:`MyDel del;`,其中MyDel是委托类型，del是变量．
+创建委托对象有两种方式,一种使用new运算符比如: `del = new MyDel(printHigh);`,另一种快捷语法:`del = printHigh;`,这两种是等价的，
+后一种之所以有效是因为方法名称跟委托类型之间存在隐式转换．
+
+*注意: 不同编译器对此的处理可能不一样，在Mono下必须要显示转换才能编译通过:`del = (MyDel)printHigh;`,
+否则就会报错．win下还未做测试*
+
+<h4 id="3.3"> 3.3 委托的其他一些操作 </h4>
+1.组合委托    
+
+```
+MyDel delA = printLow; 
+MyDel delB = printHigh; 
+MyDel delC = delA + delB; 
+delC(randValue);//此时会分别执行printLow以及printHigh 
+```
+2.委托添加以及删除方法
+
+```
+MyDel del = printLow;
+del += printHigh;
+del -= printLow;
+del(randValue); //先增加printHigh方法然后又删掉printLow方法．此时只有printHigh方法
+```
+
+<h2 id="4"> 4. 匿名方法与Lambda表达式 </h2>
+<h4 id="4.1"> 4.1 匿名方法 </h4>
+初学者比如我总是会遇到奇型怪状的委托然后一脸茫然，直到我看到了匿名方法才知道他们用的是什么鬼东西．
+匿名方法是给那些我们只需要使用一次的方法准备的，因为只用一次，所以总是想着怎么才能少打几个字符．(在这一点上计算机学家跟物理学家都是一样的懒)
+举个栗子,我们之前是用独立的具名方法声明方法:
+
+```
+public static int printLow(int value){
+    Console.WriteLine ("{0} - Low value", value);
+    return 0;
+}
+delegate void Mydel(int value);
+Mydel del = printLow;
+del(10);
+```
+如果我们不想这么麻烦，可以用匿名方法:
+
+```
+delegate int Mydel(int value);
+Mydel del = delegate(int value){
+    Console.WriteLine ("{0} - Low value", value);
+    return 0;
+};
+del(10);
+```
+注意: 1)匿名方法大括号后面的分号是需要的　2)匿名方法不会显示声明返回类型．我们上面这个栗子没有使用返回值.如果你需要返回值，直接`int var = del(10);`即可．
+
+<h4 id="4.2:> 4.2 Lambda表达式 </h4>
+Lambda方法可以让代码更加简洁，之所以有Lambda方法还寻在匿名方法，纯粹是历史原因．这里搬运*C#图解教程*上的对Lambda表达式的一些规定，具体用法请查阅相关书籍.
+1. 编译器可以从委托的声明中知道委托参数的类型，因此Lambda表达式允许我们省略类型参数，如le2的赋值代码所示.
+    - 带有类型的参数列表称为显式类型.
+    - 省略类型的参数列表称为隐式类型.
+2. 如果只有一个隐式类型参数，我们可以省略周围的圆括号,如le3的赋值代码所示．
+3. 最后，Lambda表达式允许表达式的主题是语句块或表达式．如果语句块包含了一个返回语句,我们可以将语句块替换为return关键字后的表达式,如le4的赋值代码所示.
+
+```
+MyDel del = delegate(int x)     { return x+1; } ;       //匿名方法
+MyDel le1 =         (int x) =>  { return x+1; } ;       //Lambda表达式
+MyDel le2 =             (x) =>  { return x+1; } ;       //Lambda表达式
+MyDel le3 =              x  =>  { return x+1; } ;       //Lambda表达式
+MyDel le4 =              x  =>           x+1;   ;       //Lambda表达式
+```
+
+<h2 id="5"> 5. C#中的委托，要比C/C++中的函数指针更加类型安全 </h2>
 这部分是我对C#使用委托的理解.　我们前面说C#中没有指针，严格说是不对的，C#为了保证类型安全，默认情况下不允许使用指针，但是使用`unsafe`关键字的话就可以使用指针．
 所以说，*C#使用委托而不是函数指针的原因其实是为了保证类型安全*．很多教材跟博客都是说这句话然后就结束了，
 后来又看到[一篇博客](http://www.pl-enthusiast.net/2014/08/05/type-safety/)里详细讨论了类型安全,用轮子哥的话说就是,
@@ -164,7 +251,7 @@ int main()
 
     MyDel mydel;
     TestDel testdel;
-    mydel = randValue > 50 ? printHigh : printLow ; 
+    mydel = randValue > 50 ? MyDel(printHigh) : MyDel(printLow) ; 
 
 //c++可以检测到这种类型错误并报错
 //	testdel = randValue > 50 ? printHigh : printLow ;

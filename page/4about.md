@@ -13,15 +13,12 @@ type: page
 <iframe src="https://githubbadge.appspot.com/leeyeel" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
 
 本行是粒子物理专业，高能物理实验方向    
-兴趣是c++跟python相关开发    
-目前新能源行业，工作方向为BMS  
-永远不要停止学习  
+目前在新能源行业做嵌入式软件开发 
 
 
 ## 联系我
 
 * GitHub：[leeyeel](https://github.com/leeyeel)
-* E-mail：liyao#klclear.com
 * [知乎](https://www.zhihu.com/people/lin-mou-6)
 * [豆瓣](https://www.douban.com/people/freedom52/)
 

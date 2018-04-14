@@ -14,7 +14,7 @@ url: "https://leeyeel.github.io/" # the base hostname & protocol for your site
 permalink: /:year/:month/:day/:title/
 
 # other links
-facebook_username: gaohaoyang.water
+facebook_username: 
 github_username:  leeyeel
 email: mumuli52#gmail.com
 zhihu_username: lin-mou-6
@@ -54,5 +54,6 @@ tag_dir: tag/
 excerpt_separator: "\n\n\n\n"
 
 # paginate
-gems: [jekyll-paginate]
+#gem : [jekyll-paginate]
+plugins: [jekyll-paginate]
 paginate: 6

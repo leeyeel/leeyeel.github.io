@@ -4,7 +4,7 @@ title:  "从高能物理到程序猿"
 date:   2018-04-15 00:42:00
 categories: 杂项
 tags: 心得
-excerpt: 是的，我就是中科院高能物理硕士转行程序猿的
+excerpt: 是，我就是高能物理转行程序猿的
 mathjax: true
 ---
 

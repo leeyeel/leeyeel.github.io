@@ -2,8 +2,8 @@
 layout: post
 title:  "劳特巴赫(Lauterbach)——顶级调试器和仿真器" 
 date:   2018-11-25 00:42:00
-categories: 杂项
-tags: 笔记
+categories: 学习笔记
+tags: 笔记 lauterbach
 excerpt: Lauterbach的调试器跟仿真器真的做到了极致，功能强大到令人发指。
 mathjax: true
 ---

@@ -9,6 +9,7 @@ mathjax: true
 ---
 ### 目录
 * [1. lauterbach简介](#1)
+
 基本介绍，包括硬件及软件。
 * [2. 快速调试入门](#2)
 * [2.1 查看修改内存](#2.1)
@@ -32,15 +33,15 @@ Our product line TRACE32® supports technologies like JTAG, SWD, NEXUS or ETM wi
 1. 硬件介绍
 硬件为[PowerDebug Pro](https://www.lauterbach.com/frames.html?powerdebugpro.html),通过USB 3.0与PC相连，
 另一端根据不同的处理架构使用不同的扩展与MCU相连。实物图如下所示：
-![powerdebugpro]({{site.url}}assets/lauterbach/2_powerdebugpro.jpg)
+![powerdebugpro]({{site.url}}assets/lauterbach/powerdebugpro.jpg)
 主页上有对不同处理器构架支持扩展的详细介绍。硬件上的连接方式下图所示：
-![connections]({{site.url}}assets/lauterbach/1_connection.png)
+![connections]({{site.url}}assets/lauterbach/connection.png)
 
 2. 软件介绍
 IDE使用**TRACE32**工具，是我们本文介绍的重点。由于我自己的代码涉及商业信息，不方便截图，所以本文的绝大部分内容跟图片都直接来源于
 [Debugger Basics - Training](https://www2.lauterbach.com/pdf/training_debugger.pdf)的官方文档.
 **Lauterbach的文档写的非常全面且具体，大部分都配了图并且有举例，如有精力，强烈建议阅读先阅读一遍**&laquo **Debugger Basics - Training** &raquo.
-<h2 id="2">1. 快速调试入门</h2>
+<h2 id="2">2. 调试入门</h2>
 1.配置过程
 
 参考手册

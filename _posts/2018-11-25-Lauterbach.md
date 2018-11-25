@@ -33,9 +33,10 @@ Our product line TRACE32® supports technologies like JTAG, SWD, NEXUS or ETM wi
 1. 硬件介绍
 硬件为[PowerDebug Pro](https://www.lauterbach.com/frames.html?powerdebugpro.html),通过USB 3.0与PC相连，
 另一端根据不同的处理架构使用不同的扩展与MCU相连。实物图如下所示：
-![powerdebugpro]({{site.url}}assets/lauterbach/powerdebugpro.jpg)
+![]({{site.url}}assets/lauterbach/powerdebugpro.jpg)
+
 主页上有对不同处理器构架支持扩展的详细介绍。硬件上的连接方式下图所示：
-![connections]({{site.url}}assets/lauterbach/connection.png)
+![]({{site.url}}assets/lauterbach/connection.png)
 
 2. 软件介绍
 IDE使用**TRACE32**工具，是我们本文介绍的重点。由于我自己的代码涉及商业信息，不方便截图，所以本文的绝大部分内容跟图片都直接来源于

@@ -10,10 +10,14 @@ mathjax: true
 ### 目录
 * [1. lauterbach简介](#1)
 基本介绍，包括硬件及软件。
-* [2. 快速调试入门]
-点击进入[Lauterbach官网](https://www.lauterbach.com/)，跟很多仿真器官网风格类似，
+* [2. 快速调试入门](#2)
+* [2.1 查看修改内存](#2.1)
+* [2.2 查看修改寄存器](#2.2)
+* [2.3 设置断点](#2.3)
+* [2.4 系统运行状态](#2.4)
 
 <h2 id="1">1. lauterbach简介</h2>
+点击进入[Lauterbach官网](https://www.lauterbach.com/)，跟很多仿真器官网风格类似，
 第一次访问还以为是个快倒闭的小公司网站。网站支持多语言显示，点击下侧**Chinese Home**可以切换为中文，**概要**部分对Lauterbach的简单介绍：
 ```
 劳特巴赫是世界上最大的硬件辅助调试工具生产厂商。我们的工程师团队在制造顶级的调试器和仿真器领域拥有超过30年的经验。
@@ -33,8 +37,9 @@ Our product line TRACE32® supports technologies like JTAG, SWD, NEXUS or ETM wi
 ![connections]({{site.url}}assets/lauterbach/1_connection.png)
 
 2. 软件介绍
-IDE使用**TRACE32**工具，是我们本文介绍的重点。
-
+IDE使用**TRACE32**工具，是我们本文介绍的重点。由于我自己的代码涉及商业信息，不方便截图，所以本文的绝大部分内容跟图片都直接来源于
+[Debugger Basics - Training](https://www2.lauterbach.com/pdf/training_debugger.pdf)的官方文档.
+**Lauterbach的文档写的非常全面且具体，大部分都配了图并且有举例，如有精力，强烈建议阅读先阅读一遍**&laquo **Debugger Basics - Training** &raquo.
 <h2 id="2">1. 快速调试入门</h2>
 1.配置过程
 

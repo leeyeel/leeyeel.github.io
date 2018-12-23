@@ -50,4 +50,32 @@ IDE使用**TRACE32**工具，是我们本文介绍的重点。由于我自己的
 参考手册
 
 2.常用调试
+使用TRACE32调试时，不仅可以像使用其他IDE一样通过鼠标点点点的方式，还可以像Linux的Terminal那样通过输入命令来调试，熟悉时候使用命令行操作会极大的提高效率。
+
+1) 查看数据
+* TRACE32根据访问类型对可访问的数据做了分类，最主要的类型为程序类与数据类。分类的原因不是很清楚，
+猜测可能是为了兼容不同的处理器构架，因为对ARM或者Power来说的话Flash地址跟内存地址是统一编址的，不分类也可以。
+访问程序类使用
+```
+Data.List P:0x1234
+```
+这种格式，P是Program的首字母，不同的内核构架会使用不同的指令集，如果是A*R*M可以使用R,如果是*T*HUMB可以使用T,
+如果是Power可以使用V,举例如下：
+```
+Data.List R:0x1234	；R representing ARM instruction set encoding for the ARM architecture
+Data.List T:0x1234	; T representing THUMB instruction set encoding for the ARM architecture
+Data.List V:0x1234	; V representing VLE instruction set encoding for the Power Architecture
+```
+* 访问数据类使用：
+```
+Data.Dump D:0x1234	; display a hex dump starting at Data address 0x1234
+```
+字母D表示Data,若不指定访问类，则使用默认的访问类，Data.Dump的默认类型为Data，Data.List的默认类型为Program。
+* 其他
+对于全局变量来说，不仅可以通过地址访问，还可以直接通过符号访问，比如g_u32Var为某个全局变量，则可直接访问：
+```
+Data.List g_u32Var	;
+```
+其他访问类的详细内容请查看手册。
+
 

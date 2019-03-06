@@ -88,9 +88,9 @@ mathjax: false
 | warningIndicatorRequested         |7|
 
 其中bit7为高位，bit0为低位。confirmedDTC是任何DTC必须要支持的，其他则可以根据实际情况自定义支持或者不支持。
-举例来说，这样如果某个DTC(比如0x123456)的Status为testFailed且testFailedThisOperationCycle, 则Status用16进制表示为0x03(二进制为 00000011)。
+举例来说，这样如果某个DTC(比如0x123456)的Status为testFailed且testFailedThisOperationCycle, 则Status表示为0x03(00000011<sub>b</sub>)。
 reportNumberOfDTCByStatusMask的意思则表示符合StatusMask的DTC的数目。
-比如StatusMask为0x02(二进制为00000010), 即DTC必须要满足testFailedThisOperationCycle这个条件。
+比如StatusMask为0x02(00000010<sub>b</sub>), 即DTC必须要满足testFailedThisOperationCycle这个条件。
 在本例中则由于DTC 0x123456的Status(0x03), 包含了testFailedThisOperationCycle这个条件，此0x123456这个DTC符合StatusMask的要求。
 在实际实现中我们并不需要把Status与StatusMask按位展开一一比较，只需要把当前DTC的Status跟StatusMask做一下“与”运算，如果结果非0,则表示条件符合。
 DTC的Status定义以及各个状态之间的转换机制比较复杂，在ISO14229中也有详细描述，我们稍后再做进一步介绍。
@@ -101,11 +101,11 @@ DTC的Status定义以及各个状态之间的转换机制比较复杂，在ISO14
 
 |DTC Status: bit 名称| bit 位置| bit状态 |描述|
 | ------| ------ |------| ------ |
-| testFailed                        |0|0|DTC在请求时无测试失败          |
+| testFailed                        |0|0|DTC未在请求时测试失败          |
 | testFailedThisOperationCycle      |1|0|DTC从未在当前操作循环内失败    |
 | pendingDTC                        |2|1|DTC在当前或前一个操作循环内失败|
-| confirmedDTC                      |3|0|DTC在请求时未确认              |
-| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| confirmedDTC                      |3|0|DTC未在请求时确认              |
+| testNotCompletedSinceLastClear    |4|0|DTC测试完成,自上一次清除操作   |
 | testFailedSinceLastClear          |5|1|DTC测试失败,自从上一次清除操作 |
 | testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
 | warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
@@ -160,3 +160,66 @@ DTC的Status定义以及各个状态之间的转换机制比较复杂，在ISO14
 
 
 <h2 id="2.2">2.2    0x02-reportDTCByStatusMask</h2>
+
+reportDTCByStatusMask服务的功能为返回客户端满足StatusMask的DTC列表。与上一节不同的是，reportNumberOfDTCByStatusMask返回DTC的数目，
+而reportDTCByStatusMask则返回具体的DTC列表。与reportNumberOfDTCByStatusMask类似，如果客户端请求了StatusMask不支持的状态，则服务端只会处理自己能支持的那些状态。
+
+以下为ISO14229上的例子,我们首先假设服务端支持除了bit7"warningIndicatorRequested"之外的所有的Status bit,也就是说DTCStatusAvailabilityMask为0x7F。
+同时为了简单起见我们假设服务端总共支持3个DTC，这个3个DTC的信息如下:
+
+- 假设混合电池温度传感器电压过高故障名称为P0A9B-17，DTC为0x0A9B17, Status为0x24(0010 0100<sub>b</sub>),下表为DTC P0A9B-17的StatusOfDTC各个位的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|0|DTC未在请求时测试失败          |
+| testFailedThisOperationCycle      |1|0|DTC未在当前操作循环内失败      |
+| pendingDTC                        |2|1|DTC在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|0|DTC在请求时未确认              |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|1|DTC测试失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+- 假设A/C Request “B” - circuit intermittent故障名称为P2522-1F，DTC为0x25221F, Status为0x00(0000 0000<sub>b</sub>),下表为DTC P2522-1F的StatusOfDTC各个位的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|0|DTC未在请求时测试失败          |
+| testFailedThisOperationCycle      |1|0|DTC未在当前操作循环内失败      |
+| pendingDTC                        |2|0|DTC未在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|0|DTC未在请求时已确认            |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|0|DTC测试未失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+
+- 假设离合器位置传感器对地短路故障名称为P0805-11，其DTC为0x080511,它的Status为0x2F(0010 1111<sub>b</sub>),下表为DTC P0805-11的StatusOfDTC各个位的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|1|DTC在请求时测试失败            |
+| testFailedThisOperationCycle      |1|1|DTC在当前操作循环内失败        |
+| pendingDTC                        |2|1|DTC在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|1|DTC在请求时确认                |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|1|DTC测试失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+在这个例子中，只有P0A9B-17 以及 P0805-11这两个返回给客户端。由于P2522-1F的Status为0x00,不满足DTCStatusMask(此例为0x84)的要求，所以不会返回给客户端。
+此例中还有一点需要注意，由于服务端不支持bit7的状态(DTCStatusAvailabilityMask=0x7F),因此在处理DTCStatusMask时服务端会自动忽视bit7。客户端与服务端的交互内容如下:
+
+客户端向服务断请求信息内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCByStatusMask_request.png)
+
+服务端响应客户端内容如下
+
+![]({{site.url}}assets/UDS/DTC/reportDTCByStatusMask_response.png)
+
+如果没有任何DTC的实际Status与StatusMask匹配，则服务端将不返回任何DTC，这时客户端向服务端的请求信息与上面一致，服务端响应客户端内容如下:
+
+![]({{site.url}}assets/UDS/DTC/reportDTCByStatusMask_response2.png)
+
+<h2 id="2.3">2.3    0x03-reportDTCSnapshotIdentification</h2>
+

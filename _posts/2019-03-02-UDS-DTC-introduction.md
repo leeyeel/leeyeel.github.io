@@ -246,3 +246,29 @@ snapshot是指故障发生时的快照，具体内容有整车厂定义，比如
 这里面的DTCSnapshotRecordNumber是一直累加的，是因为我们这里假设了DTCSnapshotRecordNumber是唯一的，
 即尽管DTC不是同一个(比如0x123456跟0x789ABC)但是RecordNumber却是全局累加的。
 
+
+<h2 id="2.4">2.4   0x04-reportDTCSnapshotRecordByDTCNumber</h2>
+
+reportDTCSnapshotRecordByDTCNumber的功能是根据DTC来查找对应的Snapshot。同样以ISO14229上的例子来讲解。先作如下假设:
+
+- 对于某个给定的DTC，服务端最多只能存储2个DTCSnapshot。
+- 本例是上节例子的延续，因此上节的假设在本例中都成立。
+- 假设请求的是DTC(0x123456)存储的2个Snapshot中的第2个。
+- 假设DTC(0x123456)的StatusOfDTC为0x24,并且接下来的环境数据每次DTC发生时都被捕获。
+- DTCSnapshot记录数据的DID为0x4711。
+- DTCSnapshot记录的内容如下图:
+
+![]({{site.url}}assets/UDS/DTC/DTCSnapshot_record_content.png)
+
+本例中服务端返回了1个DTCSnapshot记录。
+客户端向服务断请求信息内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotRecordByDTCNumber_request.png)
+
+服务端响应客户端内容如下
+
+![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotRecordByDTCNumber_response.png)
+
+这里有几点需要说明:
+- 上图响应信息中，
+
+

@@ -223,3 +223,26 @@ reportDTCByStatusMask服务的功能为返回客户端满足StatusMask的DTC列�
 
 <h2 id="2.3">2.3    0x03-reportDTCSnapshotIdentification</h2>
 
+snapshot是指故障发生时的快照，具体内容有整车厂定义，比如时间，温度，车速，行驶状态等信息。reportDTCSnapshotIdentification的功能为返回snapshot标识，
+从名称上就可以知道返回内容并非具体的snapshot，而是可以确定snapshot身份的标识。我们直接通过ISO14229上的例子来讲解这个服务的作用。
+
+对于此例我们做如下假设:
+
+- 对于某个给定的DTC，服务端最多只能存储2个DTCSnapshot。
+- DTC(0x123456)存储了2个Snapshot,并且这个DTC已经发生了3次(由于服务端缺少足够空间，这样只有第一个snapshot以及最近的snapshot被保存下来)。
+- DTC(0x789ABC)存储了1个Snapshot。
+- 所有的DTCSnapshot以升序排列。
+- 对于服务端来说DTCSnapshotRecordNumber是唯一的。
+
+客户端向服务断请求信息内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotIdentification_request.png)
+
+服务端响应客户端内容如下
+
+![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotIdentification_response.png)
+
+我们对这个结果稍作说明，上图响应中DTCSnapshotRecordNumber从0x01到0x03,说明DTCSnapshotRecordNumber是从1开始计数的，
+之所以到0x03就结束是因为我们此例中一共只有三个Snapshot,如果有多个Snapshot这个RecordNumber可能就会一直数到所有Snapshot数完为止。
+这里面的DTCSnapshotRecordNumber是一直累加的，是因为我们这里假设了DTCSnapshotRecordNumber是唯一的，
+即尽管DTC不是同一个(比如0x123456跟0x789ABC)但是RecordNumber却是全局累加的。
+

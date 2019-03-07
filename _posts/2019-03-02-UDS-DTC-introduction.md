@@ -269,6 +269,8 @@ reportDTCSnapshotRecordByDTCNumber的功能是根据DTC来查找对应的Snapsho
 ![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotRecordByDTCNumber_response.png)
 
 这里有几点需要说明:
-- 上图响应信息中，
+- 上图响应信息中，byte 7 (DTCSnapshotRecordNumber)为DTCSnapshot的序号。
+- 响应信息中，byte 8 (DTCSnapshotRecordNumberOfIdentifiers)为 dataIdentifier的序号，此例中只有一个dataIdentifier (0x4711),
+所以DTCSnapshotRecordNumberOfIdentifiers的值为0x01,若有多个dataIdentifier,其值会继续增加下去。
 
-
+<h2 id="2.5">2.5  0x05-reportDTCSnapshotRecordByRecordNumber</h2>

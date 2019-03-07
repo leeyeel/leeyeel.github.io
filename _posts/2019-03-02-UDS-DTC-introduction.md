@@ -15,7 +15,7 @@ mathjax: false
     - [0x02-reportDTCByStatusMask](#2.2)
     - [0x03-reportDTCSnapshotIdentification](#2.3)
     - [0x04-reportDTCSnapshotRecordByDTCNumber](#2.4)
-    - [0x05-reportDTCSnapshotRecordByRecordNumber](#2.5)
+    - [0x05-reportDTCStoredDataByRecordNumber](#2.5)
     - [0x06-reportDTCExtendedDataRecordByDTCNumber](#2.6)
     - [0x07-reportNumberOfDTCByServerityMaskRecord](#2.7)
     - [0x08-reportDTCBySeverityMaskRecord](#2.8)
@@ -273,4 +273,20 @@ reportDTCSnapshotRecordByDTCNumber的功能是根据DTC来查找对应的Snapsho
 - 响应信息中，byte 8 (DTCSnapshotRecordNumberOfIdentifiers)为 dataIdentifier的序号，此例中只有一个dataIdentifier (0x4711),
 所以DTCSnapshotRecordNumberOfIdentifiers的值为0x01,若有多个dataIdentifier,其值会继续增加下去。
 
-<h2 id="2.5">2.5  0x05-reportDTCSnapshotRecordByRecordNumber</h2>
+<h2 id="2.5">2.5  0x05-reportDTCStoredDataByRecordNumber</h2>
+
+reportDTCStoredDataByRecordNumber在ISO14229(2006)中的名称为DTCSnapshotRecordByRecordNumber,两者除了名字不同外没有其他不同, 
+它的功能是根据RecordNumber来查找对应的Snapshot(上一小节中则是通过DTCNumber来查找)。由于reportDTCStoredDataByRecordNumber
+只是与上一节reportDTCSnapshotRecordByDTCNumber请求Snapshot的方式不同，所以我们仍然使用上一节的假设与例子。
+reportDTCStoredDataByRecordNumber报文交互内容如下:
+
+客户端向服务断请求信息内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_request.png)
+
+服务端响应客户端内容如下
+
+![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response1.png)
+![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response2.png)
+
+
+<h2 id="2.6">2.6  0x06-reportDTCExtendedDataRecordByDTCNumber</h2>

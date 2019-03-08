@@ -223,7 +223,8 @@ reportDTCByStatusMask服务的功能为返回客户端满足StatusMask的DTC列�
 
 <h2 id="2.3">2.3    0x03-reportDTCSnapshotIdentification</h2>
 
-snapshot是指故障发生时的快照，具体内容有整车厂定义，比如时间，温度，车速，行驶状态等信息。reportDTCSnapshotIdentification的功能为返回snapshot标识，
+snapshot是指故障发生时的快照，具体内容有整车厂定义，比如时间，温度，车速，等信息。DTCSnapshotRecord可以用来重建故障时的状态。
+reportDTCSnapshotIdentification的功能为返回snapshot标识ID，
 从名称上就可以知道返回内容并非具体的snapshot，而是可以确定snapshot身份的标识。我们直接通过ISO14229上的例子来讲解这个服务的作用。
 
 对于此例我们做如下假设:
@@ -269,9 +270,16 @@ reportDTCSnapshotRecordByDTCNumber的功能是根据DTC来查找对应的Snapsho
 ![]({{site.url}}assets/UDS/DTC/reportDTCSnapshotRecordByDTCNumber_response.png)
 
 这里有几点需要说明:
-- 上图响应信息中，byte 7 (DTCSnapshotRecordNumber)为DTCSnapshot的序号。
+- 本例中同样假设DTCSnapshotRecordNumber对服务端来说是唯一的(这里唯一的意思是说对于任何DTC，只要有Snapshotrecord,则DTCSnapshotRecordNumber就会累加一个）。
+实际情况中可能有不同的定义方式，比如可以对每一个DTC都有一个DTCSnapshotRecordNumber序列，或者对某几个DTC有一个DTCSnapshotRecordNumber的序列。
+- 上图响应信息中，byte 7 (DTCSnapshotRecordNumber)为DTCSnapshot的序号, 当DTCSnapshotRecordNumber为全局唯一时，
+reportDTCSnapshotRecordByDTCNumber以及下一节要介绍的reportDTCStoredDataByRecordNumber都可用，但是当DTCSnapshotRecordNumber不是全局唯一时，
+下一节要介绍的reportDTCStoredDataByRecordNumber功能就不可用，因为这时候给定一个DTCSnapshotRecordNumber不能唯一的确定是哪一个DTC的DTCSnapshotRecord。
 - 响应信息中，byte 8 (DTCSnapshotRecordNumberOfIdentifiers)为 dataIdentifier的序号，此例中只有一个dataIdentifier (0x4711),
 所以DTCSnapshotRecordNumberOfIdentifiers的值为0x01,若有多个dataIdentifier,其值会继续增加下去。
+- dataIdentifier是数据ID，dataIdentifer与Snapshot record的内容想关联，一个dataIdentifier对应一组Snapshot record content。
+当一个dataIdentifier只涉及到一部分数据，而有需要所有数据时，就需要多个dataIdentifier。
+- ISO14229中并没有对dataidentifier的长度(本例中2个字节)以及snapshotData内容的长度(本例中5个字节)做强制规定。
 
 <h2 id="2.5">2.5  0x05-reportDTCStoredDataByRecordNumber</h2>
 
@@ -288,5 +296,8 @@ reportDTCStoredDataByRecordNumber报文交互内容如下:
 ![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response1.png)
 ![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response2.png)
 
+这里有几点需要说明:
+- 本例中假设DTCSnapshotRecordNumber对服务端来说是唯一的，如果DTCSnapshotRecordNumber不唯一，那么reportDTCStoredDataByRecordNumber将无法实现。
+因为这时候给定一个DTCSnapshotRecordNumber不能唯一的确定是哪一个DTC的DTCSnapshotRecord。
 
 <h2 id="2.6">2.6  0x06-reportDTCExtendedDataRecordByDTCNumber</h2>

@@ -16,7 +16,7 @@ mathjax: false
     - [0x03-reportDTCSnapshotIdentification](#2.3)
     - [0x04-reportDTCSnapshotRecordByDTCNumber](#2.4)
     - [0x05-reportDTCStoredDataByRecordNumber](#2.5)
-    - [0x06-reportDTCExtendedDataRecordByDTCNumber](#2.6)
+    - [0x06-reportDTCExtDataRecordByDTCNumber](#2.6)
     - [0x07-reportNumberOfDTCByServerityMaskRecord](#2.7)
     - [0x08-reportDTCBySeverityMaskRecord](#2.8)
     - [0x09-reportSeverityInformationOfDTC](#2.9)
@@ -279,7 +279,7 @@ reportDTCSnapshotRecordByDTCNumber以及下一节要介绍的reportDTCStoredData
 所以DTCSnapshotRecordNumberOfIdentifiers的值为0x01,若有多个dataIdentifier,其值会继续增加下去。
 - dataIdentifier是数据ID，dataIdentifer 与 Snapshot record的内容相关联:一个dataIdentifier对应一组Snapshot record content。
 当一个dataIdentifier 只涉及到所有数据中的一部分数据，而又需要所有数据时，就需要多个dataIdentifier。
-- ISO14229中并没有对dataidentifier的长度(本例中2个字节)以及snapshotData内容的长度(本例中5个字节)做强制规定。
+- ISO14229中并没有对dataidentifier的长度(本例中2个字节)以及DTCSnapshotRecord内容的长度(本例中5个字节)做强制规定。
 
 <h2 id="2.5">2.5  0x05-reportDTCStoredDataByRecordNumber</h2>
 
@@ -300,4 +300,41 @@ reportDTCStoredDataByRecordNumber报文交互内容如下:
 - 本例中假设DTCSnapshotRecordNumber对服务端来说是唯一的，如果DTCSnapshotRecordNumber不唯一，那么reportDTCStoredDataByRecordNumber将无法实现。
 因为这时候给定一个DTCSnapshotRecordNumber不能唯一的确定是哪一个DTC的DTCSnapshotRecord。
 
-<h2 id="2.6">2.6  0x06-reportDTCExtendedDataRecordByDTCNumber</h2>
+<h2 id="2.6">2.6  0x06-reportDTCExtDataRecordByDTCNumber</h2>
+
+reportDTCExtDataRecordByDTCNumber在ISO14229(2013)版本中的名称为reportDTCExtendedDataRecordByDTCNumber,它的功能是根据客户端请求的DTC，返回一个DTCExtendedDataRecord。
+其功能与reportDTCSnapshotRecordByDTCNumber类似，
+区别只是reportDTCSnapshotRecordByDTCNumber返回的是DTCSnapshotRecord 而reportDTCExtDataRecordByDTCNumber返回的是DTCExtendedDataRecord。
+与reportDTCSnapshotRecordByDTCNumber一样，客户端请求是发送的DTCNumber叫做DTCMaskRecord,实际并没有"Mask"的功能，服务端会查找与DTCMaskRecord完全匹配的DTC。
+
+通常情况下(客户端请求时的DTCExtDataRecordNumber不等于0xFE或0xFF，注意这点ISO14229(2013)与ISO14229(2006)不同，ISO14229(2006)只有不等于0xFF这一个例外),
+服务端只会返回客户端1条预定义的DTCExtendedData 记录,否则服务端会返回存储的所有DTCExtendedData records。
+DTCExtDataRecord(ISO14229(2006)此处名称为DTCExtendedDataRecord)的格式与内容由整车厂定义，
+DTCExtDataRecord中的数据结构由DTCExtDataRecordNumber定义，定义方式与reportDTCSnapshotRecordByDTCNumber中的dataIdentifier相似。
+
+如果客户端请求的DTCMaskRecord 或者 DTCExtDataRecordNumber不可用或者服务端不支持，服务端会否定响应。关于否定响应ISO14229(2006)与ISO14229(2013)也有不同，
+ISO14229(2013)中规定，如果客户端请求DTCExtDataRecordNumber为0xFE,但是服务端不支持OBD相关的扩展数据(0x90-0xEF)时同样会产生否定响应。
+
+使用ISO14229中的例子,做如下假设:
+- 对于某个给定的DTC，服务端最多只能存储2个DTCExtendedData。
+- 假设客户端请求DTC(0x123456)所有可用的DTCExtendedData。
+- 假设DTC(0x123456)的statusOfDTC 为0x24,且随后的扩展数据是可用的。
+- DTCExtendedData通过DTCExtDataRecordNumbers 0x05 和0x10引用,这两个DTCExtDataRecordNumbers的内容见下图.
+
+![]({{site.url}}assets/UDS/DTC/DTCExtDataRecordNumber.png)
+
+本例中，客户端请求信息中DTCExtDataRecordNumber的值为0xFF,表示请求所有符合条件的记录，服务端将返回所有可用的(本例子中2个)DTCExtendedData。
+
+客户端向服务断请求信息内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCExtDataRecordByDTCNumber_request.png)
+
+服务端响应客户端内容如下
+![]({{site.url}}assets/UDS/DTC/reportDTCExtDataRecordByDTCNumber_response.png)
+
+这里有一点需要说明:
+- 与reportDTCSnapshotRecordByDTCNumber中的DTCSnapshotRecord类似，ISO14229中也未对reportDTCExtDataRecordByDTCNumber中的DTCExtDataRecord长度做强制规定，
+虽然本例中的长度为1个字节，但是具体长度整车厂可以自行定义,更加灵活的是，不同的DTCExtDataRecord的长度也不必完全一致(本例中都为1个字节)。
+
+
+<h2 id="2.7">2.7  0x07-reportNumberOfDTCByServerityMaskRecord</h2>
+    

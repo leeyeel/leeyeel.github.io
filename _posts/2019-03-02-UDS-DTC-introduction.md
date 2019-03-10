@@ -277,8 +277,8 @@ reportDTCSnapshotRecordByDTCNumber以及下一节要介绍的reportDTCStoredData
 下一节要介绍的reportDTCStoredDataByRecordNumber功能就不可用，因为这时候给定一个DTCSnapshotRecordNumber不能唯一的确定是哪一个DTC的DTCSnapshotRecord。
 - 响应信息中，byte 8 (DTCSnapshotRecordNumberOfIdentifiers)为 dataIdentifier的序号，此例中只有一个dataIdentifier (0x4711),
 所以DTCSnapshotRecordNumberOfIdentifiers的值为0x01,若有多个dataIdentifier,其值会继续增加下去。
-- dataIdentifier是数据ID，dataIdentifer与Snapshot record的内容想关联，一个dataIdentifier对应一组Snapshot record content。
-当一个dataIdentifier只涉及到一部分数据，而有需要所有数据时，就需要多个dataIdentifier。
+- dataIdentifier是数据ID，dataIdentifer 与 Snapshot record的内容相关联:一个dataIdentifier对应一组Snapshot record content。
+当一个dataIdentifier 只涉及到所有数据中的一部分数据，而又需要所有数据时，就需要多个dataIdentifier。
 - ISO14229中并没有对dataidentifier的长度(本例中2个字节)以及snapshotData内容的长度(本例中5个字节)做强制规定。
 
 <h2 id="2.5">2.5  0x05-reportDTCStoredDataByRecordNumber</h2>
@@ -296,7 +296,7 @@ reportDTCStoredDataByRecordNumber报文交互内容如下:
 ![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response1.png)
 ![]({{site.url}}assets/UDS/DTC/reportDTCStoredDataByRecordNumber_response2.png)
 
-这里有几点需要说明:
+这里有一点需要说明:
 - 本例中假设DTCSnapshotRecordNumber对服务端来说是唯一的，如果DTCSnapshotRecordNumber不唯一，那么reportDTCStoredDataByRecordNumber将无法实现。
 因为这时候给定一个DTCSnapshotRecordNumber不能唯一的确定是哪一个DTC的DTCSnapshotRecord。
 

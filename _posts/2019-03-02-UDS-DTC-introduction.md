@@ -337,4 +337,66 @@ ISO14229(2013)中规定，如果客户端请求DTCExtDataRecordNumber为0xFE,但
 
 
 <h2 id="2.7">2.7  0x07-reportNumberOfDTCByServerityMaskRecord</h2>
-    
+
+reportNumberOfDTCByServerityMaskRecord的功能为返回与严重等级相匹配的DTC数目，它的形式与reportNumberOfDTCByStatusMask类似，
+不同的是这里是通过ServerityMaskRecord。DTCSeverityMask包含3个表示严重程度的bit,具体定义在ISO14229中有详细的定义，我们这里不做过多介绍。
+DTCSeverityMask的使用方法也与StatusMask类似，只不过除了要满足DTCStatusMask的要求外还要满足DTCSeverityMask的要求，也就是说满足reportNumberOfDTCByServerityMaskRecord
+的DTC需要符合下面的条件:
+```
+(((statusOfDTC & DTCStatusMask) != 0) && ((severity & DTCServerityMask) != 0)) == TRUE
+```
+每当有一个DTC满足条件，则计数加一。与 DTCStatusMask类似，如果客户端指定了服务端不支持的DTCServerityMask位，则服务端只处理它能支持的DTCServertiy。
+当所有DTC都检查一遍后，服务端会返回DTCStatusAvailabilityMask并且返回2个字节的计数到客户端。
+以ISO14229中的例子来说明:
+
+- 假设混合电池温度传感器电压过高故障名称为P0A9B-17，DTC为0x0A9B17, Status为0x24(0010 0100<sub>b</sub>), DTCFunctionalUnit = 0x10, DTCSeverity = 0x20。
+下表为DTC P0A9B-17 StatusOfDTC 各bit的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|0|DTC未在请求时测试失败          |
+| testFailedThisOperationCycle      |1|0|DTC未在当前操作循环内失败      |
+| pendingDTC                        |2|1|DTC在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|0|DTC在请求时未确认              |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|1|DTC测试失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+- 假设A/C Request “B” - circuit intermittent故障名称为P2522-1F，DTC为0x25221F, Status为0x00(0000 0000<sub>b</sub>), DTCFunctionalUnit = 0x10, DTCSeverity = 0x20
+下表为DTC P2522-1F的StatusOfDTC各个bit的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|0|DTC未在请求时测试失败          |
+| testFailedThisOperationCycle      |1|0|DTC未在当前操作循环内失败      |
+| pendingDTC                        |2|0|DTC未在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|0|DTC未在请求时已确认            |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|0|DTC测试未失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+- 假设离合器位置传感器对地短路故障名称为P0805-11，其DTC为0x080511,它的Status为0x2F(0010 1111<sub>b</sub>), DTCFunctionalUnit = 0x10, DTCSeverity = 0x40。
+下表为DTC P0805-11的StatusOfDTC各个位的状态:
+
+|DTC Status: bit 名称| bit 位置| bit状态 |描述|
+| ------| ------ |------| ------ |
+| testFailed                        |0|1|DTC在请求时测试失败            |
+| testFailedThisOperationCycle      |1|1|DTC在当前操作循环内失败        |
+| pendingDTC                        |2|1|DTC在当前或前一个操作循环内失败|
+| confirmedDTC                      |3|1|DTC在请求时确认                |
+| testNotCompletedSinceLastClear    |4|0|DTC测试已完成,自上一次清除操作 |
+| testFailedSinceLastClear          |5|1|DTC测试失败,自从上一次清除操作 |
+| testNotCompletedThisOperationCycle|6|0|DTC测试在这个操作循环内完成    |
+| warningIndicatorRequested         |7|0|服务端未要求警告指示器激活     |
+
+在本例中，DTCSeverityMaskRecord(DTCSeverityMask)为0xC0, DTCSeverityMaskRecord(DTCStatusMask)为0x01,因此只有DTC P0805-11 (0x080511)符合要求。
+
+客户端向服务断请求信息内容如下:
+![]({{site.url}}assets/UDS/DTC/reportNumberOfDTCBySeverityMaskRecord_request.png)
+
+服务端响应客户端内容如下
+![]({{site.url}}assets/UDS/DTC/reportNumberOfDTCBySeverityMaskRecord_response.png)
+
+

@@ -18,7 +18,8 @@ mathjax: true
 用惯了keil, CodeWarrior等这类IDE的小伙伴刚开始可能会不知如何下手。其实想想AUTOSAR开发使用的Lauterbach + Trace32的组合，Trace32也不带编译器。  
 
 本篇教程适合刚接触winIDEA的小伙伴，帮助大家快速上手使用。
-IC5700实物图见下图:
+IC5700实物图见下图:  
+
 ![]({{site.url}}assets/iSYSTEM/product_IC5700.jpg)
 
 
@@ -31,22 +32,27 @@ IC5700实物图见下图:
 - 新建WorkSpace  
 这里新建的WorkSpace是之后相对路径的根目录，第一次启动winIDEA可能还会弹出**Select Workspace**的对话框，直接关闭就好了。
 依次点击**File / Workspace / New Workspace**,输入文件名字并选择位置。如下图所示:
+
 ![]({{site.url}}assets/iSYSTEM/newWorkspace.PNG)
 
 注意:官方帮助文档提到在选择OK之后会出现一个选择硬件插件的对话框，如下图所示，可能是因为winIDEA版本原因，我操作时并未弹出此对话框。
+
 ![]({{site.url}}assets/iSYSTEM/selectHardwarePlugin.png)
 
 - 硬件配置
 这一步主要是选择使用的仿真器类型，根据自己的实际情况操作就是了，我自己使用的是IC5700，官方那个帮助手册里使用的是IC5000。
 依次打开**Hardware / Hardware **对话框，选择自己的仿真器,如下图:
+
 ![]({{site.url}}assets/iSYSTEM/hardwareConfiguration_1.PNG)
 
 选择好硬件后，点击**Communication**选项卡，在**USB**下拉菜单中选中自己的仿真器硬件，点击**Test**，如果连接成功可以看到下图所示的状态。
+
 ![]({{site.url}}assets/iSYSTEM/hardwareConfiguration_2.PNG)
 
 - CPU配置
 这一步是选择CPU型号。打开**Hardware / Emulation Options**对话框，点击**CPU**选项卡，根据自己的情况选择CPU类型，由于我是MPC5606,
 所以依次选择**PowerPC/OnCE 5xxx /MPC5606B**,主要注意，我的PowerPC里只有OnCE 5xxxx这一个系列,不同的小伙伴看到的可能不一样。如下图所示:
+
 ![]({{site.url}}assets/iSYSTEM/CPU.PNG)
 
 - 验证配置是否正确
@@ -64,6 +70,7 @@ IC5700实物图见下图:
 - 验证加载文件
 官方帮助文档里介绍要验证加载文件，我没有做这一步。直接把帮助文档里的图片拿来。
 上一步加载完成文件后点击**OK**,之后在**Download**窗口中选择**Option**选项卡，勾选**Verify against Loaded code**复选框即可。效果如下图:
+
 ![]({{site.url}}assets/iSYSTEM/verify.png)
 
 注意：此时点击主菜单栏中的**Debug/Download**是可以把文件烧录到MCU中去的，而且点击运行后还可以运行，但是此时无法查看代码。如下图所示，此时程序已经在运行，
@@ -81,6 +88,7 @@ IC5700实物图见下图:
 
 此处需要注意，winIDEA的断点设置并不是点一下就可以，它需要先把光标停留在想设断点的行(可以设置的断点的行前会有方框标记),然后点击debug工具栏中红色断点工具即可。
 直接使用帮助手册中的图:
+
 ![]({{site.url}}assets/iSYSTEM/Calypso6Mdebug.png)
 
 上图中间部分C代码，419行处为断点处，其他行有方框的表示可以设置断点的位置。

@@ -41,7 +41,7 @@ IC5700实物图见下图:
 
 - 硬件配置
 这一步主要是选择使用的仿真器类型，根据自己的实际情况操作就是了，我自己使用的是IC5700，官方那个帮助手册里使用的是IC5000。
-依次打开**Hardware / Hardware **对话框，选择自己的仿真器,如下图:
+依次打开**Hardware / Hardware**对话框，选择自己的仿真器,如下图:
 
 ![]({{site.url}}assets/iSYSTEM/hardwareConfiguration_1.PNG)
 
@@ -56,7 +56,7 @@ IC5700实物图见下图:
 ![]({{site.url}}assets/iSYSTEM/CPU.PNG)
 
 - 验证配置是否正确
-这一步的目的是在下载数据到MCU之前先验证下之前的操作是否正确。连好线以后依次点击**Debug / Run control / CPU Reset **查看下debug会话是否成功建立。
+这一步的目的是在下载数据到MCU之前先验证下之前的操作是否正确。连好线以后依次点击**Debug / Run control / CPU Reset**查看下debug会话是否成功建立。
 
 - 添加下载文件
 这一步的目的是把编译好的文件添加到winIDEA,之后就可以把文件下载到MCU中。之所以有这个操作的原因就是winIDEA自身没有编译器，

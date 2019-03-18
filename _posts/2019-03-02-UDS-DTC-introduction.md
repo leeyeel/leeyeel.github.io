@@ -1,6 +1,6 @@
 ---
 layout: post 
-title: "UDS诊断之读DTC信息(19 hex)服务"
+title: "UDS诊断之读DTC信息(19 hex)服务(Part I)"
 date: 2019-03-02 20:36:20
 categories: 汽车
 tags: 汽车电子 UDS DTC ISO1429 
@@ -65,6 +65,8 @@ mathjax: false
 
 在本章节中，我们会对19服务的所有sub-function进行详细介绍。初学者在读完一遍理解之后，再遇到这些sub-function只看名字就能知道他们是什么功能，
 因为他们的功能都写在名字上。
+
+读DTC服务的sub-Function太多了，所以分几次介绍。
 
 <h2 id="2.0">2.0    0x00-ISOSAEReserved</h2>
 

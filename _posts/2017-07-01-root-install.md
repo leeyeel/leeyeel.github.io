@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "cern root 安装过程"
-date:   2017-07-01 01:07:54
+title:  "Linux下安装CERN ROOT全过程"
+date:   2014-11-20 16:54:39
 categories: 高能物理
 tags: cern root install 教程
 excerpt: cern root6 的安装教程

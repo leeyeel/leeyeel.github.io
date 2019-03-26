@@ -57,3 +57,6 @@ excerpt_separator: "\n\n\n\n"
 #gem : [jekyll-paginate]
 plugins: [jekyll-paginate]
 paginate: 6
+
+plugins:
+    - jekyll-sitemap

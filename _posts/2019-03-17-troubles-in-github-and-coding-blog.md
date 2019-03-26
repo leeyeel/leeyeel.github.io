@@ -36,3 +36,17 @@ mathjax: true
 所以处理起来只需要把原来的duoshuo代码替换为来必力即可。
 对于之前未安装过评论系统的用户可参照这里[jekyll + disqus的安装方法](https://poanchen.github.io/blog/2017/07/27/how-to-add-disqus-to-your-jekyll-site)
 来实现 keyll + LiveRe(来必力)。
+9. 使用百度统计或者google分析时需要添加站点地图，jekyll添加sitemap也很简单，参考[github page的方法](https://help.github.com/en/articles/sitemaps-for-github-pages),
+只要在_config.yml文件中添加sitemap插件即可，如下:
+```
+plugins:
+  - jekyll-sitemap
+```
+10. 如果之前已经使用了jekyll的插件，再添加插件时只需要按照上面的格式继续添加就好了，比如我之前已经使用了jekyll-paginate,并且有用到`paginate: 6`这个参数，
+则两个插件同时使用时，如下即可:
+```
+plugins:
+  - jekyll-sitemap
+  - jekyll-paginate
+paginate: 6
+```

@@ -1,38 +1,56 @@
 ---
 layout: post
-title:  "从单片机开发到linux驱动开发" 
+title:  "单片机开发与linux驱动区别要点" 
 date:   2019-03-26 00:21:00
 categories: 学习笔记
 tags: 单片机 MCU Linux 驱动 区别
 excerpt: 本文适用于有单片机开发基础，但对Linux驱动开发没经验的小伙伴
 mathjax: true
 ---
+先介绍下我自己的情况,要学习的小伙伴可以比较下，确定本文内容是否与自己目前状态符合。
+
+- 读研时实验数据处理都是在Linux上做的，所以对Linux操作很熟悉，但是没有做过任何内核以及Linux驱动开发的工作。
+- 工作后做过一年半的嵌入式MCU驱动开发，对MCU的启动过程，IDE的启动代码，bootloader, nor flash, nand flash有了解。
+
 之前一直做汽车电子的MCU驱动开发，接触过的大都是NXP的汽车级芯片，主要为PowerPC构架的一些MCU，
 也有ARM构架的Cortex-M3内核以及Cortex-M4内核的MCU。最近入手S3C2440开发板一个，想借此了解下Linux驱动开发。
 熟悉几天之后总结了一下与之前驱动开发的区别。刚拿到开发板的时候完全不知道如何操作，其实了解到这些区别后上手Linux驱动开发几乎是没难度的。
 
-### 区别一
-- 单片机程序大都是直接运行在片内FLASH的，而跑Linux的芯片则不是, 所以启动方式不同。
+- 区别一: 单片机程序大都直接运行在片内FLASH，Linu程序无法在这么小的片内FLASH上运行, 所以启动方式不同。
 
 之前接触的MCU自带片内FLASH，片内Flash为Nor Flash,与内存统一编址。程序直接运行在FLASH中，
 使用Keil, CodeWarrior等IDE借助仿真器就可以直接单步调试。这是因为在裸机，或者轻量级操作系统(uC/OS, FreeROTS等)时，代码量都很小，
-MCU自带的1M或者2M的片内flash足以容纳这些代码量。尽管片内FLASH的价格稍贵，但是考虑到带来的巨大便捷以及单片机往往只需要较小的容量即可满足需求，
-大部分单片机MCU都自带片内FLASH。
+MCU自带的1M或者2M的片内flash足以容纳这些代码量。尽管片内FLASH的价格相对昂贵，但是考虑到使用片内FLASH带来便捷以及稳定性，
+加上单片机程序往往只需要较小的空间，所以多数单片机MCU都自带片内FLASH。
 
-当需要运行Linux时，代码量相对较大，使用片内FLASH往往无法满足需求，Nor FLASH的价格又偏贵, 使用几十M的Nor FLASH意味着更高的成本。
-所以此类芯片往往需要使用外挂Nand FLASH启动。Nand FLASH需要有驱动支持才可读写，主控芯片并不知道外挂的Nand FLASH型号，所以无法直接读取。
-使用Nand FLASH启动时，CPU会自动把NAND FLASH前4K的数据复制到片内RAM中执行，这个片内RAM被成为“跳板"(Stepping Stone)。
-利用这一点可以在NAND FLASH的前4K中初始化硬件，包括外挂RAM，并把程序复制到外挂RAM中，从而实现启动。
+当需要运行Linux时，代码量相对较大，使用片内FLASH无法满足需求。如果使用几十M的Nor FLASH又会大大提高成本,
+所以此类芯片常使用外挂Nand FLASH。NAND FLASH 不像NOR FLASH那样可以按字节读写，只能按Page读写。
 
-### 区别二
-- 跑Linux的芯片大都没有片内FLASH, 只有NAND FLASH，所以烧写过程不同。
+这样MCU刚上电时就无法像单片机MCU那样从片内NOR FLASH开始一行一行执行。这就造成了普通单片机MCU启动方式与运行Linux系统的MCU启动方式的不同。
 
-开发单片机主控芯片时，由于具有片内FLASH，烧写可以直接通过仿真器完成。开发Linux主控芯片时，我们常用的J-Link仿真器不支持NAND FLASH烧写
-（有些仿真器比如Lauterbach支持NAND FLASH烧写)，所以我们无法使用IDE比如Keil直接把程序烧录到开发板。新手到这里就会卡一下。
+实际上使用Nand FLASH启动时，CPU会自动把NAND FLASH前4K的数据复制到片内RAM中执行，这个片内RAM被成为“跳板"(Stepping Stone)。
+利用这一点可以在NAND FLASH的前4K中初始化硬件以及外挂RAM，并把NAND FLASH中的程序复制到外挂RAM中，并跳转到外挂RAM中执行，从而完成启动。
 
-### 其他区别
-- 单片机MCU主频较低，内存较小，一般都为片内RAM，能跑Linux的芯片一般主频较高，内存大，需要外挂RAM。
+- 区别二: 单片机程序可以使用IDE跟仿真器烧写程序到片内NOR FLASH，NAND FLASH的读写需要驱动支持，如果IDE没有NAND FLASH的驱动则无法烧写，所以烧写过程不同。
 
-理解了这个区别以后就可以对症下药了:
+开发单片机MCU驱动时，由于具有片内FLASH，烧写可以直接通过仿真器比如J-LINK来完成。开发Linux主控芯片时，我们常用的J-Link仿真器(主要是假的J-LINK便宜所以常用)
+不支持NAND FLASH烧写，不过有些仿真器比如Lauterbach是支持NAND FLASH烧写的。这样就造成我们无法使用Keil或者J-Flash等烧录工具把程序烧录到NAND FLASH上。
+
+- 区别三: 编译环境不一样。在windows下搭建编译Linux内核的交叉编译环境太繁琐，所以大都直接到Linux下去编译。
+
+这跟单片机编译是不一样的，单片机下的交叉编译环境比较容易搭建，或者直接使用Keil或者codewarrior等集成开发环境就好了。
+
+- 区别四: bootloader的作用不同。
+
+单片机开发的bootloader不是必须的，它跟APP其实并没有本质上的不同，作为引导程序的最主要原因是为了方便升级。比如我电池管理系统装到电池包里面，
+如果有bootloader,这样哪天发现需要升级的时候直接使用CAN或其他通讯协议就可以升级了，不需要拆包。如果没有bootloader，就只能拆包用仿真器烧写了。
+但是对于Linux系统来说，bootloader是必须的，没有bootloader搬运NAND FLASH的程序，就无法实现启动。
+
+- 其他区别
+
+当然还有其他区别，比如运行Linux需要更大的内存，所以RAM也是外挂的。比如运行Linux的话CPU主频需更高，通常几百MHz甚至上GHz等等。
+不过这些对开发来说并没有本质的影响。对我来说，最重要的其实是前两条。
+
+理解了这些区别以后就可以对症下药了:
 
 (未完待续...)

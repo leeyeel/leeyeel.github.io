@@ -25,7 +25,7 @@ CAN报文中我们有11位标志符的标准帧也有29位标志符的扩展帧�
 
 也就是说,J1939对CAN2.0B中的29位标志进行了重新解释,我们使用下面这张图来说明一下:   
 
-![](./assets/J1939/sae-j1939-pgn.jpg)
+![]({{site.url}}/assets/J1939/sae-j1939-pgn.jpg)
 
 上图中29位CAN ID本来是我们标识不同CAN报文的唯一标志符，现在我们对这29位进行了重新划分，其中前3位表示优先级(Priority)，中间18位表示PGN(Parameter Group Number),
 后面8位表示源地址（Source Address)。中间18位的PNG又进一步划分为保留位(R), 数据页位(DP), PDU格式(PF),以及PDU特定域(PS)。

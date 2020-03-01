@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "" 
+title:  "LetsEncrypt申请泛域名" 
 date:   2020-03-01 20:56:00
 categories: 网络
 tags: 网络
-excerpt: 一些搭建博客啊网站啊申请证书啊以及一些不能说的功能的记录
+excerpt: VPS上的上网服务以及申请ssl证书中查阅到的一些文档及方法总结
 mathjax: true
 ---
 

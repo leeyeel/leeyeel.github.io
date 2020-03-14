@@ -2,13 +2,11 @@
 layout: post
 title:  "LetsEncrypt申请泛域名" 
 date:   2020-03-01 20:56:00
-categories: 网络
+categories: 笔记心得
 tags: 网络
 excerpt: VPS上的上网服务以及申请ssl证书中查阅到的一些文档及方法总结
 mathjax: true
 ---
-
-### LetsEncrypt申请泛域名
 
 #### 1. certbot客户端申请泛域名
 以前用的`acme.sh`客户端，不过这次申请泛域名的时候有个SOURCEIP的参数实在不知道是干嘛的，尝试了好几个都报错，
@@ -64,8 +62,8 @@ mathjax: true
 #### 4. github博客
 
 这个博客就是用github pages + Jekyll 搭建的，然后使用了namecheap家的域名。由于github禁止了百度的爬虫，所以在CODING上做了镜像，
-使用DNSPod国内IP走CODING，国外IP走github，但是CODING的pages服务升级，个人域名改变，加上namecheap家的DNS服务太弱了，没法区分国内国外IP，
-所以没办法添加两条解析，等有空看下用cdn解决，暂时放弃百度。
+使用DNSPod国内IP走CODING，国外IP走github，但是CODING的pages服务升级，个人域名改变，加上namecheap家的DNS服务太弱了，
+没法区分国内国外IP，所以没办法添加两条解析,目前使用的为couldflare的免费cdn,效果不明显，且好像没有解决百度搜索的问题。 
 
 #### 5. 一些其他上网服务
 

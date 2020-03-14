@@ -2,7 +2,7 @@
 layout: post
 title:  "github无法被百度收录解决笔记" 
 date:   2019-03-17 18:42:00
-categories: troubles
+categories: 笔记心得
 tags: 笔记 github blog troubles
 excerpt: 解决github博客无法被百度收录时遇到的一些问题,同时包含jekyll下使用liveRe评论系统的方法
 mathjax: true

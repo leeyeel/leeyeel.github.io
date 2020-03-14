@@ -2,7 +2,7 @@
 layout: post
 title:  "J1939 入门教程" 
 date:   2019-03-31 22:05:00
-categories: 学习笔记
+categories: 汽车
 tags: 汽车电子 J1939 CAN 
 excerpt: 本文特别适合于对CAN有了解，对J1939不了解但是想了解的小伙伴。
 mathjax: true

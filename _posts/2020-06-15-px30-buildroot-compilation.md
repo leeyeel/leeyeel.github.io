@@ -13,14 +13,19 @@ mathjax: true
 ```
 	├── app #存放app的目录
 	├── buildroot   #buildroot下载目录
+    │   └──── dl    #buildroot下download目录，用于存放下载到的库
 	├── external    #存放extern库的目录
 	└── kernel  #存放kernel的目录
 ```	
 3. 在rockchip文件夹内下载buildroot:https://github.com/rockchip-linux/buildroot(git@github.com:rockchip-linux/buildroot.git)
+
+
 4. 在buildroot文件夹内执行menuconfig,查找并关闭:
     - qsetting:路径Target packages --> Rockchip BSP packages --> qsetting;原因是官方库为空(https://github.com/rockchip-linux/qsetting)
     - rkwifibt:路径Target packages --> Rockchip BSP packages --> rkwifibt;原因是找不到bluetooth\_bsa库
-3. external
+
+
+5. external
 
     |  名称 | github地址| git地址
     |  :-|:-|:-| 
@@ -36,7 +41,8 @@ mathjax: true
     | rktoolkit| https://github.com/rockchip-linux/rktoolkit | git@github.com:rockchip-linux/rktoolkit.git |
     | rkwifibt| https://github.com/rockchip-linux/rkwifibt | git@github.com:rockchip-linux/rkwifibt.git |
 
-4. app
+
+6. app
 
     |  名称 | github地址| git地址
     |  :-|:-|:-| 
@@ -46,7 +52,8 @@ mathjax: true
     | QLauncher | https://github.com/rockchip-linux/QLauncher | git@github.com:rockchip-linux/QLauncher.git | 
     | qplayer | https://github.com/rockchip-linux/qplayer | git@github.com:rockchip-linux/qplayer.git | 
 
-5. dl
+
+7. dl
 
 	- acl-2.2.52.src.tar.gz
 	- alsa-lib-1.1.5.tar.bz2
@@ -221,5 +228,7 @@ mathjax: true
 	- zip30.tgz
 	- zlib-1.2.11.tar.xz
 
-6. make
+
+8. make
+
 在buildroot下执行`make`命令即可

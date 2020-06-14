@@ -11,18 +11,19 @@ mathjax: true
 1. 编译需要`make`,``patchelf`, `wget`, `git`, `curl`等基础软件,也可以在找不到某些命令时根据需要安装.
 2. 创建rockchip文件夹,实际目录机构为:
 ```
-	├── app			#存放app的目录
-	├── buildroot 	#buildroot下载目录
-	├── external	#存放extern库的目录
-	└── kernel		#存放kernel的目录
+	├── app #存放app的目录
+	├── buildroot   #buildroot下载目录
+	├── external    #存放extern库的目录
+	└── kernel  #存放kernel的目录
 ```	
 3. 在rockchip文件夹内下载buildroot:https://github.com/rockchip-linux/buildroot(git@github.com:rockchip-linux/buildroot.git)
 4. 在buildroot文件夹内执行menuconfig,查找并关闭:
     - qsetting:路径Target packages --> Rockchip BSP packages --> qsetting;原因是官方库为空(https://github.com/rockchip-linux/qsetting)
     - rkwifibt:路径Target packages --> Rockchip BSP packages --> rkwifibt;原因是找不到bluetooth\_bsa库
 3. external
-    |  名称 | github地址| git地址|
-    |  ----  | ----  | ---- | 
+
+    |  名称 | github地址| git地址
+    |  :-|:-|:-| 
     | alsa-config | https://github.com/rockchip-linux/alsa-config | git@github.com:rockchip-linux/alsa-config.git |
     | broadcom_bsa | https://github.com/rockchip-linux/broadcom_bsa | git@github.com:rockchip-linux/broadcom_bsa.git |
     | camera_engine_rkisp | https://github.com/rockchip-linux/camera_engine_rkisp | git@github.com:rockchip-linux/camera_engine_rkisp.git |
@@ -36,8 +37,9 @@ mathjax: true
     | rkwifibt| https://github.com/rockchip-linux/rkwifibt | git@github.com:rockchip-linux/rkwifibt.git |
 
 4. app
-    |  名称 | github地址| git地址|
-    |  ----  | ----  | ---- | 
+
+    |  名称 | github地址| git地址
+    |  :-|:-|:-| 
     | multivideoplayer | https://github.com/rockchip-linux/multivideoplayer | git@github.com:rockchip-linux/multivideoplayer.git | 
     | qcamera | https://github.com/rockchip-linux/qcamera | git@github.com:rockchip-linux/qcamera.git | 
     | qfm | https://github.com/rockchip-linux/qfm | git@github.com:rockchip-linux/qfm.git | 

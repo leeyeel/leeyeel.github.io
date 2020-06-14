@@ -8,7 +8,7 @@ excerpt: rockchip px30 huildroot 在ubuntu 18.04 编译说明
 mathjax: true
 ---
 
-1. 编译需要`make`,``patchelf`, `wget`, `git`, `curl`等基础软件,也可以在找不到某些命令时根据需要安装.
+1. 编译需要`make`,`patchelf`, `wget`, `git`, `curl`等基础软件,也可以在找不到某些命令时根据需要安装.
 2. 创建rockchip文件夹,实际目录机构为:
 ```
 	├── app #存放app的目录
@@ -46,7 +46,7 @@ mathjax: true
     | QLauncher | https://github.com/rockchip-linux/QLauncher | git@github.com:rockchip-linux/QLauncher.git | 
     | qplayer | https://github.com/rockchip-linux/qplayer | git@github.com:rockchip-linux/qplayer.git | 
 
-	5. dl
+5. dl
 
 	- acl-2.2.52.src.tar.gz
 	- alsa-lib-1.1.5.tar.bz2
@@ -220,3 +220,6 @@ mathjax: true
 	- xz-5.2.3.tar.bz2
 	- zip30.tgz
 	- zlib-1.2.11.tar.xz
+
+6. make
+在buildroot下执行`make`命令即可

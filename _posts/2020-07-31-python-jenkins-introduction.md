@@ -57,6 +57,8 @@ classjenkins.Jenkins(url, username=None, password=None, timeout=<object object>)
 
 基于python-jenkins 0.4.16实现，由于这个版本缺少对queue的获取，所以当有多人提交任务或者队列中排队任务较多时，无法获取队列排队任务数。
 实际实现时如果队列中有排队的任务，则会一直显示在等待队列中的任务，无法显示队列中还有几个任务，大概需要多久时间执行完毕。
+工作的核心内容其实时返回构建当前任务的`build_num`,因为不管是后面的下载工作还是查看构建的信息，最终其实都是通过这个构建号来完成的，
+知道了构建号，工作其实已经完成了，后面的下载工作就可以自由发挥了。
 
 ```
 import jenkins
@@ -77,17 +79,52 @@ except Exception,e:
     sys.exit()
 
 jenkins_server.build_job(jenkins_job)
-lastBuildNum = jobInfo['lastBuild']['number']
-nextBuildNum = jobInfo['nextBuildNumber']
+last_build_num = jobInfo['lastBuild']['number']
+next_build_num = jobInfo['nextBuildNumber']
 
 if jobInfo['inQueue']:
     wait_build_widgets = ['waiting for the build in the queue:', 'progressbar.Bar('#'), '', progressbar.Timer()]
     wait_build_bar = progressbar.ProgressBar(widgets=wait_build_widgets, maxval = jenkins_timeout * 10).start()
     for i range(jenkins_timeout)
         try:
-            build_info = jekins_server.get_build_info(jenkins_job, nextBuildNum)
+            build_info = jekins_server.get_build_info(jenkins_job, next_build_num)
         except Exception,e:
             wait_build_bar.update(10 * i + 1)
             time.sleep(1)
             continue
+        if depend_info in build_info['actions'][0]['parameters'][0]['value']:
+            wait_build_bar.finish()
+            break
+        next_build_num = build_info['number']
+        next_build_num += 1
+    build_info = jenkins_server.get_build_info(jenkins_job, last_build_num)
+    if build_info['building'] == True:
+        wait_build_widgets = ['waiting for the previous buildings: ', progressbar.Bar('#'), '', progressbar.Timer()]
+        wait_build_bar = progressbar.ProgressBar(widgets=wait_build_widgets, maxval = jenkins_timeout * 10).start()
+        for i in range(jenkins_timeout):
+            build_info = jenkins_server.get_build_info(jenkins_job, next_build_num)
+            if build_info['building'] = False:
+                wait_build_bar.finish()
+                break
+            else:
+                time.sleep(1)
+    wait_build_widgets = ['waiting for the current building: ', progressbar.Bar('#'), '', progressbar.Timer()]
+    wait_build_bar = progressbar.ProgressBar(widgets=wait_build_widgets, maxval=jenkins_timeout * 10).start()
+    for i in range(jenkins_timeout):
+        try:
+            build_info = jenkins_server.get_build_info(jenkins_job, next_build_num)
+        except Exception,e:
+            wait_build_bar.update(10 * i  + 1)
+            time.sleep(1)
+            continue
+        wait_build_bar.update(10 * i  + 1)
+        if build_info['building'] == True and build_info['duration'] == 0: continue
+        if build_info['result'] == 'SUCCESS':
+            wait_build_bar.finish()
+        else:
+            print('JENKINS BUILDING FAILED!')
+            sys.exit()
+        break
+
+return next_build_num
 ```

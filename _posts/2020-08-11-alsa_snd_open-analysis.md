@@ -4,7 +4,7 @@ title:  "linux alsa-lib snd_pcm_open函数详细分析"
 date:   2020-08-11 11:56:00
 categories: 笔记心得
 tags: audio linux alsa
-excerpt: snd_pcm_open详细分析
+excerpt: snd\_pcm\_open分析系列的第一篇，介绍函数原型，作用，以及使用中的位置
 mathjax: true
 ---
 
@@ -25,7 +25,7 @@ mathjax: true
 从函数实现上主要有两个功能，第一个是更新配置文件，第二个是打开设备。
 这两个函数过程都很复杂，后面我们会继续详细解释。
 ```
-/**
+/*
  * \brief Opens a PCM
  * \param pcmp 返回pcm句柄
  * \param name 要打开的pcm设备的名字
@@ -47,7 +47,7 @@ int snd_pcm_open(snd_pcm_t **pcmp, const char *name,
     snd_config_unref(top);
     return err;
 }
-```C
+```
 
 ### 4.使用示例
 
@@ -113,15 +113,15 @@ static int play_process(snd_pcm_t *handle, char *play_name)
 
     return 0;
 }
-```C
+```
 ### 5.代码分析
 
 下面是对`snd_pcm_open`函数的分析过程，函数主要实现了两个工作:更新配置文件及打开pcm设备。
 我们按照这两部分分别进行分析。
 
-##### 5.1 snd_config_update_ref
+##### 5.1 snd\_config\_update\_ref
 
-函数的目的是更新snd_config配置,与`snd_config_update_r`功能类似，主要区别是此函数会增加引用计数，
+函数的目的是更新snd\_config配置,与`snd_config_update_r`功能类似，主要区别是此函数会增加引用计数，
 所以在引用计数为0前获取到配置树将永远不会被删除。同时由于函数使用了锁，所以函数是线程安全的。
 
 注意这里的参数top，是个二级指针。在`snd_pcm_open`中传下来的是`snd_config_t *top;`中top的地址。
@@ -152,9 +152,9 @@ int snd\_config\_update\_ref(snd\_config\_t \*\*top)
     snd_config_unlock();
     return err;
 }
-```C
+```
 
-##### 5.2 snd_pcm_open_noupdate
+##### 5.2 snd\_pcm\_open\_noupdate
 
 函数的目的是打开pcm设备，所要打开的具体设备需要依赖上面打开的设备树，
 函数接受传入的设备名称，解析名称并在设备树中查找需要打开的设备，
@@ -186,4 +186,4 @@ static int snd_pcm_open_noupdate(snd_pcm_t **pcmp, snd_config_t *root,
     snd_config_delete(pcm_conf);
     return err;
 }
-```C
+```

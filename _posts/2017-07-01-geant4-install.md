@@ -91,7 +91,7 @@ $ make install -j8
 `$HOME/geant4.10.03.p01` 表示源程序,如果下载的不同版本记得更改为解压后的文件夹名字.  
 `make -j8 or make install -j8`中的`-j8`表示八个线程运行．如果计算机有更多核心可用`-j16`或更多．
 cmake结束后，如果没有提示错误，终端出现类似如下:
-```
+```bash
 --Configuring done
 --Generating done
 --Build files have been written to: /home/xxx
@@ -105,27 +105,27 @@ cmake结束后，如果没有提示错误，终端出现类似如下:
 
 2）进到刚才提到的geant4make文件夹,会看到名为geant4make.sh的文件。
 终端切换到目录并执行：
-```
+```bash
 $ source geant4make.sh
 ```
 每次使用geant4都必须运行此环境变量，不想每次都运行可以把该命令写到.bashrc中．
-```
+```bash
 $ echo 'source $HOME/geant4-install/share/Geant4-10.03.p01/geant4make/geant4make.sh' >> $HOME/.bashrc
 ```
 3)运行栗子
 上面前两步执行成功后，可以切换到栗子目录，具体可以在源程序文件夹下找到，里面有有个examples文件夹.
-```
+```bash
 $ cd $HOME/geant4.10.03.p01/examples/basic/B1
 $ make -j8
 ```
 看到类似:
-```
+```bash
 LinkingexampleB1
 ...Done!
 ```
 表示编译成功
 然后终端输入命令：
-```
+```bash
 $ exampleB1
 ```
 运行最简单的栗子．

@@ -60,7 +60,7 @@ classjenkins.Jenkins(url, username=None, password=None, timeout=<object object>)
 工作的核心内容其实时返回构建当前任务的`build_num`,因为不管是后面的下载工作还是查看构建的信息，最终其实都是通过这个构建号来完成的，
 知道了构建号，工作其实已经完成了，后面的下载工作就可以自由发挥了。
 
-```
+```python
 import jenkins
 import progressbar
 

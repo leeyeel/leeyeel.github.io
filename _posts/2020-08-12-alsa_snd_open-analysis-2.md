@@ -14,7 +14,7 @@ mathjax: true
 ### 1.snd_config_update_r 
 
 函数原型如下:
-```
+```c
 /**
  * \brief 更新配置树，如果需要则会读取配置树.
  * \param _top 顶层节点指针的地址，是个二级指针，用作输出.

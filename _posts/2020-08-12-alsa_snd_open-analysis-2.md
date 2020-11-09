@@ -8,13 +8,13 @@ excerpt: alsa-lib 读取更新配置树函数snd_config_update_ref的分析
 mathjax: true
 ---
 `snd_config_update_ref`函数的目的是更新配置树，第一次调用时，实际上主要是解析并加载配置文件。
-函数的原型已经在[上一篇]({{site.url}}/2020/08/11/alsa_snd_open-analysis)中介绍过，
+函数的原型已经在[上一篇]({{site.url}}/2020/08/11/alsa_snd_open-analysis-1)中介绍过，
 `snd_config_update_ref`主要是调用了`snd_config_update_r`函数，本篇我们会详细分析此函数。
 
 ### 1.snd_config_update_r 
 
 函数原型如下:
-```C
+```
 /**
  * \brief 更新配置树，如果需要则会读取配置树.
  * \param _top 顶层节点指针的地址，是个二级指针，用作输出.

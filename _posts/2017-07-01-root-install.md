@@ -24,7 +24,7 @@ mathjax: true
 
 如果你的linux发行版是 Fedora 18, 19 and 20; Scientific Linux 5, 6; CentOS 6, 7 :
 
-```
+```bash
 sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \  
          libXpm-devel libXft-devel libXext-devel gcc-gfortran openssl-devel pcre-devel \
          mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mysql-devel \
@@ -34,7 +34,7 @@ sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \
 ```
 如果你的linux发行版是 Ubuntu 10, 12 , 14 and 16:
 
-```
+```bash
 sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev \
          libxft-dev libxext-dev
          gfortran libssl-dev libpcre3-dev \
@@ -50,7 +50,7 @@ sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev \
 安装好依赖之后就可以下载源文件了，访问[root-downloads](https://root.cern.ch/downloading-root)下载自己喜欢的版本，新手推荐直接下载Pro版本．
 点击Pro版本后进入下载页面后，选择`Source distribution`下面的链接，点一下会自动下载．这一段也可以直接依次运行下面的命令,如果速度太慢，换成手动下载试试．
 
-```
+```bash
 git clone https://github.com/root-project/root.git $HOME/root
 ```
 
@@ -58,7 +58,7 @@ git clone https://github.com/root-project/root.git $HOME/root
 
 原理是首先创建一个root6-build文件夹，然后进入root6-build文件夹后使用cmake指定一些参数，最后make安装．跟`./configure && make `的方式稍有不同，好象是更科学．
 
-```
+```bash
 mkdir $HOME/root6-build  && cd $HOME/root6-build  
 cmake ../root  
 make -j8
@@ -66,7 +66,7 @@ make -j8
 
 最后make 的过程可能比较久，视计算机性能而定，如果make的过程没有报错直到结束，则表示一切正常．　
 之后运行一下环境变量之后即可打开root．  
-```
+```bash
 source $HOME/root6-build/bin/thisroot.sh  
 root
 ```
@@ -76,7 +76,7 @@ root
 好像Ubuntu`./configure && make`的安装方法仍然可用，我在Centos7上测试会提示此方法已被弃用．
 
 每次运行root前都要执行一遍source那行命令，如果不想每次都运行，可以把这行写到环境变量里．
-```
+```bash
 echo
 echo '#ROOT'
 echo 'source $HOME/root6-build/bin/thisroot.sh' >> $HOME/.bashrc

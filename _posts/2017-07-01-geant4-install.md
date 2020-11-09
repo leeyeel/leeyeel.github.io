@@ -22,7 +22,7 @@ Geant4跟ROOT有很多共同的依赖，所以可以首先安装一下ROOT所需
 
 如果你的linux发行版是 Fedora 18, 19 and 20; Scientific Linux 5, 6; CentOS 6, 7 :
 (`$`符号是终端命令提示符，不要把这个符号复制到终端)  
-```
+```bash
 $ sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \  
          libXpm-devel libXft-devel libXext-devel gcc-gfortran openssl-devel pcre-devel \
          mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mysql-devel \
@@ -32,7 +32,7 @@ $ sudo yum install git cmake gcc-c++ gcc binutils  libX11-devel \
 ```
 如果你的linux发行版是 Ubuntu 10, 12 , 14 and 16:
 
-```
+```bash
 $ sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev \
          libxft-dev libxext-dev
          gfortran libssl-dev libpcre3-dev \
@@ -47,7 +47,7 @@ $ sudo apt-get install git dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev
 除此之外还需要安装cmake,以及X11,需要说明的是10.1.2以后的版本cmake需要3.3版本以上，所以你可以先在终端输入
 `cmake --version`看一下cmake版本，如果版本太低的话需要手动安装一个高版本的cmake. X11跟图形显示有关系:
 
-```
+```bash
 $ sudo apt-get install cmake libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev #安装需要的工具
 $ sudo apt-get install qt4
 ```
@@ -56,7 +56,7 @@ Geant4需要下载主程序以及数据包，并且数据包要与主程序的�
 下载Geant4的地址[geant4-downloads](http://geant4.cern.ch/support/download.shtml),下载 Source files 中那个GNU or Linux tar format即可，
 没错，就是只有三十几M,我第一次安装的时候还以为下载错了．．．下载之后解压到某目录，为了方便，我们直接放在用户home目录下，下载后解压．
 并且创建名为geant4-build的文件夹.上面这段可以用下面这段代码实现:
-```
+```bash
 $ wget http://geant4.web.cern.ch/geant4/support/source/geant4.10.03.p01.tar.gz -O  $HOME/geant4.10.03.p01.tar.gz #下载源程序
 $ cd $HOME
 $ tar xvzf geant4.10.03.p01.tar.gz
@@ -71,11 +71,11 @@ data文件是geant4运行所需要的各种数据文件，用户可以在编译�
 
 原理是首先创建一个geant4-build文件夹，然后进入geant4-build文件夹后使用cmake指定一些参数，最后make安装.
 注意:如果先要qt界面，确保你的计算机内安装好了qt,懒得一个一个装可以直接:
-```
+```bash
 $ sudo apt-get install qt4*
 ```
 下面为安装geant4过程:
-```
+```bash
 $ mkidr geant4-build && cd geant4-build
 $ cmake  -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install/  -DGEANT4_USE_OPENGL_X11=ON 
 \ -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON 
@@ -135,26 +135,26 @@ $ exampleB1
 遇到提示错误一定仔细阅读错误提示,之后去搜索相应的解决办法。这里列举scientificlinux6.5，fedora19出现的问题的解决方法。
 
 安装geant4最可能遇到的问题是X11 Xmu问题，这种问题，如果是Ubuntu 等就按照上面讲过的：
-```
+```bash
 $ sudo apt-get install libx11-dev libxext-dev libxtst-dev libxrender-dev libxmu-dev  libxmuu-dev
 ```
 如果是sl,fedora,redhat等就执行 
-```
+```bash
 $ sudo yum search X11 | grep Xmu
 ```
 一般会出现：
-```
+```bash
 libXmu.i686 : X.Org X11 libXmu/libXmuu runtime libraries
 libXmu.x86_64 : X.Org X11 libXmu/libXmuu runtime libraries
 libXmu-devel.i686 : X.Org X11 libXmu development package
 libXmu-devel.x86_64 : X.Org X11 libXmu development package
 ```
 如果你是64位系统，直接把有 x86_64的装上
-```
+```bash
 $ sudo yum install libXmu.x86_64 libXmu-devel.x86_64 
 ```
 即可解决问题，如果无效，可以尝试下面的方法。
-```
+```bash
 $ sudo yum install expat-devel mesa* freeglut-devel
 $ sudo yum groupinstall “X software Development”
 ```

@@ -33,7 +33,7 @@ mathjax: false
 这里我先来举个栗子，原栗子是*C#图解教程(第4版)*中介绍委托时用的栗子，这里我把它改造一下，用C/C++中的函数指针来实现，
 先看下面的代码:  
 
-```
+```c++
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -64,7 +64,7 @@ int main(){
 ```
 上面这段C++代码，MyDel是一个函数指针,但是C#中没有指针(虽然声明为不安全代码，也是可以使用指针的)，如果要实现同样的功能，在C#该如何做呢？看下面的代码:  
 
-```
+```c#
 using System;
 
 namespace delegateExample
@@ -99,7 +99,7 @@ namespace delegateExample
 C++ 代码跟C#对比一下，很容易就能发现，C#中的委托　`delegate void MyDel(int value);`，其实就是C++中的函数指针`void (*MyDel)(int value) = NULL;`,
 如果你到这里感觉还是不是很明显，我们还可以进一步改造C++的代码:
 
-```
+```c++
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -159,7 +159,7 @@ C#中规定委托需要以delegate关键字开头，其余部分与方法的声�
 <h4 id="3.3"> 3.3 委托的其他一些操作 </h4>
 1.组合委托    
 
-```
+```c#
 MyDel delA = printLow; 
 MyDel delB = printHigh; 
 MyDel delC = delA + delB; 
@@ -167,7 +167,7 @@ delC(randValue);//此时会分别执行printLow以及printHigh
 ```
 2.委托添加以及删除方法
 
-```
+```c#
 MyDel del = printLow;
 del += printHigh;
 del -= printLow;
@@ -180,7 +180,7 @@ del(randValue); //先增加printHigh方法然后又删掉printLow方法．此时
 匿名方法是给那些我们只需要使用一次的方法准备的，因为只用一次，所以总是想着怎么才能少打几个字符．(在这一点上计算机学家跟物理学家都是一样的懒)
 举个栗子,我们之前是用独立的具名方法声明方法:
 
-```
+```c#
 public static int printLow(int value){
     Console.WriteLine ("{0} - Low value", value);
     return 0;
@@ -191,7 +191,7 @@ del(10);
 ```
 如果我们不想这么麻烦，可以用匿名方法:
 
-```
+```c#
 delegate int Mydel(int value);
 Mydel del = delegate(int value){
     Console.WriteLine ("{0} - Low value", value);
@@ -224,7 +224,7 @@ MyDel le4 =              x  =>           x+1;   ;       //Lambda表达式
 *同一段内存，在不同的地方，会被强制要求使用相同的办法来解释（interpret)*,所以C里面的union就不是类型安全的，因为同一个内存地址可以按照不同的方式去解释. 
 C++要比C类型安全一些，但是使用不当仍然可能造成类型不安全，这里我仍然使用上面那个例子来说明:
 
-```
+```c#
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -268,7 +268,7 @@ int main()
 在这段程序中，我们又声明了一个函数指针类型TestDel,与MyDel不同的是它指向的函数接受一个float类型的参数．接下来，我们通过类型强制转换把MyDel类型转换为TestDel类型，
 c++允许这种转换，并且可以编译通过．但是运行就会得到不可预测的结果．C#对此做了严格的限制，它不允许委托类型的转换:
 
-```
+```c#
 using System;
 
 namespace delegateExample

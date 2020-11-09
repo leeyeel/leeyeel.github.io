@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数详细分析"
+title:  "linux alsa-lib snd_pcm_open函数详细分析（一)"
 date:   2020-08-11 11:56:00
 categories: 笔记心得
 tags: audio linux alsa
@@ -24,7 +24,7 @@ mathjax: true
 `snd_pcm_open`实现位于`alsa-lib/src/pcm/pcm.c`中。
 从函数实现上主要有两个功能，第一个是更新配置文件，第二个是打开设备。
 这两个函数过程都很复杂，后面我们会继续详细解释。
-```
+```C
 /*
  * \brief Opens a PCM
  * \param pcmp 返回pcm句柄
@@ -53,7 +53,7 @@ int snd_pcm_open(snd_pcm_t **pcmp, const char *name,
 
 下面是一段播放音频的代码，大部分来自于alsa-utils中的aplay.c文件，为了方便了解使用流程对其做了精简，
 此示例仅仅为了说明`snd_pcm_open`的位置，无法直接编译运行。
-```
+```C
 static int play_process(snd_pcm_t *handle, char *play_name)
 {
     int err;
@@ -128,7 +128,7 @@ static int play_process(snd_pcm_t *handle, char *play_name)
 
 关键函数`snd_config_update_r`的详细分析参考后面的文章，主要是太复杂了，一篇分析不过来。
 
-```
+```C
 /* top为出参 */
 int snd_config_update_ref(snd_config_t **top)
 {
@@ -162,7 +162,7 @@ int snd_config_update_ref(snd_config_t **top)
 注意`snd_pcm_open`函数最终返回的句柄`pcmp`其实就是此函数的返回的。
 
 此函数会在后面文章继续分析，同样是因为太复杂，一篇文章放不下。
-```
+```C
 static int snd_pcm_open_noupdate(snd_pcm_t **pcmp, snd_config_t *root,
                  const char *name, snd_pcm_stream_t stream,
                  int mode, int hop)

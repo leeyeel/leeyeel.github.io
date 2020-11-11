@@ -126,7 +126,7 @@ static int play_process(snd_pcm_t *handle, char *play_name)
 
 注意这里的参数top，是个二级指针。在`snd_pcm_open`中传下来的是`snd_config_t *top;`中top的地址。
 
-关键函数`snd_config_update_r`的详细分析参考后面的文章，主要是太复杂了，一篇分析不过来。
+关键函数`snd_config_update_r`的详细分析参考[inux alsa-lib snd_pcm_open函数详细分析（二)]({{site.url}}/2020/08/11/alsa_snd_open-analysis-2)
 
 ```c
 /* top为出参 */
@@ -161,7 +161,7 @@ int snd_config_update_ref(snd_config_t **top)
 如果配置中有使用插件，函数还需要解析插件，最终打开硬件设备。
 注意`snd_pcm_open`函数最终返回的句柄`pcmp`其实就是此函数的返回的。
 
-此函数会在后面文章继续分析，同样是因为太复杂，一篇文章放不下。
+此函数会在后面文章继续分析。
 ```c
 static int snd_pcm_open_noupdate(snd_pcm_t **pcmp, snd_config_t *root,
                  const char *name, snd_pcm_stream_t stream,

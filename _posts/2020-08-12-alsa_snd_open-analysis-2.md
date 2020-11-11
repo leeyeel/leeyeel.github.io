@@ -100,7 +100,7 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
         memcpy(name, c, l);
         name[l] = 0;
         //目的是把相对路径变为绝对路径，比如地址中如果有~/，则自动转换为/home/
-        //详细实现见后面分析
+        //详细实现见下文分析
         err = snd_user_file(name, &local->finfo[k].name);
         if (err < 0)
             goto _end;
@@ -203,7 +203,7 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
  _skip:
     //此函数的功能是配置并执行了配置树中的hooks函数。
     //如果配置文件中引用了其他配置,则通过此函数最终层层加载到引用的配置，最终一并添加到配置树中
-    //详细见后面分析
+    //详细见下文分析
     err = snd_config_hooks(top, NULL);
     if (err < 0) {
         SNDERR("hooks failed, removing configuration");
@@ -215,4 +215,87 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
 }
 ```
 
-后面内容还有很多。远远没有结束。。。
+##### 1.1 sndconfig_topdir
+
+此函数的功能简单，返回默认的顶层配置目录。这里的顶层配置目录其实就是指配置文件的根目录。
+函数以字符串的形式返回顶层配置目录，如果配置了环境变量ALSA_CONFIG_DIR，
+且这个路径确实有效，则函数会返回这个环境变量的值，否则会返回默认值
+
+```c
+const char *snd_config_topdir(void)
+{
+    //注意是静态变量，所以如果第一次调用函数时获取到了值则下次会直接返回这个值
+    static char *topdir;
+    if (!topdir) {
+        //获取环境变量
+        topdir = getenv("ALSA_CONFIG_DIR");
+        if (!topdir || *topdir != '/' || strlen(topdir) >= PATH_MAX)
+            //默认值ALSA_CONFIG_DIR,具体定义可能有所不同
+            topdir = ALSA_CONFIG_DIR;
+    }
+    return topdir;
+}
+```
+
+##### 1.2 snd_user_file
+
+函数的目的是展开环境变量中的相对路径，如果获取到的环境变量中有`~/`开头，则会展开为具体的绝对路径。
+
+```C
+int snd_user_file(const char *file, char **result)
+{
+    int err;
+    size_t len;
+    char *buf = NULL;
+
+    assert(file && result);
+    *result = NULL;
+
+    /* expand ~/ if needed */
+    // 如果开头有~/，则会去读HOME环境变量,如果读到，则用读到的值替换~/
+    // 如果读取不到HOME,则会进一步读取linux的passwd文件，从中解析出目录
+    if (file[0] == '~' && file[1] == '/') {
+        const char *home = getenv("HOME");
+        if (home == NULL) {
+            struct passwd pwent, *p = NULL;
+            //获取当前用户的uid
+            uid_t id = getuid();
+            size_t bufsize = 1024;
+
+            buf = malloc(bufsize);
+            if (buf == NULL)
+                goto out;
+            //返回ERANGE表示size太小,此时进入循环重新分配
+            while ((err = getpwuid_r(id, &pwent, buf, bufsize, &p)) == ERANGE) {
+                char *newbuf;
+                bufsize += 1024;
+                if (bufsize < 1024)
+                    break;
+                newbuf = realloc(buf, bufsize);
+                if (newbuf == NULL)
+                    goto out;
+                buf = newbuf;
+            }
+            //找到匹配后返回当前用户的pw_dir
+            home = err ? "" : pwent.pw_dir;
+        }
+        len = strlen(home) + strlen(&file[2]) + 2;
+        *result = malloc(len);
+        if (*result)
+            snprintf(*result, len, "%s/%s", home, &file[2]);
+    } else {
+        //strdup拷贝file字符串到result
+        *result = strdup(file);
+    }
+
+out:
+    if (buf)
+        free(buf);
+
+    if (*result == NULL)
+        return -ENOMEM;
+    return 0;
+}
+```
+
+远远未结束，待续

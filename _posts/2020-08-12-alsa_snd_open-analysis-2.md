@@ -241,7 +241,7 @@ const char *snd_config_topdir(void)
 
 函数的目的是展开环境变量中的相对路径，如果获取到的环境变量中有`~/`开头，则会展开为具体的绝对路径。
 
-```C
+```c
 int snd_user_file(const char *file, char **result)
 {
     int err;

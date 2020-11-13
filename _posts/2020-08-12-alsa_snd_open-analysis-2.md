@@ -149,10 +149,15 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
  _end:
     if (err < 0) {
         if (top) {
+            //释放一个配置节点以及它的所有子结点的内存
+            //如果这个节点本身是个子节点，则释放时会首先从配置树中移除掉
+            //此函数假设只用来删除本地的配置树，对于全局配置树
+            //使用nd_config_update_ref取引用计数，并且使用snd_config_unref去引用计数才能删除
             snd_config_delete(top);
             *_top = NULL;
         }
         if (update) {
+            //释放私有的update结构体的内存
             snd_config_update_free(update);
             *_update = NULL;
         }
@@ -175,6 +180,7 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
         top = NULL;
     }
     //仅仅是创建了一个顶层的配置树，本质上创建了一个空的链表
+    //详细分析见下文
     err = snd_config_top(&top);
     if (err < 0)
         goto _end;
@@ -298,4 +304,233 @@ out:
 }
 ```
 
-远远未结束，待续
+##### 1.3 snd_config_top
+
+创建一个top配置节点，返回内容是个空的复合节点，既没有父节点也没有ID。
+
+```c
+int snd_config_top(snd_config_t **config)
+{
+    assert(config);
+    return _snd_config_make(config, 0, SND_CONFIG_TYPE_COMPOUND);
+}
+```
+###### 1.3.1 _snd_config_make
+
+```c
+static int _snd_config_make(snd_config_t **config, char **id, snd_config_type_t type)
+{
+    snd_config_t *n;
+    assert(config);
+    //分配内存
+    n = calloc(1, sizeof(*n));
+    if (n == NULL) {
+        if (*id) {
+            free(*id);
+            *id = NULL;
+        }
+        return -ENOMEM;
+    }
+    //top节点，传入的id为0，即没有id
+    if (id) {
+        n->id = *id;
+        *id = NULL;
+    }
+    //传入type为SND_CONFIG_TYPE_COMPOUND
+    n->type = type;
+    //初始化复合类型节点链表
+    //INIT_LIST_HEAD的工作只是把next及pre指针全部初始化为当前节点,即执行如下操作
+    //n->u.compound.fields.next = n->u.compound.fields.pre = &n->u.compound.fields
+    if (type == SND_CONFIG_TYPE_COMPOUND)
+        INIT_LIST_HEAD(&n->u.compound.fields);
+    *config = n;
+    return 0;
+}
+```
+
+#### 1.4 snd_input_stdio_open
+
+通过打开文件来创建一个新的输入对象，
+其中输入对象是alsa中的一个结构体，里面封装了输入对象的各种成员变量及方法。
+此函数会打开文件，并把打开文件的句柄作为输入对象的成员变量。
+```c
+int snd_input_stdio_open(snd_input_t **inputp, const char *file, const char *mode)
+{
+    int err;
+    //打开配置文件
+    FILE *fp = fopen(file, mode);
+    if (!fp) {
+        //SYSERR("fopen");
+        return -errno;
+    }
+    //创建新的输入对象
+    //只不过不是通过打开文件，而是通过直接传入文件句柄
+    err = snd_input_stdio_attach(inputp, fp, 1);
+    if (err < 0)
+        fclose(fp);
+    return err;
+}
+```
+###### 1.4.1 snd_input_stdio_open
+
+主要功能是给snd_input_t这个结构体赋值
+```c
+int snd_input_stdio_attach(snd_input_t **inputp, FILE *fp, int _close)
+{
+    snd_input_t *input;
+    snd_input_stdio_t *stdio;
+    assert(inputp && fp);
+    //分配内存
+    stdio = calloc(1, sizeof(*stdio));
+    if (!stdio)
+        return -ENOMEM;
+    input = calloc(1, sizeof(*input));
+    if (!input) {
+        free(stdio);
+        return -ENOMEM;
+    }
+    //注意这里的fp,保存在stdio中，stdio又保存在input的private变量中
+    //最终出参即为input
+    stdio->fp = fp;
+    //此处_close为1,表示需要调用者调用snd_input_close去关闭文件
+    stdio->close = _close;
+    input->type = SND_INPUT_STDIO;
+    input->ops = &snd_input_stdio_ops;
+    input->private_data = stdio;
+    *inputp = input;
+    return 0;
+}
+```
+
+#### 1.5 snd_config_load
+
+是本篇的核心，也是最复杂的函数。
+加载一个配置树,注意这里传入的第二个参数in,即是snd_input_stdio_open的出参,
+内部包含了输入文件的句柄。函数会读取并解析这个输入文件，最终把配置文件转变为配置树的形式。
+
+```c
+int snd_config_load(snd_config_t *config, snd_input_t *in)
+{
+    //snd_config_load1分析见下面函数
+    return snd_config_load1(config, in, 0);
+}
+```
+
+###### 1.5.1 snd_config_load1
+
+比上面函数多了override参数
+
+```c
+static int snd_config_load1(snd_config_t *config, snd_input_t *in, int override)
+{
+    int err;
+    input_t input;
+    //结构体见1.5.1.1代码
+    struct filedesc *fd, *fd_next;
+    assert(config && in);
+    //分配内存，
+    fd = malloc(sizeof(*fd));
+    if (!fd)
+        return -ENOMEM;
+    //注意这里in的参数传递给了fd
+    fd->name = NULL;
+    fd->in = in;
+    fd->line = 1;
+    fd->column = 0;
+    fd->next = NULL;
+    INIT_LIST_HEAD(&fd->include_paths);
+    //这里fd被传递给了input的current字段
+    input.current = fd;
+    input.unget = 0;
+    //解析配置文件，是本函数的核心函数
+    //详细分析见 1.5.1.2
+    err = parse_defs(config, &input, 0, override);
+    fd = input.current;
+    if (err < 0) {
+        const char *str;
+        switch (err) {
+        case LOCAL_UNTERMINATED_STRING:
+            str = "Unterminated string";
+            err = -EINVAL;
+            break;
+        case LOCAL_UNTERMINATED_QUOTE:
+                        str = "Unterminated quote";
+            err = -EINVAL;
+            break;
+        case LOCAL_UNEXPECTED_CHAR:
+            str = "Unexpected char";
+            err = -EINVAL;
+            break;
+        case LOCAL_UNEXPECTED_EOF:
+            str = "Unexpected end of file";
+            err = -EINVAL;
+            break;
+        default:
+            str = strerror(-err);
+            break;
+        }
+        SNDERR("%s:%d:%d:%s", fd->name ? fd->name : "_toplevel_", fd->line, fd->column, str);
+        goto _end;
+    }
+    if (get_char(&input) != LOCAL_UNEXPECTED_EOF) {
+        SNDERR("%s:%d:%d:Unexpected }", fd->name ? fd->name : "", fd->line, fd->column);
+        err = -EINVAL;
+        goto _end;
+    }
+ _end:
+    while (fd->next) {
+        fd_next = fd->next;
+        snd_input_close(fd->in);
+        free(fd->name);
+        free_include_paths(fd);
+        free(fd);
+        fd = fd_next;
+    }
+
+    free_include_paths(fd);
+    free(fd);
+    return err;
+}
+```
+
+###### 1.5.1.1 struct filedesc
+
+```c
+struct filedesc {
+    char *name;
+    snd_input_t *in;
+    unsigned int line, column;
+    struct filedesc *next;
+
+    /* list of the include paths (configuration directories),
+     * defined by <searchdir:relative-path/to/top-alsa-conf-dir>,
+     * for searching its included files.
+     */
+    struct list_head include_paths;
+};
+```
+
+###### 1.5.1.2 parse_defs
+
+读取配置文件并解析为配置树的形式
+
+```c
+static int parse_defs(snd_config_t *parent, input_t *input, int skip, int override)
+{
+    int c, err;
+    while (1) {
+        c = get_nonwhite(input);
+        if (c < 0)
+            return c == LOCAL_UNEXPECTED_EOF ? 0 : c;
+        unget_char(c, input);
+        if (c == '}')
+            return 0;
+        err = parse_def(parent, input, skip, override);
+        if (err < 0)
+            return err;
+    }
+    return 0;
+}
+```
+
+未完代序，正文刚刚开始

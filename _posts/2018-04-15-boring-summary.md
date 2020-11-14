@@ -7,6 +7,8 @@ tags: 乱七八糟
 excerpt: 是，我就是高能物理转行程序猿的
 mathjax: true
 ---
+* TOC
+{:toc}
 
 这本该是两年前想写的，拖到了现在。    
 

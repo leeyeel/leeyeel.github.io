@@ -7,6 +7,8 @@ tags: linux python
 excerpt: 本文重点是提供一个后台提交任务及查询的逻辑框架
 mathjax: true
 ---
+* TOC
+{:toc}
 
 尽管python-jenkins提供了一系列的API，但是如何组合跟使用这些API特别是处理好排队还是需要费点精力，
 这篇笔记是我实际使用中的处理逻辑，不是很友好不过使用过程中还是比较健壮，分享给大家。

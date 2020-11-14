@@ -7,6 +7,9 @@ tags: 笔记 winIDEA iSYSTEM IC5000 IC5700 使用教程
 excerpt: 介绍一下如何使用iSYSTEM 仿真器与 winIDEA 进行代码调试
 mathjax: true
 ---
+* TOC
+{:toc}
+
 ## 目录
 - [iSYSTEM介绍](#1)
 - [winIDEA使用入门](#2)

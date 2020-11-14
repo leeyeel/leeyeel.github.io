@@ -7,6 +7,9 @@ tags: 笔记 lauterbach
 excerpt: Lauterbach的仿真器真的做到了极致，功能强大到令人发指。
 mathjax: true
 ---
+* TOC
+{:toc}
+
 ## 目录
 - [lauterbach简介](#1)
 - [Trace32使用](#2)

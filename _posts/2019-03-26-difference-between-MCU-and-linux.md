@@ -7,6 +7,8 @@ tags: 单片机 MCU Linux 驱动 区别
 excerpt: 本文适用于有单片机开发基础，但对Linux驱动开发没经验的小伙伴
 mathjax: true
 ---
+* TOC
+{:toc}
 
 之前一直做汽车电子的MCU驱动开发，接触过的大都是NXP的汽车级芯片，主要为PowerPC构架的一些MCU，
 也有ARM构架的Cortex-M3内核以及Cortex-M4内核的MCU。最近入手S3C2440开发板一个，想借此了解下Linux驱动开发。

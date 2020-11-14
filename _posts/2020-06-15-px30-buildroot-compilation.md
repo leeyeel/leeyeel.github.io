@@ -7,6 +7,8 @@ tags: linux
 excerpt: rockchip px30 huildroot 在ubuntu 18.04 编译说明
 mathjax: true
 ---
+* TOC
+{:toc}
 
 1. 编译需要`make`,`patchelf`, `wget`, `git`, `curl`等基础软件,也可以在找不到某些命令时根据需要安装.
 2. 创建rockchip文件夹,实际目录机构为:

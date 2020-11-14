@@ -7,6 +7,8 @@ tags: C# 委托　函数指针
 excerpt: 通过对比C#中委托与C/C++中函数指针，来更好的理解委托
 mathjax: false
 ---
+* TOC
+{:toc}
 
 ### 写在前面
 

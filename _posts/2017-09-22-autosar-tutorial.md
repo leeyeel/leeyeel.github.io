@@ -7,6 +7,8 @@ tags: autosar
 excerpt: 最近在自学AUTOSAR的一些内容，把学习中收集到的一些资料整理及心得总结一下，作为学习笔记，若有错误及建议，请一定要告诉我，不胜感激。    
 mathjax: true
 ---
+* TOC
+{:toc}
 
 ### What is the AUTOSAR standard and why is it created?
 

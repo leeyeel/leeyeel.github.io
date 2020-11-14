@@ -7,6 +7,9 @@ tags: rocks cluster 教程
 excerpt: 主要记录我安装rocks cluster 的过程，包括后续的一些配置    
 mathjax: true
 ---
+* TOC
+{:toc}
+
 ### 准备工作
 本文默认读者具有一定的安装系统的经验，Linux使用经验，并且知道rocks适用于哪些行业。
 纯手工配置集群是件非常庞大的工作量，好在有rocks, 它几乎集成了集群配置的所有工具。

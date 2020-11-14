@@ -7,6 +7,8 @@ tags: 笔记 github blog troubles
 excerpt: 解决github博客无法被百度收录时遇到的一些问题,同时包含jekyll下使用liveRe评论系统的方法
 mathjax: true
 ---
+* TOC
+{:toc}
 
 由于github禁止了百度爬虫，所以在github上搭建的博客内容就无法被百度收录了。解决这个问题的方法有很多，
 我采用的方式是在coding上做一个镜像，让百度去去爬coding上的内容，在DNS解析的时候把国内访问统统指向coding,把国外访问指向github。

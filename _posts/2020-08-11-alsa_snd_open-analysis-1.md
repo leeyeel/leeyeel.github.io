@@ -7,6 +7,8 @@ tags: audio linux alsa
 excerpt: snd_pcm_open分析系列的第一篇，介绍函数原型，作用，以及使用中的位置
 mathjax: true
 ---
+* TOC
+{:toc}
 
 `snd_pcm_open`通常是接触alsa-lib的第一个api,也通常是使用alsa进行录音或播放的第一步。
 正如名字中表示的一样，`snd_pcm_open`用来打开一个pcm音频设备，并得到这个音频设备的句柄，

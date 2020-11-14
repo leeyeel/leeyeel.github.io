@@ -7,6 +7,8 @@ tags: 统计 假设检验
 excerpt: 打算做一个统计学系列的博客，主要记录自己的学习过程。
 mathjax: true
 ---
+* TOC
+{:toc}
 
 ### 立flag,挖坑
 

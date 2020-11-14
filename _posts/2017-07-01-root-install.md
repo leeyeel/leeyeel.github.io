@@ -7,6 +7,9 @@ tags: cern root install 教程
 excerpt: cern root6 的安装教程
 mathjax: true
 ---
+* TOC
+{:toc}
+
 ### 说明
 
 本次更新是因为当前ROOT6已经抛弃原来的`./configure && make`的安装方式,改用cmake安装．所以之前的安装教程不再适用．

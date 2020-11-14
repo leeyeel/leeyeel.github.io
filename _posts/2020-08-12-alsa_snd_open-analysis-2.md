@@ -7,7 +7,6 @@ tags: audio linux alsa
 excerpt: alsa-lib 读取更新配置树函数snd_config_update_ref的分析
 mathjax: true
 ---
-
 * TOC
 {:toc}
 
@@ -15,7 +14,7 @@ mathjax: true
 函数的原型已经在[上一篇]({{site.url}}/2020/08/11/alsa_snd_open-analysis-1)中介绍过，
 `snd_config_update_ref`主要是调用了`snd_config_update_r`函数，本篇我们会详细分析此函数。
 
-### 1.snd_config_update_r 
+# 1.snd_config_update_r 
 
 函数原型如下:
 ```c
@@ -225,7 +224,7 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
 }
 ```
 
-##### 1.1 sndconfig_topdir
+## 1.1 sndconfig_topdir
 
 此函数的功能简单，返回默认的顶层配置目录。这里的顶层配置目录其实就是指配置文件的根目录。
 函数以字符串的形式返回顶层配置目录，如果配置了环境变量ALSA_CONFIG_DIR，
@@ -247,7 +246,7 @@ const char *snd_config_topdir(void)
 }
 ```
 
-##### 1.2 snd_user_file
+## 1.2 snd_user_file
 
 函数的目的是展开环境变量中的相对路径，如果获取到的环境变量中有`~/`开头，则会展开为具体的绝对路径。
 
@@ -308,7 +307,7 @@ out:
 }
 ```
 
-##### 1.3 snd_config_top
+## 1.3 snd_config_top
 
 创建一个top配置节点，返回内容是个空的复合节点，既没有父节点也没有ID。
 
@@ -319,7 +318,7 @@ int snd_config_top(snd_config_t **config)
     return _snd_config_make(config, 0, SND_CONFIG_TYPE_COMPOUND);
 }
 ```
-###### 1.3.1 _snd_config_make
+### 1.3.1 _snd_config_make
 
 ```c
 static int _snd_config_make(snd_config_t **config, char **id, snd_config_type_t type)
@@ -352,7 +351,7 @@ static int _snd_config_make(snd_config_t **config, char **id, snd_config_type_t 
 }
 ```
 
-#### 1.4 snd_input_stdio_open
+### 1.4 snd_input_stdio_open
 
 通过打开文件来创建一个新的输入对象，
 其中输入对象是alsa中的一个结构体，里面封装了输入对象的各种成员变量及方法。
@@ -375,7 +374,8 @@ int snd_input_stdio_open(snd_input_t **inputp, const char *file, const char *mod
     return err;
 }
 ```
-###### 1.4.1 snd_input_stdio_open
+
+### 1.4.1 snd_input_stdio_open
 
 主要功能是给snd_input_t这个结构体赋值
 ```c
@@ -406,7 +406,7 @@ int snd_input_stdio_attach(snd_input_t **inputp, FILE *fp, int _close)
 }
 ```
 
-#### 1.5 snd_config_load
+## 1.5 snd_config_load
 
 是本篇的核心，也是最复杂的函数。
 加载一个配置树,注意这里传入的第二个参数in,即是snd_input_stdio_open的出参,
@@ -420,7 +420,7 @@ int snd_config_load(snd_config_t *config, snd_input_t *in)
 }
 ```
 
-###### 1.5.1 snd_config_load1
+### 1.5.1 snd_config_load1
 
 比上面函数多了override参数
 
@@ -497,7 +497,7 @@ static int snd_config_load1(snd_config_t *config, snd_input_t *in, int override)
 }
 ```
 
-###### 1.5.1.1 struct filedesc
+#### 1.5.1.1 struct filedesc
 
 ```c
 struct filedesc {
@@ -514,7 +514,7 @@ struct filedesc {
 };
 ```
 
-###### 1.5.1.2 parse_defs
+#### 1.5.1.2 parse_defs
 
 读取配置文件并解析为配置树的形式
 

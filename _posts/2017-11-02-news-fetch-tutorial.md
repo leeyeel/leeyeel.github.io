@@ -7,6 +7,9 @@ tags: calibre linux ubuntu kindle 代理
 excerpt: 利用calibre抓取《经济学人》等杂志并自动推送到kindle
 mathjax: true
 ---
+* TOC
+{:toc}
+
 前两部分已经设置过的读者直接跳到第三部分阅读即可.
 
 * [1. kindle以及amazon帐号设置](#1) 

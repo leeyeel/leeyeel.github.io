@@ -11,6 +11,8 @@ mathjax: true
 * TOC
 {:toc}
 
+解析配置的最后一个复杂函数子函数
+
 # 1.snd_config_hooks
 
 核心函数之一，配置hooks功能，其中使用hooks功能加载并解析了配置文件中引用的其他配置文件。

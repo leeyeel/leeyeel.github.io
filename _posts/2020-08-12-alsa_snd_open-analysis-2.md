@@ -14,7 +14,7 @@ mathjax: true
 函数的原型已经在[上一篇]({{site.url}}/2020/08/11/alsa_snd_open-analysis-1)中介绍过，
 `snd_config_update_ref`主要是调用了`snd_config_update_r`函数，本篇我们会详细分析此函数。
 
-# 1.snd_config_update_r 
+### 1.snd_config_update_r 
 
 函数原型如下:
 ```c
@@ -224,7 +224,7 @@ int snd_config_update_r(snd_config_t **_top, snd_config_update_t **_update, cons
 }
 ```
 
-## 1.1 sndconfig_topdir
+### 1.1 sndconfig_topdir
 
 此函数的功能简单，返回默认的顶层配置目录。这里的顶层配置目录其实就是指配置文件的根目录。
 函数以字符串的形式返回顶层配置目录，如果配置了环境变量ALSA_CONFIG_DIR，
@@ -246,7 +246,7 @@ const char *snd_config_topdir(void)
 }
 ```
 
-## 1.2 snd_user_file
+### 1.2 snd_user_file
 
 函数的目的是展开环境变量中的相对路径，如果获取到的环境变量中有`~/`开头，则会展开为具体的绝对路径。
 
@@ -307,7 +307,7 @@ out:
 }
 ```
 
-## 1.3 snd_config_top
+### 1.3 snd_config_top
 
 创建一个top配置节点，返回内容是个空的复合节点，既没有父节点也没有ID。
 
@@ -407,7 +407,7 @@ int snd_input_stdio_attach(snd_input_t **inputp, FILE *fp, int _close)
 }
 ```
 
-## 1.5 snd_config_load
+### 1.5 snd_config_load
 
 是本篇的核心，也是最复杂的函数。
 加载一个配置树,注意这里传入的第二个参数in,即是snd_input_stdio_open的出参,
@@ -498,7 +498,7 @@ static int snd_config_load1(snd_config_t *config, snd_input_t *in, int override)
 }
 ```
 
-#### 1.5.1.1 struct filedesc
+### 1.5.1.1 struct filedesc
 
 ```c
 struct filedesc {
@@ -515,7 +515,7 @@ struct filedesc {
 };
 ```
 
-#### 1.5.1.2 parse_defs
+### 1.5.1.2 parse_defs
 
 读取配置文件并解析为配置树的形式
 
@@ -550,7 +550,7 @@ static int parse_defs(snd_config_t *parent, input_t *input, int skip, int overri
 }
 ```
 
-##### 1.5.1.2.1 get_nonwhite
+### 1.5.1.2.1 get_nonwhite
 
 从文件中读取一个字符，如果遇到空格或者制表符,回车等空字符则跳过，实际返回一个非空字符
 
@@ -577,7 +577,7 @@ tatic int get_nonwhite(input_t *input)
 }
 ```
 
-###### 1.5.1.2.1.1 get_char_skip_comments
+### 1.5.1.2.1.1 get_char_skip_comments
 
 从文件中读取一个字符，但是会跳过注释行。也就是说此函数会返回一个不是注释的字符。
 
@@ -694,7 +694,7 @@ static int get_char_skip_comments(input_t *input)
 }
 ```
 
-###### 1.5.1.2.1.1.1 get_char
+### 1.5.1.2.1.1.1 get_char
 
 从文件中读取一个字符
 
@@ -756,7 +756,7 @@ static int get_char(input_t *input) {
     return (unsigned char)c;
 }
 ```
-###### 1.5.1.2.1.1.1.1 snd_input_getc
+### 1.5.1.2.1.1.1.1 snd_input_getc
 
 从打开的文件中读取一个字符。
 这里函数开始使用了函数指针，全都一样的面具，所以要深入分析到底是哪个函数。
@@ -791,7 +791,7 @@ static int snd_input_stdio_getc(snd_input_t *input)
 其值为`snd_input_stdio_t *stdio`,stdio的fp字段为在`snd_input_stdio_open`中打开的文件描述符`fp`,
 也就是打开的配置文件的描述符，至此可以发现，读取字符最终使用的还是c库提供的接口`getc`。
 
-###### 1.5.1.2.1.1.1.2 get_delimstring
+### 1.5.1.2.1.1.1.2 get_delimstring
 
 按照分割符读取字符串，即读取分割符之间的字符串
 
@@ -842,7 +842,7 @@ static int get_delimstring(char **string, int delim, input_t *input)
      return c;
 }
 ```
-###### 1.5.1.2.1.1.1.2.1 get_quotedchar
+### 1.5.1.2.1.1.1.2.1 get_quotedchar
 
 解析带有转义字符的字符,需要注意的是如果是转义字符+数字的组合，
 表示后面是三位八进制数字。函数会读取三位并转换为十进制数字返回。
@@ -894,7 +894,7 @@ static int get_quotedchar(input_t *input)
 }
 ```
 
-###### 1.5.1.2.1.1.1.2.2 add_char_local_string
+### 1.5.1.2.1.1.1.2.2 add_char_local_string
 
 添加一个字符到字符串后面。每读到一个字符，就添加到字符串后面，最终字符组成字符串返回。
 需要注意local string在初始化时有个默认的大小为64个字节。如果添加字符后长度超出范围，
@@ -923,7 +923,7 @@ static int add_char_local_string(struct local_string *s, int c)
     return 0;
 }
 ```
-###### 1.5.1.2.1.1.2 _snd_config_path
+### 1.5.1.2.1.1.2 _snd_config_path
 
 生成一个绝对路径。采用的方式拼接top目录及name
 ```c
@@ -939,7 +939,7 @@ static char *_snd_config_path(const char *name)
 }
 ```
 
-###### 1.5.1.2.1.1.3 add_include_path
+### 1.5.1.2.1.1.3 add_include_path
 
 把路径添加到include搜索路径的链表中。根据前面的分析，此路径是由top路径加名称拼接的，
 所以此目录一定在top目录下。
@@ -958,7 +958,7 @@ static int add_include_path(struct filedesc *fd, char *dir)
 }
 ```
 
-###### 1.5.1.2.1.1.4 input_stdio_open
+### 1.5.1.2.1.1.4 input_stdio_open
 
 目的依然是打开一个配置文件，并返回一个snd_input_t类型，与snd_input_stdio_open功能一致，
 区别是input_stdio_open传入的参数file可以是绝对路径，也可以是相对top的相对路径，
@@ -1023,7 +1023,7 @@ out:
 }
 ```
 
-##### 1.5.1.2.2 parse_def
+### 1.5.1.2.2 parse_def
 
 具体执行解析读取的内容，读取，并解析。
 ```c
@@ -1190,7 +1190,7 @@ static int parse_def(snd_config_t *parent, input_t *input, int skip, int overrid
     return err;
 }
 ```
-###### 1.5.1.2.2.1 get_string
+### 1.5.1.2.2.1 get_string
 
 ```c
 static int get_string(char **string, int id, input_t *input)
@@ -1230,7 +1230,7 @@ static int get_string(char **string, int id, input_t *input)
     }
 }
 ```
-###### 1.5.1.2.2.1.1 get_freestring
+### 1.5.1.2.2.1.1 get_freestring
 
 获取连续的字符，并把连续的字符存储到string中。连续字符的意思是连续的字母及数字的字符串，
 里面不能包括特殊字符，比如'.',' ','?','='等等，读字符串时遇到这些字符则截断，返回之前的字符串。
@@ -1307,7 +1307,7 @@ static int get_freestring(char **string, int id, input_t *input)
     return c;
 }
 ```
-###### 1.5.1.2.2.1.2 _snd_config_search
+### 1.5.1.2.2.1.2 _snd_config_search
 
 从配置树中查找一个配置，查找的依据为id,即名字。
 如果传入的参数len为负数，则直接比较id,如果len为正数，则表示只希望比较len长度的id。
@@ -1336,7 +1336,7 @@ static int _snd_config_search(snd_config_t *config,
     return -ENOENT;
 }
 ```
-###### 1.5.1.2.2.3 _snd_config_make_add
+### 1.5.1.2.2.3 _snd_config_make_add
 生成一个配置节点，并且把新生成的配置节点加到配置树的链表中去。
 功能与前面介绍的_snd_config_make类似，只不过会添加到配置树链表中
 ```c
@@ -1355,7 +1355,7 @@ static int _snd_config_make_add(snd_config_t **config, char **id,
     return 0;
 }
 ```
-###### 1.5.1.2.2.4 parse_array_defs 
+### 1.5.1.2.2.4 parse_array_defs 
 
 解析'[]'数组中多个值，方法时逐个解析数组中内容。
 
@@ -1379,7 +1379,7 @@ static int parse_array_defs(snd_config_t *parent, input_t *input, int skip, int 
     return 0;
 }
 ```
-###### 1.5.1.2.2.4.1 parse_array_def
+### 1.5.1.2.2.4.1 parse_array_def
 解析'['中数组的内容，如果'[]'之间有'{}',则继续递归解析，
 如果有'[]'则表示数组中有数组，也需要递归解析。
 最终都需要使用parse_value来解析,其中的id即为数组的索引
@@ -1458,7 +1458,7 @@ static int parse_array_def(snd_config_t *parent, input_t *input, int idx, int sk
         return err;
 }
 ```
-###### 1.5.1.2.2.4.1.1 parse_value 
+### 1.5.1.2.2.4.1.1 parse_value 
 
 真正去解析配置文件中的某个值，如果是字符串则解析为string类型，
 如果是数字则解析为数值。解析完成后把解析出来的节点类型添加到配置树链表中。

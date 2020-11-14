@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数详细分析（二)"
+title:  "linux alsa-lib snd_pcm_open源代码详细分析（二)"
 date:   2020-08-11 11:56:00
 categories: 笔记心得
 tags: audio linux alsa
-excerpt: snd_pcm_open分析系列的第二篇，对子函数snd_config_update_ref的分析
+excerpt: snd_pcm_open源码分析的第二篇，对子函数snd_config_update_ref的分析，
+其中主要是对snd_config_update_ref的子函数snd_config_load函数的分析。
 mathjax: true
 ---
 * TOC
@@ -589,6 +590,10 @@ static int get_char_skip_comments(input_t *input)
         //从输入文件中读取一个字符，最终会调用C库的getc接口读取字符
         //详细分析见下文
         c = get_char(input);
+        //实际中未发现有'<'符号，此语法不详
+        //从代码分析上看，如果遇到'<'则读取'<'与'>'之间的内容
+        //最后调用snd_input_stdio_open返回出参input
+        //之后继续读取字符。推测'< >'之间为配置searchdir即configdir的语法
         if (c == '<') {
             char *str;
             snd_input_t *in;
@@ -602,7 +607,7 @@ static int get_char_skip_comments(input_t *input)
                 return err;
 
             //判断是否有"searchdir:"，如果有，则此目录为头文件的搜索目录
-            //采用默认值时没有设置此路径
+            //采用默认值时没有设置此路径,不会进入分支
             if (!strncmp(str, "searchdir:", 10)) {
                 /* directory to search included files */
                 //如果有searchdir:，则把:后的路径，及top路径组合起来，返回给tmp
@@ -634,6 +639,7 @@ static int get_char_skip_comments(input_t *input)
             }
 
             //与上面searchdir:同理
+            //默认没有confdir,会进入else分支
             if (!strncmp(str, "confdir:", 8)) {
                 /* file in the specified directory */
                 //与searchdir同理
@@ -645,10 +651,9 @@ static int get_char_skip_comments(input_t *input)
                 //见前面分析,打开一个配置文件，返回输入文件对象
                 err = snd_input_stdio_open(&in, str, "r");
             } else { /* absolute or relative file path */
-                //查找并打开一个文件，
-                //并且通过从文件读取内容创建一个新的输入文件对象
-                //与snd_input_stdio_open类似，但是多了搜索
-                //见下文分析
+                //查找并打开一个文件，功能与snd_input_stdio_open类似
+                //通过从文件读取内容创建一个新的输入文件对象
+                //详细实现见下文分析
                 err = input_stdio_open(&in, str,
                         &input->current->include_paths);
             }
@@ -672,6 +677,9 @@ static int get_char_skip_comments(input_t *input)
             input->current = fd;
             continue;
         }
+        //如果不为'#'则break退出，否则进入下面的while直到\n换行
+        //即如果开头是'#',则把剩余的读完，
+        //直到读到一行开头不是'#'的字符并返回此字符
         if (c != '#')
             break;
         while (1) {
@@ -918,7 +926,7 @@ static int add_char_local_string(struct local_string *s, int c)
 ```
 ###### 1.5.1.2.1.1.2 _snd_config_path
 
-生成一个路径。采用的方式拼接top目录及name
+生成一个绝对路径。采用的方式拼接top目录及name
 ```c
 static char *_snd_config_path(const char *name)
 {
@@ -953,7 +961,12 @@ static int add_include_path(struct filedesc *fd, char *dir)
 
 ###### 1.5.1.2.1.1.4 input_stdio_open
 
-```
+目的依然是打开一个配置文件，并返回一个snd_input_t类型，与snd_input_stdio_open功能一致，
+区别是input_stdio_open传入的参数file可以是绝对路径，也可以是相对top的相对路径，
+函数如果打开绝对路径失败，则会继续打开相对路径，如果相对路径也失败，则判断第三个参数
+include_paths是否有配置，如果有配置则继续从include_paths下查找是否有file，有则打开执行。
+
+```c
 static int input_stdio_open(snd_input_t **inputp, const char *file,
                 struct list_head *include_paths)
 {
@@ -961,16 +974,29 @@ static int input_stdio_open(snd_input_t **inputp, const char *file,
     struct include_path *path;
     char full_path[PATH_MAX + 1];
     int err = 0;
-
+    //返回一个输入文件对象，输入的配置文件为file
+    //file可以是绝对路径，也可以是相对于top目录的相对路径
+    //如果是绝对路径，则此处顺利的话可以执行成功，err为0，跳转到out
+    //如果是相对路径，则此处执行失败，继续下面file[0] ==  '/'的判断
     err = snd_input_stdio_open(inputp, file, "r");
     if (err == 0)
         goto out;
 
+    //如果执行到此说明前面snd_input_stdio_open函数执行失败
+    //执行失败可能是因为输入的路径是相对路径
+    //此处如果输入的file为绝对路径，
+    //说明前面snd_input_stdio_open执行失败的原因是找不到此文件或文件有问题
+    //此时应该返回错误直接退出
+    //如果路径不是绝对路径，说明此时传入的可能是相对top的相对路径
+    //则继续下面的流程
     if (file[0] == '/') /* not search file with absolute path */
         return err;
 
     /* search file in top configuration directory /usr/share/alsa */
+    //snd_config_topdir 返回默认的配置顶层目录，即/usr/share/alsa
+    //最终full_path返回file的绝对路径
     snprintf(full_path, PATH_MAX, "%s/%s", snd_config_topdir(), file);
+    //继续打开配置文件，执行到此处说明传入的file参数是个相对路径
     err = snd_input_stdio_open(inputp, full_path, "r");
     if (err == 0)
         goto out;
@@ -985,6 +1011,7 @@ static int input_stdio_open(snd_input_t **inputp, const char *file,
             if (!path->dir)
                 continue;
 
+            //返回的是path->dir下file的路径，即在path->dir下查找file
             snprintf(full_path, PATH_MAX, "%s/%s", path->dir, file);
             err = snd_input_stdio_open(inputp, full_path, "r");
             if (err == 0)
@@ -999,4 +1026,535 @@ out:
 
 ##### 1.5.1.2.2 parse_def
 
-未完待续
+具体执行解析读取的内容，读取，并解析。
+```c
+static int parse_def(snd_config_t *parent, input_t *input, int skip, int override)
+{
+    char *id = NULL;
+    int c;
+    int err;
+    snd_config_t *n;
+    enum {MERGE_CREATE, MERGE, OVERRIDE, DONT_OVERRIDE} mode;
+    while (1) {
+        //读取一个非空字符
+        c = get_nonwhite(input);
+        if (c < 0)
+            return c;
+        //比如通常重定义使用的!,即在此实现
+        switch (c) {
+        case '+':
+            mode = MERGE_CREATE;
+            break;
+        case '-':
+            mode = MERGE;
+            break;
+        case '?':
+            mode = DONT_OVERRIDE;
+            break;
+        case '!':
+            mode = OVERRIDE;
+            break;
+        default:
+            mode = !override ? MERGE_CREATE : OVERRIDE;
+            unget_char(c, input);
+        }
+        //读取配置中的字符串，读取到的字符串在id中保存
+        //如果遇到'"',则读取两个'"'之间的内容
+        //否则读取普通字符，直到遇到' ',',','.','='等特殊的字符为止
+        //具体实现见下文分析
+        err = get_string(&id, 1, input);
+        if (err < 0)
+            return err;
+        //读取非空白字符
+        c = get_nonwhite(input);
+        //如果不是'.'则break
+        //如果是'.',说明是类似于defaults.pcm.device 0这种
+        //需要继续读取
+        if (c != '.')
+            break;
+        if (skip) {
+            free(id);
+            continue;
+        }
+        //查找配置树中是否有id
+        //如果找到了，则返回0，判断mode的值，
+        //通常第一次读取时由于配置树是空的，这里肯定找不到
+        if (_snd_config_search(parent, id, -1, &n) == 0) {
+            if (mode == DONT_OVERRIDE) {
+                skip = 1;
+                free(id);
+                continue;
+            }
+            if (mode != OVERRIDE) {
+                if (n->type != SND_CONFIG_TYPE_COMPOUND) {
+                    SNDERR("%s is not a compound", id);
+                    return -EINVAL;
+                }
+                n->u.compound.join = 1;
+                parent = n;
+                free(id);
+                continue;
+            }
+            snd_config_delete(n);
+        }
+        if (mode == MERGE) {
+            SNDERR("%s does not exists", id);
+            err = -ENOENT;
+            goto __end;
+        }
+        //生成一个复合配置节点,并且添加到parant的配置树链表中。
+        //生成配置文件使用的关键信为id
+        //具体详见下文分析
+        err = _snd_config_make_add(&n, &id, SND_CONFIG_TYPE_COMPOUND, parent);
+        if (err < 0)
+            goto __end;
+        n->u.compound.join = 1;
+        parent = n;
+    }
+    if (c == '=') {
+        c = get_nonwhite(input);
+        if (c < 0)
+            return c;
+    }
+    if (!skip) {
+        if (_snd_config_search(parent, id, -1, &n) == 0) {
+            if (mode == DONT_OVERRIDE) {
+                skip = 1;
+                n = NULL;
+            } else if (mode == OVERRIDE) {
+                snd_config_delete(n);
+                n = NULL;
+            }
+        } else {
+            n = NULL;
+            if (mode == MERGE) {
+                SNDERR("%s does not exists", id);
+                err = -ENOENT;
+                goto __end;
+            }
+        }
+    }
+    switch (c) {
+    case '{':
+    case '[':
+    {
+        char endchr;
+        if (!skip) {
+            if (n) {
+                if (n->type != SND_CONFIG_TYPE_COMPOUND) {
+                    SNDERR("%s is not a compound", id);
+                    err = -EINVAL;
+                    goto __end;
+                }
+            } else {
+                err = _snd_config_make_add(&n, &id, SND_CONFIG_TYPE_COMPOUND, parent);
+                if (err < 0)
+                    goto __end;
+            }
+        }
+        //这里如果遇到'{',则表示需要递归的解析
+        if (c == '{') {
+            err = parse_defs(n, input, skip, override);
+            endchr = '}';
+        } else {
+            //如果遇到'['，则表示为一个数组类型的参数，需要逐个去解析
+            //详见下文具体分析
+            err = parse_array_defs(n, input, skip, override);
+            endchr = ']';
+        }
+        c = get_nonwhite(input);
+        if (c != endchr) {
+            if (n)
+                snd_config_delete(n);
+            err = LOCAL_UNEXPECTED_CHAR;
+            goto __end;
+        }
+        break;
+    }
+    default:
+        unget_char(c, input);
+        err = parse_value(&n, parent, input, &id, skip);
+        if (err < 0)
+            goto __end;
+        break;
+    }
+    c = get_nonwhite(input);
+    switch (c) {
+    case ';':
+    case ',':
+        break;
+    default:
+        unget_char(c, input);
+    }
+      __end:
+    free(id);
+    return err;
+}
+```
+###### 1.5.1.2.2.1 get_string
+
+```c
+static int get_string(char **string, int id, input_t *input)
+{
+    int c = get_nonwhite(input), err;
+    if (c < 0)
+        return c;
+    switch (c) {
+    //注意，这些特殊字符里面包括'.'
+    //特殊字符返回错误玛
+    case '=':
+    case ',':
+    case ';':
+    case '.':
+    case '{':
+    case '}':
+    case '[':
+    case ']':
+    case '\\':
+        return LOCAL_UNEXPECTED_CHAR;
+    case '\'':
+    //此函数上文已分析国
+    //则会读取两个'"'之间的内容,保存在string中
+    case '"':
+        err = get_delimstring(string, c, input);
+        if (err < 0)
+            return err;
+        return 1;
+    default:
+        unget_char(c, input);
+        //默认情况下返回freestring,即一直读取，直到遇到空格前的字符串
+        //详细见下文分析
+        err = get_freestring(string, id, input);
+        if (err < 0)
+            return err;
+        return 0;
+    }
+}
+```
+###### 1.5.1.2.2.1.1 get_freestring
+
+获取连续的字符，并把连续的字符存储到string中。连续字符的意思是连续的字母及数字的字符串，
+里面不能包括特殊字符，比如'.',' ','?','='等等，读字符串时遇到这些字符则截断，返回之前的字符串。
+```c
+static int get_freestring(char **string, int id, input_t *input)
+{
+    struct local_string str;
+    int c;
+
+    //初始化为0，分配字符串大小为64字节
+    init_local_string(&str);
+    while (1) {
+        //读取一个字符
+        c = get_char(input);
+        //如果返回值<0,正常的原因就是因为到了文件结尾
+        //如果不是文件结尾，则是其他未知情况，break掉
+        if (c < 0) {
+            //此时表示读到文件结尾
+            if (c == LOCAL_UNEXPECTED_EOF) {
+                //把已经读取到的str拷贝到string中
+                *string = copy_local_string(&str);
+                //如果第一次就读到了文件结尾，则*string为空
+                if (! *string)
+                    c = -ENOMEM;
+                else
+                    c = 0;
+            }
+            break;
+        }
+        switch (c) {
+        case '.':
+            //此处传下的参数id为1，不会进入break分支
+            if (!id)
+                break;
+        case ' ':
+        case '\f':
+        case '\t':
+        case '\n':
+        case '\r':
+        case '=':
+        case ',':
+        case ';':
+        case '{':
+        case '}':
+        case '[':
+        case ']':
+        case '\'':
+        case '"':
+        case '\\':
+        case '#':
+            //遇到., ' '等不是正常a-z,0-9这种字符则进行拷贝动作
+            //正常拷贝则c为0，拷贝时str还为空则c为错误码
+            //拷贝后跳转到_out
+            *string = copy_local_string(&str);
+            if (! *string)
+                c = -ENOMEM;
+            else {
+                unget_char(c, input);
+                c = 0;
+            }
+            goto _out;
+        default:
+            break;
+        }
+        //把读取到的字符添加到str中，所以str会存储着读取到的字符串
+        if (add_char_local_string(&str, c) < 0) {
+            c = -ENOMEM;
+            break;
+        }
+    }
+ _out:
+    //释放str内存
+    free_local_string(&str);
+    return c;
+}
+```
+###### 1.5.1.2.2.1.2 _snd_config_search
+
+从配置树中查找一个配置，查找的依据为id,即名字。
+如果传入的参数len为负数，则直接比较id,如果len为正数，则表示只希望比较len长度的id。
+查找的配置树节点保存在result中。
+
+```c
+static int _snd_config_search(snd_config_t *config,
+                  const char *id, int len, snd_config_t **result)
+{
+    snd_config_iterator_t i, next;
+    snd_config_for_each(i, next, config) {
+        snd_config_t *n = snd_config_iterator_entry(i);
+        if (len < 0) {
+            //如果len为负数，则直接比较id
+            if (strcmp(n->id, id) != 0)
+                continue;
+        //如果len为正数，则只比较len长度的id
+        } else if (strlen(n->id) != (size_t) len ||
+               memcmp(n->id, id, (size_t) len) != 0)
+                continue;
+        //找到匹配一致的则返回当前节点
+        if (result)
+            *result = n;
+        return 0;
+    }
+    return -ENOENT;
+}
+```
+###### 1.5.1.2.2.3 _snd_config_make_add
+生成一个配置节点，并且把新生成的配置节点加到配置树的链表中去。
+功能与前面介绍的_snd_config_make类似，只不过会添加到配置树链表中
+```c
+static int _snd_config_make_add(snd_config_t **config, char **id,
+                snd_config_type_t type, snd_config_t *parent)
+{
+    snd_config_t *n;
+    int err;
+    assert(parent->type == SND_CONFIG_TYPE_COMPOUND);
+    err = _snd_config_make(&n, id, type);
+    if (err < 0)
+        return err;
+    n->parent = parent;
+    list_add_tail(&n->list, &parent->u.compound.fields);
+    *config = n;
+    return 0;
+}
+```
+###### 1.5.1.2.2.4 parse_array_defs 
+
+解析'[]'数组中多个值，方法时逐个解析数组中内容。
+
+```c
+static int parse_array_defs(snd_config_t *parent, input_t *input, int skip, int override)
+{
+    int idx = 0;
+    while (1) {
+        int c = get_nonwhite(input), err;
+        if (c < 0)
+            return c;
+        unget_char(c, input);
+        if (c == ']')
+            return 0;
+        //解析数组中的其中一个
+
+        err = parse_array_def(parent, input, idx++, skip, override);
+        if (err < 0)
+            return err;
+    }
+    return 0;
+}
+```
+###### 1.5.1.2.2.4.1 parse_array_def
+解析'['中数组的内容，如果'[]'之间有'{}',则继续递归解析，
+如果有'[]'则表示数组中有数组，也需要递归解析。
+最终都需要使用parse_value来解析,其中的id即为数组的索引
+```c
+static int parse_array_def(snd_config_t *parent, input_t *input, int idx, int skip, int override)
+{
+    char *id = NULL;
+    int c;
+    int err;
+    snd_config_t *n = NULL;
+
+    if (!skip) {
+        char static_id[12];
+        snprintf(static_id, sizeof(static_id), "%i", idx);
+        id = strdup(static_id);
+        if (id == NULL)
+            return -ENOMEM;
+    }
+    c = get_nonwhite(input);
+    if (c < 0) {
+        err = c;
+        goto __end;
+    }
+    switch (c) {
+    case '{':
+    case '[':
+    {
+        char endchr;
+        if (!skip) {
+            if (n) {
+                if (n->type != SND_CONFIG_TYPE_COMPOUND) {
+                    SNDERR("%s is not a compound", id);
+                    err = -EINVAL;
+                    goto __end;
+                }
+            } else {
+                err = _snd_config_make_add(&n, &id, SND_CONFIG_TYPE_COMPOUND, parent);
+                if (err < 0)
+                    goto __end;
+            }
+        }
+        //即便在数组中遇到'{'依然要递归处理
+        if (c == '{') {
+            err = parse_defs(n, input, skip, override);
+            endchr = '}';
+        } else {
+            //数组里面可以嵌套数组，需要递归处理
+            err = parse_array_defs(n, input, skip, override);
+            endchr = ']';
+        }
+        c = get_nonwhite(input);
+        if (c < 0) {
+            err = c;
+            goto __end;
+        }
+        if (c != endchr) {
+            if (n)
+                snd_config_delete(n);
+            err = LOCAL_UNEXPECTED_CHAR;
+            goto __end;
+        }
+        break;
+    }
+    default:
+        unget_char(c, input);
+        //最终都要走到这里，解析值
+        //详见下文分析
+        err = parse_value(&n, parent, input, &id, skip);
+        if (err < 0)
+            goto __end;
+        break;
+    }
+    err = 0;
+      __end:
+    free(id);
+        return err;
+}
+```
+###### 1.5.1.2.2.4.1.1 parse_value 
+
+真正去解析配置文件中的某个值，如果是字符串则解析为string类型，
+如果是数字则解析为数值。解析完成后把解析出来的节点类型添加到配置树链表中。
+
+```c
+static int parse_value(snd_config_t **_n, snd_config_t *parent, input_t *input, char **id, int skip)
+{
+    snd_config_t *n = *_n;
+    char *s;
+    int err;
+
+    //获取字符串
+    err = get_string(&s, 0, input);
+    if (err < 0)
+        return err;
+    if (skip) {
+        free(s);
+        return 0;
+    }
+    //如果正确得到字符串且范围时数字范围
+    if (err == 0 && ((s[0] >= '0' && s[0] <= '9') || s[0] == '-')) {
+        long long i;
+        errno = 0;
+        //转换为long long类型
+        err = safe_strtoll(s, &i);
+        //转换失败
+        if (err < 0) {
+            double r;
+            //转换为double类型
+            err = safe_strtod(s, &r);
+            if (err >= 0) {
+                free(s);
+                if (n) {
+                    if (n->type != SND_CONFIG_TYPE_REAL) {
+                        SNDERR("%s is not a real", *id);
+                        return -EINVAL;
+                    }
+                } else {
+                    //生成配置节点，并添加到配置树链表
+                    //类型为double
+                    err = _snd_config_make_add(&n, id, SND_CONFIG_TYPE_REAL, parent);
+                    if (err < 0)
+                        return err;
+                }
+                n->u.real = r;
+                *_n = n;
+                return 0;
+            }
+        } else {
+            free(s);
+            if (n) {
+                if (n->type != SND_CONFIG_TYPE_INTEGER && n->type != SND_CONFIG_TYPE_INTEGER64) {
+                    SNDERR("%s is not an integer", *id);
+                    return -EINVAL;
+                }
+            } else {
+                if (i <= INT_MAX)
+                    //整数类型节点
+                    err = _snd_config_make_add(&n, id, SND_CONFIG_TYPE_INTEGER, parent);
+                else
+                    //长整型数字节点
+                    err = _snd_config_make_add(&n, id, SND_CONFIG_TYPE_INTEGER64, parent);
+                if (err < 0)
+                    return err;
+            }
+            if (n->type == SND_CONFIG_TYPE_INTEGER)
+                n->u.integer = (long) i;
+            else
+                n->u.integer64 = i;
+            *_n = n;
+            return 0;
+        }
+    }
+    if (n) {
+        if (n->type != SND_CONFIG_TYPE_STRING) {
+            SNDERR("%s is not a string", *id);
+            free(s);
+            return -EINVAL;
+        }
+    } else {
+        //如果是字符串类型,则生成string类型节点
+        err = _snd_config_make_add(&n, id, SND_CONFIG_TYPE_STRING, parent);
+        if (err < 0)
+            return err;
+    }
+    free(n->u.string);
+    n->u.string = s;
+    *_n = n;
+    return 0;
+}
+```
+至此,`snd_config_load`函数流程完成。`snd_config_load`通过逐个字符读取配置文件，
+遇到字符串则解析为字符串，遇到数字则解析为数字，遇到'{'则递归解析，遇到'['则按照数组逐个解析，
+并且'{','['均可嵌套，此时同样需要递归解析。每解析完成一个则生成一个配置节点，并添加到配置树链表中。
+从顶层的配置树入口，即可访问整个配置数。
+
+再次回到`snd_config_update_r`函数，在调用`snd_config_load`把配置文件加载解析为配置树之后，
+剩下的另一个重要函数为`snd_config_hooks`。由于篇幅原因，`snd_config_hooks`将在下一篇分析。

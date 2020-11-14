@@ -4,7 +4,7 @@ title:  "linux alsa-lib snd_pcm_open函数详细分析（二)"
 date:   2020-08-11 11:56:00
 categories: 笔记心得
 tags: audio linux alsa
-excerpt: alsa-lib 读取更新配置树函数snd_config_update_ref的分析
+excerpt: snd_pcm_open分析系列的第二篇，对子函数snd_config_update_ref的分析
 mathjax: true
 ---
 * TOC
@@ -350,12 +350,12 @@ static int _snd_config_make(snd_config_t **config, char **id, snd_config_type_t 
     return 0;
 }
 ```
-
 ### 1.4 snd_input_stdio_open
 
 通过打开文件来创建一个新的输入对象，
 其中输入对象是alsa中的一个结构体，里面封装了输入对象的各种成员变量及方法。
 此函数会打开文件，并把打开文件的句柄作为输入对象的成员变量。
+
 ```c
 int snd_input_stdio_open(snd_input_t **inputp, const char *file, const char *mode)
 {
@@ -399,6 +399,7 @@ int snd_input_stdio_attach(snd_input_t **inputp, FILE *fp, int _close)
     //此处_close为1,表示需要调用者调用snd_input_close去关闭文件
     stdio->close = _close;
     input->type = SND_INPUT_STDIO;
+    //注意这里的ops字段即private_data字段，后面分析会用到
     input->ops = &snd_input_stdio_ops;
     input->private_data = stdio;
     *inputp = input;
@@ -522,13 +523,25 @@ struct filedesc {
 static int parse_defs(snd_config_t *parent, input_t *input, int skip, int override)
 {
     int c, err;
+    //注意这里的循环，理想情况下在此可解析全部置文件
     while (1) {
+        //获取一个非空的字符，非空表示不是空格或制表符这类的字符
+        //实现原理见下文的详细分析
         c = get_nonwhite(input);
         if (c < 0)
             return c == LOCAL_UNEXPECTED_EOF ? 0 : c;
+        //此函数的实际目的不是很清楚
+        //unget_char与get_char对应，实际unget_char并未做任何读取的操作
+        //unget_char只是对输入参数input的赋值，特别是赋值了unget这个字段为1
+        //这个字段的作用是会在下一次的读取中，直接跳过读取，返回当前的字符c
+        //所以在某处使用了unget_char之后，
+        //通过alsa的接口再次获取字符时，获取到的字符依然是c,而不是文件真实的下一个字符
+        //这么做的目的不清楚，如果有小伙伴了解请告诉我
         unget_char(c, input);
         if (c == '}')
             return 0;
+        //核心函数，解析读出来的具体的某个关键字并解析
+        //详细分析见下文
         err = parse_def(parent, input, skip, override);
         if (err < 0)
             return err;
@@ -537,4 +550,453 @@ static int parse_defs(snd_config_t *parent, input_t *input, int skip, int overri
 }
 ```
 
-未完代序，正文刚刚开始
+##### 1.5.1.2.1 get_nonwhite
+
+从文件中读取一个字符，如果遇到空格或者制表符,回车等空字符则跳过，实际返回一个非空字符
+
+```c
+tatic int get_nonwhite(input_t *input)
+{
+    int c;
+    while (1) {
+        //跳过注释，见下文分析
+        c = get_char_skip_comments(input);
+        //从代码中可以看到，如果读取到的为' ','\f','\t','\n','\r'等字符则会跳出switch语句，
+        //但是仍在while中，所以会继续读取字符,再次判断
+        switch (c) {
+        case ' ':
+        case '\f':
+        case '\t':
+        case '\n':
+        case '\r':
+            break;
+        default:
+            return c;
+        }
+    }
+}
+```
+
+###### 1.5.1.2.1.1 get_char_skip_comments
+
+从文件中读取一个字符，但是会跳过注释行。也就是说此函数会返回一个不是注释的字符。
+
+```c
+static int get_char_skip_comments(input_t *input)
+{
+    int c;
+    while (1) {
+        //从输入文件中读取一个字符，最终会调用C库的getc接口读取字符
+        //详细分析见下文
+        c = get_char(input);
+        if (c == '<') {
+            char *str;
+            snd_input_t *in;
+            struct filedesc *fd;
+            DIR *dirp;
+            //如果读取到字符为'<',表示后面可能还有'>'与之配对
+            //再次读取时要把这对括号之间的内容全部读取
+            //详细分析见下文
+            int err = get_delimstring(&str, '>', input);
+            if (err < 0)
+                return err;
+
+            //判断是否有"searchdir:"，如果有，则此目录为头文件的搜索目录
+            //采用默认值时没有设置此路径
+            if (!strncmp(str, "searchdir:", 10)) {
+                /* directory to search included files */
+                //如果有searchdir:，则把:后的路径，及top路径组合起来，返回给tmp
+                //具体实现见下文
+                char *tmp = _snd_config_path(str + 10);
+                free(str);
+                if (tmp == NULL)
+                    return -ENOMEM;
+                str = tmp;
+
+                //打开目录，目的是判断目录是否存在是否可用
+                dirp = opendir(str);
+                if (!dirp) {
+                    SNDERR("Invalid search dir %s", str);
+                    free(str);
+                    return -EINVAL;
+                }
+                closedir(dirp);
+
+                //把上面拼接好的路径添加到搜索链表中
+                //具体实现见下文分析
+                err = add_include_path(input->current, str);
+                if (err < 0) {
+                    SNDERR("Cannot add search dir %s", str);
+                    free(str);
+                    return err;
+                }
+                continue;
+            }
+
+            //与上面searchdir:同理
+            if (!strncmp(str, "confdir:", 8)) {
+                /* file in the specified directory */
+                //与searchdir同理
+                char *tmp = _snd_config_path(str + 8);
+                free(str);
+                if (tmp == NULL)
+                    return -ENOMEM;
+                str = tmp;
+                //见前面分析,打开一个配置文件，返回输入文件对象
+                err = snd_input_stdio_open(&in, str, "r");
+            } else { /* absolute or relative file path */
+                //查找并打开一个文件，
+                //并且通过从文件读取内容创建一个新的输入文件对象
+                //与snd_input_stdio_open类似，但是多了搜索
+                //见下文分析
+                err = input_stdio_open(&in, str,
+                        &input->current->include_paths);
+            }
+
+            if (err < 0) {
+                SNDERR("Cannot access file %s", str);
+                free(str);
+                return err;
+            }
+            fd = malloc(sizeof(*fd));
+            if (!fd) {
+                free(str);
+                return -ENOMEM;
+            }
+            fd->name = str;
+            fd->in = in;
+            fd->next = input->current;
+            fd->line = 1;
+            fd->column = 0;
+            INIT_LIST_HEAD(&fd->include_paths);
+            input->current = fd;
+            continue;
+        }
+        if (c != '#')
+            break;
+        while (1) {
+            c = get_char(input);
+            if (c < 0)
+                return c;
+            if (c == '\n')
+                break;
+        }
+    }
+
+    return c;
+}
+```
+
+###### 1.5.1.2.1.1.1 get_char
+
+从文件中读取一个字符
+
+```c 
+static int get_char(input_t *input) {
+    int c;
+    struct filedesc *fd;
+    //注意此处对unget的判断
+    //如果之前使用了unget_char，则会把unget置为1
+    //此时这里会直接返回input->ch，即使用unget_char之前时读到的字符
+    if (input->unget) {
+        input->unget = 0;
+        return input->ch;
+    }       
+ again:
+    //前面在snd_config_load1中把fd赋值给input->current
+    fd = input->current;
+    //从输入文件中读取一个字符
+    //注意此处的fd->in,fd来自于input->current; input来自于get_char_skip_comments,
+    //而get_char_skip_comments又来自于`get_nonwhite`,来自于`parse_defs`，来自于`snd_config_load1`,
+    //在snd_config_load1`中，fd->in来自于`snd_config_load1`的入参，
+    //最终来自于snd_input_stdio_open的出参
+    //详见下文分析
+    c = snd_input_getc(fd->in);
+    switch (c) {
+
+    //如果读到\n换行符则行数加1，列数变为0
+    case '\n':  
+        fd->column = 0;
+        fd->line++;
+        break;  
+
+    //如果读到\t换行符则列数补足到8的倍数列
+    //比如原来column为2,遇到\t,则column变为8
+    //比如原来column为9,遇到\t,则column变为16
+    case '\t':  
+        fd->column += 8 - fd->column % 8;
+        break;  
+
+    //文件结束,则判断是否还有其他文件
+    //如果还有其他文件，则释放当前文件的内存
+    //打开后面的文件继续读取
+    //如果没有其他文件则返回错误码
+    case EOF:       
+        if (fd->next) {
+            snd_input_close(fd->in);
+            free(fd->name);
+            input->current = fd->next;
+            free(fd);
+            goto again;
+        }
+        return LOCAL_UNEXPECTED_EOF;
+
+    //默认情况下列数加1，表示读取到一个字符
+    default:
+        fd->column++;
+        break;
+    }
+    return (unsigned char)c;
+}
+```
+###### 1.5.1.2.1.1.1.1 snd_input_getc
+
+从打开的文件中读取一个字符。
+这里函数开始使用了函数指针，全都一样的面具，所以要深入分析到底是哪个函数。
+```c
+int snd_input_getc(snd_input_t *input)
+{
+    return input->ops->getch(input);
+}
+```
+逐一向上追溯入参input,可以发现`snd_input_getc`中的参数来源于`get_char中`的`fd->in`,
+根据`get_char`函数中的分析，`fd->in`是来自于`snd_input_stdio_open`的出参，
+参考前面的`snd_input_stdio_open`的分析，in参数在`snd_input_stdio_attach`被赋值，
+其ops字段为`&snd_input_stdio_ops`,此结构体定义如下:
+```c
+    static const snd_input_ops_t snd_input_stdio_ops = {                                                                                
+    .close      = snd_input_stdio_close,                                                                                            
+    .scan       = snd_input_stdio_scan,                                                                                             
+    .gets       = snd_input_stdio_gets,                                                                                             
+    .getch      = snd_input_stdio_getc,                                                                                             
+    .ungetch    = snd_input_stdio_ungetc,                                                                                           
+}; 
+```
+分析其中的`getch`函数为`snd_input_stdio_getc`,具体定义为:
+```
+static int snd_input_stdio_getc(snd_input_t *input)
+{
+    snd_input_stdio_t *stdio = input->private_data;
+    return getc(stdio->fp);
+}
+```
+再分析input参数中的private_data字段,与ops字段一样，在`snd_input_stdio_attach`被赋值，
+其值为`snd_input_stdio_t *stdio`,stdio的fp字段为在`snd_input_stdio_open`中打开的文件描述符`fp`,
+也就是打开的配置文件的描述符，至此可以发现，读取字符最终使用的还是c库提供的接口`getc`。
+
+###### 1.5.1.2.1.1.1.2 get_delimstring
+
+按照分割符读取字符串，即读取分割符之间的字符串
+
+```c
+static int get_delimstring(char **string, int delim, input_t *input)
+{
+    struct local_string str;
+    int c;
+
+    //初始化为0
+    init_local_string(&str);
+    while (1) {
+        //获取一个字符
+        c = get_char(input);
+        if (c < 0)
+            break;
+        if (c == '\\') {
+            //获取一个反转字符
+            //这是由于反转字符的ascii码需要一个'\'加一个字符表示，
+            //字节读取ascii字符无法准确获取反转字符
+            //具体实现方式见下文分析
+            c = get_quotedchar(input);
+            if (c < 0)
+                break;
+            if (c == '\n')
+                continue;
+        } else if (c == delim) {
+            //把str中的字符串拷贝到从堆中分配的内存中，
+            //并返回堆的地址
+            //所以返回的字符串需要手动释放内存
+            *string = copy_local_string(&str);
+            if (! *string)
+                c = -ENOMEM;
+            else
+                c = 0;
+            break;
+        }
+        //把字符添加到本地string中
+        //如果字符超出了string预定义的大小
+        //则扩展字符串大小为原来的两倍后再添加
+        //具体实现方式见下文分析
+        if (add_char_local_string(&str, c) < 0) {
+            c = -ENOMEM;
+            break;
+        }
+    }
+     free_local_string(&str);
+     return c;
+}
+```
+###### 1.5.1.2.1.1.1.2.1 get_quotedchar
+
+解析带有转义字符的字符,需要注意的是如果是转义字符+数字的组合，
+表示后面是三位八进制数字。函数会读取三位并转换为十进制数字返回。
+```c
+static int get_quotedchar(input_t *input)
+{
+    int c;
+    //读取一个字符
+    c = get_char(input);
+    switch (c) {
+    //换行
+    case 'n':
+        return '\n';
+    //制表
+    case 't':
+        return '\t';
+    //垂直制表
+    case 'v':
+        return '\v';
+    //退格
+    case 'b':
+        return '\b';
+    //回车
+    case 'r':
+        return '\r';
+    //换页
+    case 'f':
+        return '\f';
+    //三位八进制数
+    case '0' ... '7':
+    {
+        int num = c - '0';
+        int i = 1;
+        do {
+            c = get_char(input);
+            if (c < '0' || c > '7') {
+                unget_char(c, input);
+                break;
+            }
+            //转换为十进制
+            num = num * 8 + c - '0';
+            i++;
+        } while (i < 3);
+        return num;
+    }
+    default:
+        return c;
+    }
+}
+```
+
+###### 1.5.1.2.1.1.1.2.2 add_char_local_string
+
+添加一个字符到字符串后面。每读到一个字符，就添加到字符串后面，最终字符组成字符串返回。
+需要注意local string在初始化时有个默认的大小为64个字节。如果添加字符后长度超出范围，
+则函数会先把大小变为原来的两倍，再添加字符。有点类似与c++中的vector。
+```c
+static int add_char_local_string(struct local_string *s, int c)
+{
+    //索引值大于等于分配的大小，则需要重新分配大小
+    if (s->idx >= s->alloc) {
+        //注意这里，新的大小变为原来的两倍
+        size_t nalloc = s->alloc * 2;
+        if (s->buf == s->tmpbuf) {
+            s->buf = malloc(nalloc);
+            if (s->buf == NULL)
+                return -ENOMEM;
+            memcpy(s->buf, s->tmpbuf, s->alloc);
+        } else {
+            char *ptr = realloc(s->buf, nalloc);
+            if (ptr == NULL)
+                return -ENOMEM;
+            s->buf = ptr;
+        }
+        s->alloc = nalloc;
+    }
+    s->buf[s->idx++] = c;
+    return 0;
+}
+```
+###### 1.5.1.2.1.1.2 _snd_config_path
+
+生成一个路径。采用的方式拼接top目录及name
+```c
+static char *_snd_config_path(const char *name)
+{
+    //获取top目录，前面已分析过
+    const char *root = snd_config_topdir();
+    char *path = malloc(strlen(root) + strlen(name) + 2);
+    if (!path)
+        return NULL;
+    sprintf(path, "%s/%s", root, name);
+    return path;
+}
+```
+
+###### 1.5.1.2.1.1.3 add_include_path
+
+把路径添加到include搜索路径的链表中。根据前面的分析，此路径是由top路径加名称拼接的，
+所以此目录一定在top目录下。
+```c
+static int add_include_path(struct filedesc *fd, char *dir)
+{
+    struct include_path *path;
+
+    path = calloc(1, sizeof(*path));
+    if (!path)
+        return -ENOMEM;
+
+    path->dir = dir;
+    list_add_tail(&path->list, &fd->include_paths);
+    return 0;
+}
+```
+
+###### 1.5.1.2.1.1.4 input_stdio_open
+
+```
+static int input_stdio_open(snd_input_t **inputp, const char *file,
+                struct list_head *include_paths)
+{
+    struct list_head *pos, *base;
+    struct include_path *path;
+    char full_path[PATH_MAX + 1];
+    int err = 0;
+
+    err = snd_input_stdio_open(inputp, file, "r");
+    if (err == 0)
+        goto out;
+
+    if (file[0] == '/') /* not search file with absolute path */
+        return err;
+
+    /* search file in top configuration directory /usr/share/alsa */
+    snprintf(full_path, PATH_MAX, "%s/%s", snd_config_topdir(), file);
+    err = snd_input_stdio_open(inputp, full_path, "r");
+    if (err == 0)
+        goto out;
+
+    /* search file in user specified include paths. These directories
+     * are subdirectories of /usr/share/alsa.
+     */
+    if (include_paths) {
+        base = include_paths;
+        list_for_each(pos, base) {
+            path = list_entry(pos, struct include_path, list);
+            if (!path->dir)
+                continue;
+
+            snprintf(full_path, PATH_MAX, "%s/%s", path->dir, file);
+            err = snd_input_stdio_open(inputp, full_path, "r");
+            if (err == 0)
+                goto out;
+        }
+    }
+
+out:
+    return err;
+}
+```
+
+##### 1.5.1.2.2 parse_def
+
+未完待续

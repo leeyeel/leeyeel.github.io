@@ -343,7 +343,7 @@ int snd_config_searcha(snd_config_t *root, snd_config_t *config, const char *key
 此类函数的功能，所使用的宏，以及主要作用总结在下表:
 
     | 函数名 | 使用到的宏 | 用到的函数 | 功能说明|
-    | :- | :- | :- | :-|
+    | :-: | :-: | :-: | :-: |
     | snd_config_search | SND_CONFIG_SEARCH | \ |在配置树中根据key查找节点|
     | snd_config_searcha | SND_CONFIG_SEARCHA | snd_config_searcha | 在配置树中根据key查找节点，展开别名。别名从root下查找|
     | snd_config_searchv | SND_CONFIG_SEARCHV | snd_config_search | 在配置树中根据key查找节点；key可以是一系列的多个key|

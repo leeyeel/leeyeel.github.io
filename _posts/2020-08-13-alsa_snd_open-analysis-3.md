@@ -119,7 +119,7 @@ static int snd_config_hooks_call(snd_config_t *root, snd_config_t *config, snd_c
     return 0;
 }
 ```
-## 1.1 snd_config_search
+# 1.1 snd_config_search
 
 在配置树中通过id查找一个子节点。id可以是一个或多个，中间以圆点(.)分隔。
 如果是多个id的情况，则每个id需要依次指定前一级的复合节点。
@@ -145,7 +145,7 @@ int snd_config_search(snd_config_t *config, const char *key, snd_config_t **resu
 ```
 实际主要是使用了`SND_CONFIG_SEARCH`宏，这类宏有多个，后面会对所有类型的宏都做详细的分析。
 
-## 1.1.1 SND_CONFIG_SEARCH
+# 1.1.1 SND_CONFIG_SEARCH
 
 此宏是相对来说最简单的宏，实现的目的比较单一，即通过Key查找节点。
 其中主要调用了_snd_config_search函数，此函数在上一篇中已经分析过。
@@ -186,7 +186,7 @@ int snd_config_search(snd_config_t *config, const char *key, snd_config_t **resu
 }
 ```
 
-## 1.2 snd_config_get_string
+# 1.2 snd_config_get_string
 
 非常简单，返回string类型节点的string值。
 
@@ -201,7 +201,7 @@ int snd_config_get_string(const snd_config_t *config, const char **ptr)
 }
 ```
 
-## 1.3 snd_config_search_definition
+# 1.3 snd_config_search_definition
 
 在配置树中查找节点，函数允许传入的参数为别名(alias),同时如果传入的参数为别名，函数会还把别名展开。
 如果传入的名字中包含冒号(:),则冒号(:)后则为`snd_config_expand`展开所用的参数。
@@ -251,7 +251,7 @@ int snd_config_search_definition(snd_config_t *config,
 }
 ```
 
-### 1.3.1 snd_config_search_alias_hooks
+# 1.3.1 snd_config_search_alias_hooks
 
 在配置树下使用别名及hooks查找节点。主要用来实现`snd_config_search_definition`的功能。
 对别两个函数，`snd_config_search_definition`的第三个参数name可以包含':'，
@@ -272,7 +272,7 @@ int snd_config_search_alias_hooks(snd_config_t *config,
 这些宏分析起来及其复杂，因为大部分都涉及到递归处理，以及相互嵌套。
 这些函数中最基础的有两个，在此做介绍，其他类似的函数的函数只做功能说明.
 
-### 1.3.2 snd_config_searcha
+# 1.3.2 snd_config_searcha
 
 通过key在配置树中查找节点，展开别名。注意与1.1 snd_config_search的区别。
 ```bash
@@ -301,7 +301,7 @@ int snd_config_searcha(snd_config_t *root, snd_config_t *config, const char *key
 }
 ```
 
-### 1.3.2.1 SND_CONFIG_SEARCHA
+# 1.3.2.1 SND_CONFIG_SEARCHA
 
 此宏主要用来实现`snd_config_searcha`,使用key查找一个配置节点，同时在root下查找是否有别名并展开。
 注意传入的fcn为调用者本身，意味着此处会有递归处理。
@@ -342,8 +342,8 @@ int snd_config_searcha(snd_config_t *root, snd_config_t *config, const char *key
 
 此类函数的功能，所使用的宏，以及主要作用总结在下表:
 
-    | 函数名| 使用到的宏| 用到的函数 | 功能说明|
-    | :- | :- | :- | :- |
+    | 函数名| 使用到的宏 | 用到的函数 | 功能说明|
+    | :- | :- | :- | :-|
     | snd_config_search | SND_CONFIG_SEARCH | \ |在配置树中根据key查找节点|
     | snd_config_searcha | SND_CONFIG_SEARCHA | snd_config_searcha | 在配置树中根据key查找节点，展开别名。别名从root下查找|
     | snd_config_searchv | SND_CONFIG_SEARCHV | snd_config_search | 在配置树中根据key查找节点；key可以是一系列的多个key|
@@ -354,6 +354,6 @@ int snd_config_searcha(snd_config_t *root, snd_config_t *config, const char *key
     | snd_config_searchva_hooks | SND_CONFIG_SEARCHVA | snd_config_searcha_hooks | 在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_searcha_hooks类似但是key可以是一系列的key|
     | snd_config_search_alias_hooks | SND_CONFIG_SEARCH_ALIAS |snd_config_searcha_hooks <br> snd_config_searchva_hooks |在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_search_alias相似，并且展开hooks与snd_config_search_hooks相似|
 
-### 1.3.2 snd_config_expand 
+# 1.3.2 snd_config_expand 
 
 远远未结束,待续

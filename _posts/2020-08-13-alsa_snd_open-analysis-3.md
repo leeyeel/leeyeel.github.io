@@ -10,7 +10,7 @@ mathjax: true
 * TOC
 {:toc}
 
-解析配置的最后一个复杂函数子函数
+解析配置的最后一个超复杂子函数
 
 # 1. snd_config_hooks
 
@@ -29,6 +29,8 @@ static int snd_config_hooks_call(snd_config_t *root, snd_config_t *config, snd_c
     int err;
 
     //在配置树中通过id寻找某个节点
+    //实际通常这里func后会跟一个load,比如alsa.conf中的func load
+    //目的是加载其他配置
     //见下文详细分析
     err = snd_config_search(config, "func", &c);
     if (err < 0) {
@@ -86,11 +88,14 @@ static int snd_config_hooks_call(snd_config_t *root, snd_config_t *config, snd_c
             err = -ENOMEM;
             goto _err;
         }
+        //这里即可拼接出函数的名字
         snprintf(buf, len, "snd_config_hook_%s", str);
         buf[len-1] = '\0';
         func_name = buf;
     }
+    //对dlopen的包装，打开库，如果指定的库不存在，则打开默认的库
     h = snd_dlopen(lib, RTLD_NOW);
+    //对dlsym的包装，从动态库中解析函数符号，即通过字符串查找到函数
     func = h ? snd_dlsym(h, func_name, SND_DLSYM_VERSION(SND_CONFIG_DLSYM_VERSION_HOOK)) : NULL;
     err = 0;
     if (!h) {
@@ -106,6 +111,7 @@ static int snd_config_hooks_call(snd_config_t *root, snd_config_t *config, snd_c
         snd_config_delete(func_conf);
     if (err >= 0) {
         snd_config_t *nroot;
+        //这里执行了根据字符串查找出来的函数
         err = func(root, config, &nroot, private_data);
         if (err < 0)
             SNDERR("function %s returned error: %s", func_name, snd_strerror(err));
@@ -245,6 +251,8 @@ int snd_config_search_definition(snd_config_t *config,
         snd_config_unlock();
         return err;
     }
+    //展开节点，并执行对应的函数
+    //见下文分析
     err = snd_config_expand(conf, config, args, NULL, result);
     snd_config_unlock();
     return err;
@@ -343,20 +351,303 @@ int snd_config_searcha(snd_config_t *root, snd_config_t *config, const char *key
 此类函数的功能，所使用的宏，以及主要作用总结在下表:
 
 
- | 函数名| 功能说明 | 使用到的宏| 用到的函数 |
+ | 函数名| 功能说明 | 使用到的宏| 
  | :- | :- | :- | :- |
- | snd_config_search | 在配置树中根据key查找节点|SND_CONFIG_SEARCH | \ |
- | snd_config_searcha | 在配置树中根据key查找节点，展开别名。别名从root下查找|SND_CONFIG_SEARCHA | snd_config_searcha | 
- | snd_config_searchv | 在配置树中根据key查找节点；key可以是一系列的多个key|SND_CONFIG_SEARCHV | snd_config_search | 
- | snd_config_searchva | 在配置树中根据key查找节点，展开别名；key可以是连续多个key|SND_CONFIG_SEARCHVA | snd_config_searcha | 
- | snd_config_search_alias |在配置树中根据key查找节点，展开别名.与snd_config_searcha类似，但是只能在config下查找。如果config下找不到id,则函数会尝试寻找base.id| SND_CONFIG_SEARCH_ALIAS | snd_config_searcha <br> snd_config_searchva| 
- | snd_config_search_hooks |在配置树中根据key查找节点,并且展开hooks。与snd_config_search类似，但是搜索的任何包含hooks的节点都会被各自的hooks函数修改| SND_CONFIG_SEARCH | snd_config_hooks | 
- | snd_config_searcha_hooks |在配置树中根据key查找节点,并且展开alias与hooks| SND_CONFIG_SEARCHA | snd_config_searcha_hooks <br> snd_config_hooks | 
- | snd_config_searchva_hooks | 在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_searcha_hooks类似但是key可以是一系列的key|SND_CONFIG_SEARCHVA | snd_config_searcha_hooks | 
- | snd_config_search_alias_hooks |在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_search_alias相似，并且展开hooks与snd_config_search_hooks相似| SND_CONFIG_SEARCH_ALIAS |snd_config_searcha_hooks <br> snd_config_searchva_hooks |
-
+ | snd_config_search | 在配置树中根据key查找节点|SND_CONFIG_SEARCH |
+ | snd_config_searcha | 在配置树中根据key查找节点，展开别名。别名从root下查找|SND_CONFIG_SEARCHA |
+ | snd_config_searchv | 在配置树中根据key查找节点；key可以是一系列的多个key|SND_CONFIG_SEARCHV | 
+ | snd_config_searchva | 在配置树中根据key查找节点，展开别名；key可以是连续多个key|SND_CONFIG_SEARCHVA |
+ | snd_config_search_alias |在配置树中根据key查找节点，展开别名.与snd_config_searcha类似，但是只能在config下查找。如果config下找不到id,则函数会尝试寻找base.id| SND_CONFIG_SEARCH_ALIAS |
+ | snd_config_search_hooks |在配置树中根据key查找节点,并且展开hooks。与snd_config_search类似，但是搜索的任何包含hooks的节点都会被各自的hooks函数修改| SND_CONFIG_SEARCH|
+ | snd_config_searcha_hooks |在配置树中根据key查找节点,并且展开alias与hooks| SND_CONFIG_SEARCHA |
+ | snd_config_searchva_hooks | 在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_searcha_hooks类似但是key可以是一系列的key|SND_CONFIG_SEARCHVA |
+ | snd_config_search_alias_hooks |在配置树中根据key查找节点,并且展开alias与hooks。与snd_config_search_alias相似，并且展开hooks与snd_config_search_hooks相似| SND_CONFIG_SEARCH_ALIAS |
 
 
 # 1.3.2 snd_config_expand 
 
-远远未结束,待续
+使用参数及函数展开一个配置节点。如果传入的这个节点中有参数(通过一个id为@args的子节点定义),
+则这个函数会用各自的参数值,或默认的参数值或者空来取代任何以$开头的string节点。
+而且任何函数都会被评估（参考`snd_config_evaluate`),结果的副本将会在result中返回。
+这里评估(evaluated)的意思比较模糊，从代码分析上看应该是所有的函数都被执行了。
+
+```c
+int snd_config_expand(snd_config_t *config, snd_config_t *root, const char *args,
+              snd_config_t *private_data, snd_config_t **result)
+{
+    int err;
+    snd_config_t *defs, *subs = NULL, *res;
+    //寻找参数
+    //前面已分析过
+    err = snd_config_search(config, "@args", &defs);
+    if (err < 0) {
+        if (args != NULL) {
+            SNDERR("Unknown parameters %s", args);
+            return -EINVAL;
+        }
+        //创建config的副本到res,注意是深层拷贝
+        //也就是说如果config是复合节点
+        //它的子节点也会被拷贝
+        //详细见下文分析
+        err = snd_config_copy(&res, config);
+        if (err < 0)
+            return err;
+    } else {
+        //如果找到参数，则直接创建一个top节点
+        //前文已分析
+        err = snd_config_top(&subs);
+        if (err < 0)
+            return err;
+        //把defs里面的"default“节点添加到空的subs里面
+        //详细见下文分析
+        err = load_defaults(subs, defs);
+        if (err < 0) {
+            SNDERR("Load defaults error: %s", snd_strerror(err));
+            goto _end;
+        }
+        //解析参数args
+        //太太太复杂
+        err = parse_args(subs, args, defs);
+        if (err < 0) {
+            SNDERR("Parse arguments error: %s", snd_strerror(err));
+            goto _end;
+        }
+        //在运行时评估一个配置节点
+        err = snd_config_evaluate(subs, root, private_data, NULL);
+        if (err < 0) {
+            SNDERR("Args evaluate error: %s", snd_strerror(err));
+            goto _end;
+        }             }
+        err = snd_config_walk(config, root, &res, _snd_config_expand, subs);
+        if (err < 0) {
+            SNDERR("Expand error (walk): %s", snd_strerror(err));
+            goto _end;
+        }
+    }
+    err = snd_config_evaluate(res, root, private_data, NULL);
+    if (err < 0) {
+        SNDERR("Evaluate error: %s", snd_strerror(err));
+        snd_config_delete(res);
+        goto _end;
+    }
+    *result = res;
+    err = 1;
+ _end:
+    if (subs)
+        snd_config_delete(subs);
+    return err;
+}
+```
+
+# 1.3.2.1 snd_config_evaluate
+
+在运行时评估一个函数，此函数会评估配置树中的任何一个函数(@func)，
+并用各自函数的结果替换这些节点。这里的评估应该时计算的意思。
+
+```c
+int snd_config_evaluate(snd_config_t *config, snd_config_t *root,
+                snd_config_t *private_data, snd_config_t **result)
+{
+    /* FIXME: Only in place evaluation is currently implemented */
+    assert(result == NULL);
+    return snd_config_walk(config, root, result, _snd_config_evaluate, private_data);
+}
+```
+
+# 1.3.2.2 snd_config_walk
+
+这里面传入的回调函数为`_snd_config_evaluate`,函数本身又会有递归，
+大概目的就是一步一步查找func，找到并执行，并且由于创建了新的配置树，
+会把执行函数后的节点信息替换掉原来的节点。
+
+```c
+static int snd_config_walk(snd_config_t *src,
+               snd_config_t *root,
+               snd_config_t **dst,
+               snd_config_walk_callback_t callback,
+               snd_config_t *private_data)
+{
+    int err;
+    snd_config_iterator_t i, next;
+
+    switch (snd_config_get_type(src)) {
+    case SND_CONFIG_TYPE_COMPOUND:
+        err = callback(src, root, dst, SND_CONFIG_WALK_PASS_PRE, private_data);
+        if (err <= 0)
+            return err;
+        snd_config_for_each(i, next, src) {
+            snd_config_t *s = snd_config_iterator_entry(i);
+            snd_config_t *d = NULL;
+
+            err = snd_config_walk(s, root, (dst && *dst) ? &d : NULL,
+                          callback, private_data);
+            if (err < 0)
+                goto _error;
+            if (err && d) {
+                err = snd_config_add(*dst, d);
+                if (err < 0)
+                    goto _error;
+            }
+        }
+        err = callback(src, root, dst, SND_CONFIG_WALK_PASS_POST, private_data);
+        if (err <= 0) {
+        _error:
+            if (dst && *dst)
+                snd_config_delete(*dst);
+        }
+        break;
+    default:
+        err = callback(src, root, dst, SND_CONFIG_WALK_PASS_LEAF, private_data);
+        break;
+    }
+    return err;
+}
+```
+# 1.3.2.2 _snd_config_evaluate
+
+具体执行函数，太复杂,即有循环，又有递归，注意里面的`snd_dlopen`
+及`snd_dlsym`,会从动态库中根据func符号找到函数，并且执行。
+所以func其实是执行了，evaluate可以理解为计算的意思。
+
+```c
+static int _snd_config_evaluate(snd_config_t *src,
+                snd_config_t *root,
+                snd_config_t **dst ATTRIBUTE_UNUSED,
+                snd_config_walk_pass_t pass,
+                snd_config_t *private_data)
+{
+    int err;
+    if (pass == SND_CONFIG_WALK_PASS_PRE) {
+        char *buf = NULL;
+        const char *lib = NULL, *func_name = NULL;
+        const char *str;
+        int (*func)(snd_config_t **dst, snd_config_t *root,
+                snd_config_t *src, snd_config_t *private_data) = NULL;
+        void *h = NULL;
+        snd_config_t *c, *func_conf = NULL;
+        err = snd_config_search(src, "@func", &c);
+        if (err < 0)
+            return 1;
+        err = snd_config_get_string(c, &str);
+        if (err < 0) {
+            SNDERR("Invalid type for @func");
+            return err;
+        }
+        assert(str);
+        err = snd_config_search_definition(root, "func", str, &func_conf);
+        if (err >= 0) {
+            snd_config_iterator_t i, next;
+            if (snd_config_get_type(func_conf) != SND_CONFIG_TYPE_COMPOUND) {
+                SNDERR("Invalid type for func %s definition", str);
+                err = -EINVAL;
+                goto _err;
+            }
+            snd_config_for_each(i, next, func_conf) {
+                snd_config_t *n = snd_config_iterator_entry(i);
+                const char *id = n->id;
+                if (strcmp(id, "comment") == 0)
+                    continue;
+                if (strcmp(id, "lib") == 0) {
+                    err = snd_config_get_string(n, &lib);
+                    if (err < 0) {
+                        SNDERR("Invalid type for %s", id);
+                        goto _err;
+                    }
+                    continue;
+                }
+                if (strcmp(id, "func") == 0) {
+                    err = snd_config_get_string(n, &func_name);
+                    if (err < 0) {
+                        SNDERR("Invalid type for %s", id);
+                        goto _err;
+                    }
+                    continue;
+                }
+                SNDERR("Unknown field %s", id);
+            }
+        }
+        if (!func_name) {
+            int len = 9 + strlen(str) + 1;
+            buf = malloc(len);
+            if (! buf) {
+                err = -ENOMEM;
+                goto _err;
+            }
+            snprintf(buf, len, "snd_func_%s", str);
+            buf[len-1] = '\0';
+            func_name = buf;
+        }
+        h = snd_dlopen(lib, RTLD_NOW);
+        if (h)
+            func = snd_dlsym(h, func_name, SND_DLSYM_VERSION(SND_CONFIG_DLSYM_VERSION_EVALUATE));
+        err = 0;
+        if (!h) {
+            SNDERR("Cannot open shared library %s", lib);
+            err = -ENOENT;
+            goto _errbuf;
+        } else if (!func) {
+            SNDERR("symbol %s is not defined inside %s", func_name, lib);
+            snd_dlclose(h);
+            err = -ENXIO;
+            goto _errbuf;
+        }
+           _err:
+        if (func_conf)
+            snd_config_delete(func_conf);
+        if (err >= 0) {
+            snd_config_t *eval;
+            err = func(&eval, root, src, private_data);
+            if (err < 0)
+                SNDERR("function %s returned error: %s", func_name, snd_strerror(err));
+            snd_dlclose(h);
+            if (err >= 0 && eval) {
+                /* substitute merges compound members */
+                /* we don't want merging at all */
+                err = snd_config_delete_compound_members(src);
+                if (err >= 0)
+                    //替换节点
+                    err = snd_config_substitute(src, eval);
+            }
+        }
+           _errbuf:
+        free(buf);
+        if (err < 0)
+            return err;
+        return 0;
+    }
+    return 1;
+}
+```
+
+至此，`snd_config_expand`的功能为展开节点，从节点中搜索函数，逐个执行，并最终用执行结果替换掉原来的节点。
+`snd_config_search_definition`则查找某个定义，查找到后使用`snd_config_expand`去展开执行。
+根据读取alsa的默认配置文件alsa.conf,通常会构建一个func load函数，再用构造出的函数去load配置文件。
+里面又是一大堆递归。总之alsa配置的目的就是通过在配置文件中修改配置，即可控制运行时的函数执行。
+为了实现这个目标，alsa丧心病狂的实现了众多嵌套，递归，为了实现代码复用，采用了众多的宏，整体让alsa变得及其复杂。
+
+根据读取alsa的默认配置文件alsa.conf,通常会构建一个func load函数，再用构造出的函数去load配置文件。
+里面又是一大堆递归。总之alsa配置的目的就是通过在配置文件中修改配置，即可控制运行时的函数执行。
+为了实现这个目标，alsa丧心病狂的实现了众多嵌套，递归，为了实现代码复用，采用了众多的宏，整体让alsa变得及其复杂。
+
+比如alsa.conf中的配置:
+
+```bash
+@hooks [
+    {
+        func load
+        files [
+            "/etc/alsa/conf.d"
+            "/etc/asound.conf"
+            "~/.asoundrc"
+        ]
+        errors false
+    }
+]
+```
+
+通过这个hooks，实际上构造了`snd_config_hooks_load`函数,运行时会解析符号并从动态库中找到此函数，
+用来加载接下来的三个配额文件，`"/etc/alsa/conf.d"`及`"/etc/asound.conf"`,`"~/.asoundrc"`。
+
+至此`snd_config_update_r`的大致功能已经比较清晰了，从配置文件中读取配置文件，解析为配置树，
+执行所有的hooks，其中可能又会包含读取配置文件，解析为配置树。执行所有的hooks函数，重新更新配置树。
+返回最后的配置树。

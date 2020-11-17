@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数详细分析（一)"
+title:  "linux alsa-lib snd_pcm_open函数源码分析（一)"
 date:   2020-08-11 11:56:00
 categories: 笔记心得
 tags: audio linux alsa

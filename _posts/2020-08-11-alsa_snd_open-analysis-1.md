@@ -189,3 +189,4 @@ static int snd_pcm_open_noupdate(snd_pcm_t **pcmp, snd_config_t *root,
     return err;
 }
 ```
+各子函数的详细介绍参考本系列其他文章

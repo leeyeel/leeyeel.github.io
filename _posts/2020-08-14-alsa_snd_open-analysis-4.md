@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（四)"
-date:   2020-08-15 00:56:00
+title:  "linux alsa-lib snd_pcm_open函数源码分析（五)"
+date:   2020-08-15 23:56:00
 categories: 笔记心得
 tags: audio linux alsa
-excerpt: snd_pcm_open分析系列的第四篇，介绍snd_pcm_open_noupdate子函数
+excerpt: snd_pcm_open分析系列的第五篇，介绍snd_pcm_open_noupdate子函数
 mathjax: true
 ---
 * TOC
@@ -56,7 +56,7 @@ static int snd_pcm_open_noupdate(snd_pcm_t **pcmp, snd_config_t *root,
         err = snd_pcm_open_noupdate(pcmp, root, str, stream, mode,
                         hop + 1);
     else {
-        //只是进行了conf->hop = hop的设置,具体作用不是很清楚
+        //只是进行了conf->hop = hop的设置,具体作用会在后面递归时用到，用作对递归层数的限制
         snd_config_set_hop(pcm_conf, hop);
         //这里是重要入口，打开配置文件,在打开配置文件过程中逐渐执行了所有的函数
         //详细见下文分析
@@ -433,123 +433,9 @@ void *snd_dlsym(void *handle, const char *name, const char *version)
 #endif
 }
 ```
-# 1.2 _snd_pcm_plug_open
+函数通过配置文件拼接并查找到_snd_pcm_plug_open函数，之后执行，
+看似一个普通的函数执行，实际是个非常重要的函数入口，从此打开的alsa的插件系统。
+露出了插件系统的冰山一角。
 
-重要入口函数，打开插件，注意函数前的'_'前缀，表示是真正打开plug的前戏。
-看似一个简单的函数，竟然又是冰山一角。
-
-```c
-int _snd_pcm_plug_open(snd_pcm_t **pcmp, const char *name,
-               snd_config_t *root, snd_config_t *conf,
-               snd_pcm_stream_t stream, int mode)
-{
-    snd_config_iterator_t i, next;
-    int err;
-    snd_pcm_t *spcm;
-    snd_config_t *slave = NULL, *sconf;
-    snd_config_t *tt = NULL;
-    enum snd_pcm_plug_route_policy route_policy = PLUG_ROUTE_POLICY_DEFAULT;
-    snd_pcm_route_ttable_entry_t *ttable = NULL;
-    unsigned int csize, ssize;
-    unsigned int cused, sused;
-    snd_pcm_format_t sformat = SND_PCM_FORMAT_UNKNOWN;
-    int schannels = -1, srate = -1;
-    const snd_config_t *rate_converter = NULL;
-
-    snd_config_for_each(i, next, conf) {
-        snd_config_t *n = snd_config_iterator_entry(i);
-        const char *id;
-        if (snd_config_get_id(n, &id) < 0)
-            continue;
-        if (snd_pcm_conf_generic_id(id))
-            continue;
-        if (strcmp(id, "slave") == 0) {
-            slave = n;
-            continue;
-        }
-#ifdef BUILD_PCM_PLUGIN_ROUTE
-        if (strcmp(id, "ttable") == 0) {
-            route_policy = PLUG_ROUTE_POLICY_NONE;
-            if (snd_config_get_type(n) != SND_CONFIG_TYPE_COMPOUND) {
-                SNDERR("Invalid type for %s", id);
-                return -EINVAL;
-            }
-            tt = n;
-            continue;
-        }
-        if (strcmp(id, "route_policy") == 0) {
-            const char *str;
-            if ((err = snd_config_get_string(n, &str)) < 0) {
-                SNDERR("Invalid type for %s", id);
-                return -EINVAL;
-            }
-            if (tt != NULL)
-                SNDERR("Table is defined, route policy is ignored");
-            if (!strcmp(str, "default"))
-                route_policy = PLUG_ROUTE_POLICY_DEFAULT;
-            else if (!strcmp(str, "average"))
-                route_policy = PLUG_ROUTE_POLICY_AVERAGE;
-            else if (!strcmp(str, "copy"))
-                route_policy = PLUG_ROUTE_POLICY_COPY;
-            else if (!strcmp(str, "duplicate"))
-                route_policy = PLUG_ROUTE_POLICY_DUP;
-            continue;
-        }
-#endif
-#ifdef BUILD_PCM_PLUGIN_RATE
-        if (strcmp(id, "rate_converter") == 0) {
-            rate_converter = n;
-            continue;
-        }
-#endif
-        SNDERR("Unknown field %s", id);
-        return -EINVAL;
-    }
-    if (!slave) {
-        SNDERR("slave is not defined");
-        return -EINVAL;
-    }
-    err = snd_pcm_slave_conf(root, slave, &sconf, 3,
-                 SND_PCM_HW_PARAM_FORMAT, SCONF_UNCHANGED, &sformat,
-                 SND_PCM_HW_PARAM_CHANNELS, SCONF_UNCHANGED, &schannels,
-                 SND_PCM_HW_PARAM_RATE, SCONF_UNCHANGED, &srate);
-    if (err < 0)
-        return err;
-#ifdef BUILD_PCM_PLUGIN_ROUTE
-    if (tt) {
-        err = snd_pcm_route_determine_ttable(tt, &csize, &ssize);
-        if (err < 0) {
-            snd_config_delete(sconf);
-            return err;
-        }
-        ttable = malloc(csize * ssize * sizeof(*ttable));
-        if (ttable == NULL) {
-            snd_config_delete(sconf);
-            return err;
-        }
-        err = snd_pcm_route_load_ttable(tt, ttable, csize, ssize, &cused, &sused, -1);
-        if (err < 0) {
-            snd_config_delete(sconf);
-            return err;
-        }
-    }
-#endif
-#ifdef BUILD_PCM_PLUGIN_RATE
-    if (! rate_converter)
-        rate_converter = snd_pcm_rate_get_default_converter(root);
-#endif
-
-    err = snd_pcm_open_slave(&spcm, root, sconf, stream, mode, conf);
-    snd_config_delete(sconf);
-    if (err < 0)
-        return err;
-    err = snd_pcm_plug_open(pcmp, name, sformat, schannels, srate, rate_converter,
-                route_policy, ttable, ssize, cused, sused, spcm, 1);
-    if (err < 0)
-        snd_pcm_close(spcm);
-    return err;
-}
-```
-
-未完待续
+后续的文章会继续对插件的加载做详细分析
 

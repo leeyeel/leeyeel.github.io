@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（五)"
-date:   2020-08-15 23:56:00
+title:  "linux alsa-lib snd_pcm_open函数源码分析（四)"
+date:   2020-08-14 23:56:00
 categories: 笔记心得
 tags: audio linux alsa
-excerpt: snd_pcm_open分析系列的第五篇，介绍snd_pcm_open_noupdate子函数
+excerpt: snd_pcm_open分析系列的第四篇，介绍snd_pcm_open_noupdate子函数
 mathjax: true
 ---
 * TOC
@@ -251,6 +251,7 @@ static int snd_pcm_open_conf(snd_pcm_t **pcmp, const char *name,
             if (str && *str)
                 (*pcmp)->compat = 1;
         }
+        //找不到
         err = snd_config_search(pcm_root, "defaults.pcm.minperiodtime", &tmp);
         if (err >= 0)
             snd_config_get_integer(tmp, &(*pcmp)->minperiodtime);

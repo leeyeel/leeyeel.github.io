@@ -18,19 +18,19 @@ linux内核设计与实现(原书第3版)/(美)拉芙(Love,R.)著，陈莉君,�
 
 中文版P40, 章节4.4.2 Unix系统中的进程调度,在讲解unix系统调度将nice值映射到时间片上的问题时的第一个问题:
 ```latex
-类推，如果是两个具有普通优先级的进程，他们同样会每个获得50$\%$处理器时间，但是是在100ms内各获得一半。
+类推，如果是两个具有普通优先级的进程，他们同样会每个获得50\% 处理器时间，但是是在100ms内各获得一半。
 ```
 
 原文在如下:
 
 ```latex
 Now, what happens if we run exactly two low priority processes? We’d
-expect they each receive 50$\%$ of the processor, which they do. But they each enjoy the
+expect they each receive 50\% of the processor, which they do. But they each enjoy the
 processor for only 5 milliseconds at a time (5 out of 10 milliseconds each)! That is, instead
 of context switching twice every 105 milliseconds, we now context switch twice every
 10 milliseconds.
 Conversely, if we have two normal priority processes, each again receives
-the correct 50$\%$ of the processor, but in 100 millisecond increments.
+the correct 50\% of the processor, but in 100 millisecond increments.
 ```
 
 前面讲道，如果两个相同的低优先级的进程会发生什么?我们希望他们每个都占用50%的处理器时间，他们的确是这样的。

@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "linux 内核设计与实现勘误" 
+title:  "《linux 内核设计与实现(原书第3版)》翻译问题" 
 date:   2020-11-20 23:06:00
 categories: 笔记心得
 tags: linux kernel errata
-excerpt: 阅读《linux内核设计与实现(原书第三版)》时发现的翻译错误
+excerpt: 阅读《linux内核设计与实现(原书第三版)》时发现的翻译问题
 mathjax: true
 ---
 * TOC

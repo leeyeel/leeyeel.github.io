@@ -372,6 +372,15 @@ snd_pcm_open_slave(snd_pcm_t **pcmp, snd_config_t *root,
 打开‘named'从设备,snd_pcm_open_named_slave其实是个宏，运行是会被替换为snd1_pcm_open_named_slave。
 函数在这里检查hop,不能大于SND_CONF_MAX_HOPS,本质是对递归层数的限制
 
+这里由于我们传入的配置文件中，plug下面的slave即为hw设备，
+所以在执行一次`snd_pcm_open_named_slave`后即可通过`snd_pcm_open_conf`函数找到hw设备并打开，
+如果使用了多个插件，也就是说slave设备不是hw设备，则在`snd_pcm_open_conf`的过程中会再次解析并打开新的插件，
+直到最后到达hw设备,此时从递归的`snd_pcm_open_conf`中返回。
+
+注意这里的pcmp参数，实际最终返回的是slave设备的handle,在本例配置中就是hw设备的handle,
+执行过程中，`snd_pcm_open_conf`会先查找符号`_snd_pcm_hw_open',再执行`snd_pcm_hw_open`函数真正打开硬件设备，
+即给最终的slave设备的结构体赋值。
+
 ```c
 int snd_pcm_open_named_slave(snd_pcm_t **pcmp, const char *name,
                  snd_config_t *root,
@@ -387,15 +396,19 @@ int snd_pcm_open_named_slave(snd_pcm_t **pcmp, const char *name,
     if (snd_config_get_string(conf, &str) >= 0)
         return snd_pcm_open_noupdate(pcmp, root, str, stream, mode,
                          hop + 1);
-    //如果不是hw设备，则再次打开conf，前面已经分析过此函数
-    //此函数也是非常重要的函数入口
-    //函数会解析并执行配置文件中的函数
+    //如果不是hw设备，则会根据配置参数再次进入解析配置，根据配置查找函数，执行函数的流程
+    //详细前上一篇对此函数的详细分析，本质上是递归执行，直到打开硬件设备
+    //此处传入的name为NULL,在`snd_pcm_open_conf`中回去读取字符串，获取到字符串为hw
+    //在函数内部拼接出_snd_pcm_hw_open并执行，最终打开硬件设备
     return snd_pcm_open_conf(pcmp, name, root, conf, stream, mode);
 }
 ```
 # 1.4 snd_pcm_plug_open
 
-真正的打开plug PCM设备
+真正的打开plug PCM设备,给plug设备的snd_pcm_t结构体赋值。
+这里pcmp的返回值就是最终`snd_pcm_open`返回的设备handle。
+
+注意传入的倒数第二个参数slave,实际为上一步`snd_pcm_open_slave`返回的slave设备。
 
 ```c
 int snd_pcm_plug_open(snd_pcm_t **pcmp,
@@ -419,6 +432,8 @@ int snd_pcm_plug_open(snd_pcm_t **pcmp,
     plug->sformat = sformat;
     plug->schannels = schannels;
     plug->srate = srate;
+    //注意这里的slave的赋值，为`snd_pcm_open_slave`返回的slave设备,
+    //通过这种方法，最终返回的设备handle中，可以依次找到所有的slave设备
     plug->gen.slave = plug->req_slave = slave;
     plug->gen.close_slave = close_slave;
     plug->route_policy = route_policy;
@@ -427,12 +442,18 @@ int snd_pcm_plug_open(snd_pcm_t **pcmp,
     plug->tt_cused = tt_cused;
     plug->tt_sused = tt_sused;
 
+    //分配pcm内存，创建最终返回的句柄
+    //详见下文分析
     err = snd_pcm_new(&pcm, SND_PCM_TYPE_PLUG, name, slave->stream, slave->mode);
     if (err < 0) {
         free(plug);
         return err;
     }
+    //注意此处的两个ops,实际为最终snd_pcm_open返回的handle的操作函数
     pcm->ops = &snd_pcm_plug_ops;
+    //特别注意此处的fast_ops,实际为slave传进的fast_ops;所以具体传入的是什么值
+    //还需要具体分析在递归时打开slave设备中的执行过程
+    //此过程后续可单独写一篇文章详细分析
     pcm->fast_ops = slave->fast_ops;
     pcm->fast_op_arg = slave->fast_op_arg;
     if (rate_converter) {
@@ -456,6 +477,74 @@ int snd_pcm_plug_open(snd_pcm_t **pcmp,
     return 0;
 }
 ```
+# 1.4.1 snd_pcm_new
 
-未完待续
+创建一个新的pcm设备。由于在此分配内存，所以无论是slave还是主设备，最终都要调到此函数，
+但是传入的参数不同，使得有些创建出来的pcm设备其实是从设备.
 
+```c
+#ifndef DOC_HIDDEN
+int snd_pcm_new(snd_pcm_t **pcmp, snd_pcm_type_t type, const char *name,
+        snd_pcm_stream_t stream, int mode)
+{
+    snd_pcm_t *pcm;
+#ifdef THREAD_SAFE_API
+    pthread_mutexattr_t attr;
+#endif
+    //分配内存，给各个成员变量赋值
+    pcm = calloc(1, sizeof(*pcm));
+    if (!pcm)
+        return -ENOMEM;
+    pcm->type = type;
+    if (name)
+        pcm->name = strdup(name);
+    pcm->stream = stream;
+    pcm->mode = mode;
+    pcm->poll_fd_count = 1;
+    pcm->poll_fd = -1;
+    pcm->op_arg = pcm;
+    pcm->fast_op_arg = pcm;
+    INIT_LIST_HEAD(&pcm->async_handlers);
+#ifdef THREAD_SAFE_API
+    pthread_mutexattr_init(&attr);
+#ifdef HAVE_PTHREAD_MUTEX_RECURSIVE
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+#endif
+    pthread_mutex_init(&pcm->lock, &attr);
+    /* use locking as default;
+     * each plugin may suppress this in its open call
+     */
+    pcm->need_lock = 1;
+    if (mode & SND_PCM_ASYNC) {
+        /* async handler may lead to a deadlock; suppose no MT */
+        pcm->lock_enabled = 0;
+    } else {
+        /* set lock_enabled field depending on $LIBASOUND_THREAD_SAFE */
+        static int do_lock_enable = -1; /* uninitialized */
+
+        /* evaluate env var only once at the first open for consistency */
+        if (do_lock_enable == -1) {
+            char *p = getenv("LIBASOUND_THREAD_SAFE");
+            do_lock_enable = !p || *p != '0';
+        }
+        pcm->lock_enabled = do_lock_enable;
+    }
+#endif
+    *pcmp = pcm;
+    return 0;
+}
+```
+
+# 2. _snd_pcm_plug_open总结
+
+通过上面零散的分析，插件的打开过程大概可以总结如下:
+
+首先根据配置参数拼接符号，根据拼接出来的符号去查找函数，第一个拼接出来的函数为`_snd_pcm_plug_open`，
+在此函数中，会继续解析配置文件，打开配置文件中配置的slave设备。在我们当前的配置例子中，
+slave设备即为hw设备，返回hw设备的句柄，并把这个句柄作为参数传入`snd_pcm_plug_open`,在`snd_pcm_plug_open`函数中，
+去真正的创建一个plug的pcm设备，同时原先传入的slave的句柄也会被保留。
+
+对于有多个插件的配置，情况要复杂的多，在打开slave设备的过程中，需要通过递归去分析配置文件，逐个打开slave设备，
+所有打开的插件pcm设备都会得到保留，并最终通过函数指针串联起来。
+
+后面文章会详细分析slave设备被打开的过程，以此更清楚slave设备时如何被连接起来的。

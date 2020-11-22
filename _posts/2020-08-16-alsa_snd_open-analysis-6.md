@@ -27,32 +27,32 @@ pcm.rate16k {
 本篇重点对alsa加载插件的流程做总结，依然以上面的配置参数为例。如果用户想要使用rate16k这个插件，
 则在`snd_pcm_open`函数中传入的name为`rate16k`:
 
-参数rate16从`snd_pcm_open`传至`snd_pcm_open_noupdate`,在`snd_pcm_open_noupdate`中,
+- 参数rate16从`snd_pcm_open`传至`snd_pcm_open_noupdate`,在`snd_pcm_open_noupdate`中,
 由于`snd_config_get_string`获取不到string类型的节点返回负数错误码。
 流程会执行到`snd_pcm_open_conf`,注意此时传入的配置节点已经为`snd_config_search_definition`找到的pcm的节点，
 也就是本篇示例的节点的根节点。
 
-`snd_pcm_open_conf`接收到的name此时为rate16k,函数会查找type节点，并获取到type对应的字符串plug,
+- `snd_pcm_open_conf`接收到的name此时为rate16k,函数会查找type节点，并获取到type对应的字符串plug,
 之后拼接出符号`_snd_pcm_plug_open`并从动态库中查找到函数，之后执行此函数。
 
-在执行`_snd_pcm_plug_open`函数中，又执行了另一个重要的函数`snd_pcm_open_slave`,此函数实际时调用`snd_pcm_open_named_slave`,
+- 在执行`_snd_pcm_plug_open`函数中，又执行了另一个重要的函数`snd_pcm_open_slave`,此函数实际时调用`snd_pcm_open_named_slave`,
 在此函数中，首先去获取string, 此时的节点依然为复合节点，显然获取string失败，此时会再次执行`snd_pcm_open_conf`函数,
 区别是此处的配置节点已经不是pcm节点而是slave节点。
 
-在`snd_pcm_open_conf`中会获取pcm对应的字符串"hw:0,0",并从"hw:0,0"中分离出hw这个关键字。
+- 在`snd_pcm_open_conf`中会获取pcm对应的字符串"hw:0,0",并从"hw:0,0"中分离出hw这个关键字。
 分离出来后会继续拼接出符号`_snd_pcm_hw_open`，在动态库中查找到此函数并执行。
 
-在`_snd_pcm_hw_open`函数中，获取到了rate的整型值16000,如果有其他值比如"format"或者channels等也会一并获取。
+- 在`_snd_pcm_hw_open`函数中，获取到了rate的整型值16000,如果有其他值比如"format"或者channels等也会一并获取。
 获取到这些参数后，会调用`snd_pcm_hw_open`函数进行真正的hw设备的打开操作。
 
-在`snd_pcm_hw_open`函数中会分别调用`snd_ctl_hw_open`及`snd_pcm_hw_open_fd`函数，这两个函数会使用ioctl命令，
+- 在`snd_pcm_hw_open`函数中会分别调用`snd_ctl_hw_open`及`snd_pcm_hw_open_fd`函数，这两个函数会使用ioctl命令，
 调用到内核中去。可以说调用到这两个函数时已经到了用户态的最底层，调用`snd_pcm_hw_open_fd`最终会返回pcmp,
 这个参数会向上`snd_pcm_hw_open`-->`_snd_pcm_hw_open`-->`snd_pcm_open_conf`-->`snd_pcm_open_named_slave`-->`snd_pcm_open_slave`。
 
-此时返回到`_snd_pcm_plug_open`中，由于`snd_pcm_open_slave`实际已经返回了hw设备的handle,
+- 此时返回到`_snd_pcm_plug_open`中，由于`snd_pcm_open_slave`实际已经返回了hw设备的handle,
 返回的这个handle作为slave设备的handle作为参数传入到`snd_pcm_plug_open`中。
 
-在`snd_pcm_plug_open`中通过`snd_pcm_new`创建一个plug设备，并把slave设备的handle赋值为plughandle结构体中的gen.slave字段。
+- 在`snd_pcm_plug_open`中通过`snd_pcm_new`创建一个plug设备，并把slave设备的handle赋值为plughandle结构体中的gen.slave字段。
 同时`pcm->fast_ops`实际为`slave->fast_ops`，即实际为hw设备的`fast_ops`。
 
 至此，采用本篇举例的配置的插件加载完成。

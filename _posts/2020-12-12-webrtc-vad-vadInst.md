@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "webrtc "
+title:  "webrtc vad 源码解析(一)"
 date:   2020-12-23 23:35:00
 categories: 笔记心得
 tags: webrtc vad 源码
@@ -15,7 +15,7 @@ webrtc关于vad的源代码中的句柄使用了`VadInst`这个结构体，这�
 源代码位于webrtc的`common_audio/vad/include/webrtc_vad.h`,
 即[https://webrtc.googlesource.com/src/common_audio/vad/include/webrtc_vad.h](https://webrtc.googlesource.com/src/common_audio/vad/include/webrtc_vad.h)文件。
 
-### 结构体的前置声明
+### 1. 结构体前置声明
 
 `webrtc_vad.h`文件中有如下语句:
 
@@ -68,7 +68,7 @@ int WebRtcVad_Init(VadInst* handle) {
 }
 ```
 
-### c库free的原理
+### 2. c库free原理
 
 上面分析了为什么可以使用的`VadInst`指针的原理，实际上只是作为一个名称，内部使用时会再转换为`VadInstT`，
 但是有一个例外,即`WebRtcVad_Free`函数:

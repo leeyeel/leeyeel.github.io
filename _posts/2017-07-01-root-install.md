@@ -3,12 +3,24 @@ layout: post
 title:  "Linux下安装CERN ROOT全过程"
 date:   2014-11-20 16:54:39
 categories: 高能物理
-tags: cern root install 教程
+tags: cern root install 教程 ubuntu 20.04
 excerpt: cern root6 的安装教程
 mathjax: true
 ---
 * TOC
 {:toc}
+
+### ubuntu 20.04上安装root_v6.22.06流程 (2021.02.16更新)
+
+- 依赖安装过程略，与之前一致
+- 下载root安装包，解压:`tar xvzf root_v6.22.06.source.tar.gz`
+- 解压后生成`root-6.22.06`文件夹
+- 进入`root-6.22.06/build`，执行`cmake .. -DCMAKE_INSTALL_PREFIX=/yourpath/ -Dgnuinstall=ON`,
+    `-DCMAKE_INSTALL_PREFIX=/yourpath/`是为了安装到固定目录，安装到固定目录的好处就是易于管理，
+    方便删除，迁移，特别是在服务器上没有root权限时，只能用这种方式。
+- 执行`cmake --build .`,相当于`make',后面也可以加`-j<N>`
+- 执行`cmake --build . --target install`，相当于`make install`,目的是把可执行文件拷贝到指定的目录
+
 
 ### 说明
 
@@ -18,7 +30,7 @@ mathjax: true
 
 本教程的测试系统为Ubuntu 16.04 LTS,如果是其他发行版本，请注意把`apt-get`改为`yum`或其他对应的命令．
 
-以后可能不再更新了，毕竟已经转行．不过有问题的可以直接留言，我会尽量给大家解答．如果没法留言，你可能需要科学上网.
+以后可能不再更新了,有问题的可以直接留言，我会尽量给大家解答．如果没法留言，你可能需要科学上网.
 
 ### 准备工作
 

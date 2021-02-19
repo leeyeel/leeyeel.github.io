@@ -12,6 +12,10 @@ mathjax: true
 
 几年前就想做的分析，因为懒因为忙就一直拖，今年疫情每回老家终于有空可以做一些分析了，结果。。后面再说
 
+图中用到的原始数据及分析代码见github[redpackets](https://github.com/leeyeel/redpackets);
+分析工具为ROOT,安装见[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+ROOT官网见:[https://root.cern/](https://root.cern/)
+
 ### 整体思路
 
 需要说明一点，在不知道实际策略的情况下使用统计去还原策略，理论上虽然可行，但是却需要大量的数据，

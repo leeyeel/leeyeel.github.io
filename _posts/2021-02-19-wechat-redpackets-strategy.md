@@ -13,7 +13,9 @@ mathjax: true
 几年前就想做的分析，因为懒因为忙就一直拖，今年疫情每回老家终于有空可以做一些分析了，结果。。后面再说
 
 图中用到的原始数据及分析代码见github[redpackets](https://github.com/leeyeel/redpackets);
+
 分析工具为ROOT,安装见[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+
 ROOT官网见:[https://root.cern/](https://root.cern/)
 
 ### 整体思路
@@ -51,13 +53,18 @@ ROOT官网见:[https://root.cern/](https://root.cern/)
 当我把这张图给我对象看并给她解释数据表示的含义的时候，她突然来了一句，这个好像在B站毕导那里看到过。。。。
 
 接写来就是立马打开B站去查找，果然毕导在差不多刚好一年前的这个时候已经做过完全一致的研究。
+
 [我给自己发了2亿个红包，才发现先抢和后抢差距这么大](https://www.bilibili.com/video/BV1z7411e7qB)
+
 大意了大意了，虽然在开始之前搜索了互联网上的博文内容，没有发现类似的工作，到头来竟然忽视了还有视频这种东西。
 这也导致了对接下来的分析工作没有了兴趣，因为毕导确实都做了,还做的很完整。
 
 ### 分析软件
 
-使用ROOT，关于这个工具有兴趣的可以看下多年前写的安装教程，实际现在不需要这么麻烦:[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)。
+使用ROOT，关于这个工具有兴趣的可以看下多年前写的安装教程，实际现在不需要这么麻烦:
+
+[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+
 之所以选用这个工具一是因为熟悉，第二是，实在太了解它的强大了，即便后来做更复杂的数据分析也毫无压力。
 
 ### 原本计划的后续工作

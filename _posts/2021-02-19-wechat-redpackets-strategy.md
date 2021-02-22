@@ -14,9 +14,10 @@ mathjax: true
 
 图中用到的原始数据及分析代码见github[redpackets](https://github.com/leeyeel/redpackets);
 
-分析工具为ROOT,安装见[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+分析工具为ROOT,安装见[root安装介绍少](https://blog.whatsroot.xyz/2014/11/20/root-install/)
 
-ROOT官网见:[https://root.cern/](https://root.cern/)
+
+ROOT官网见:[ROOT官网https://root.cern/](https://root.cern/)
 
 ### 整体思路
 
@@ -46,8 +47,10 @@ ROOT官网见:[https://root.cern/](https://root.cern/)
 
 ![]({{site.url}}/assets/redpackets/hist1.jpg)
 
-图中为直方图数据，只不过用点替代了方格，横轴是索引的百分比，纵轴为数量，由于数据量较少，数据的误差棒普遍较大。
-可以看出手气最佳在百分之九十附近有明显的峰值，即这个附近手气最佳的概率最大。
+图中直方图数据，只不过用点替代了方格，横轴是索引的百分比，纵轴为数量，图中数据点上的十字是误差棒，表示统计误差，
+由于数据量较少，数据的误差普遍较大。
+
+不过依然可以看出手气最佳在百分之九十附近有明显的峰值，即这个附近手气最佳的概率最大。
 
 到这里接下来应该再去分析每个位置的红包分布，以及手气最佳的数值所占当前红包总金额的比重分布等等。
 当我把这张图给我对象看并给她解释数据表示的含义的时候，她突然来了一句，这个好像在B站毕导那里看到过。。。。
@@ -63,13 +66,16 @@ ROOT官网见:[https://root.cern/](https://root.cern/)
 
 使用ROOT，关于这个工具有兴趣的可以看下多年前写的安装教程，实际现在不需要这么麻烦:
 
-[roo](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+[ROOT安装教程](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+
 
 之所以选用这个工具一是因为熟悉，第二是，实在太了解它的强大了，即便后来做更复杂的数据分析也毫无压力。
 
 ### 原本计划的后续工作
 
-(毕导都做了)
+先查看手气最佳的分布，再计算每次抢红包的比重分布。最后用网络上的红包分配方法模拟红包。
+
+(大部分工作毕导都做了o(╯□╰)o)
 
 ### 总结
 

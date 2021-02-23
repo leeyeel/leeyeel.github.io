@@ -14,10 +14,10 @@ mathjax: true
 
 图中用到的原始数据及分析代码见github[redpackets](https://github.com/leeyeel/redpackets);
 
-分析工具为ROOT,安装见[root安装介绍少](https://blog.whatsroot.xyz/2014/11/20/root-install/)
+分析工具为ROOT,安装见[root安装介绍](https://blog.whatsroot.xyz/2014/11/20/root-install/)
 
 
-ROOT官网见:[ROOT官网https://root.cern/](https://root.cern/)
+ROOT官网见:[ROOT官网:https://root.cern/](https://root.cern/)
 
 ### 整体思路
 

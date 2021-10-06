@@ -13,11 +13,13 @@ mathjax: true
 ffmpeg configure选项及Makefile介绍(ffmpeg 版本n4.5-dev)
 
 ### configure 介绍
+
     从目前可查询到的记录
-    (`commit 9aeeeb63f7e1ab7b0b7bb839a5f258667a2d2d78 Author: Fabrice Bellard <fabrice@bellard.org> Date:   Wed Dec 20 00:02:47 2000 +0000`)
+    (commit 9aeeeb63f7e1ab7b0b7bb839a5f258667a2d2d78 Author: Fabrice Bellard <fabrice@bellard.org> Date:   Wed Dec 20 00:02:47 2000 +0000)
 可以看到，最早期的ffmpeg是没有configure文件的。
 后来大概是出于配置项可扩展性的考虑，于2001年的7月22首次添加了configure文件。首版内容如下，仅有75行。
 对比当前版本有7000多行，二十年来多出一百多倍。
+
 ```
 #!/bin/sh
 

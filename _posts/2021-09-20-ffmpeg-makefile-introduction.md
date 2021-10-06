@@ -9,9 +9,7 @@ mathjax: true
 ---
 * TOC
 {:toc}
-
 ffmpeg configure选项及Makefile介绍(ffmpeg 版本n4.5-dev)
-
 ### configure 介绍
 从目前可查询到的记录(Fabrice Bellard, Wed Dec 20 00:02:47)可以看到，最早期的ffmpeg是没有configure文件的。
 后来大概是出于配置项可扩展性的考虑，于2001年的7月22首次添加了configure文件。首版内容如下，仅有75行。

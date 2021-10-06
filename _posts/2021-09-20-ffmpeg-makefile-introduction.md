@@ -11,7 +11,9 @@ mathjax: true
 {:toc}
 
 ffmpeg configure选项及Makefile介绍(ffmpeg 版本n4.5-dev)
+
 ### configure 介绍
+
     从目前可查询到的记录(Fabrice Bellard, Wed Dec 20 00:02:47)可以看到，最早期的ffmpeg是没有configure文件的。
 后来大概是出于配置项可扩展性的考虑，于2001年的7月22首次添加了configure文件。首版内容如下，仅有75行。
 对比当前版本有7000多行，二十年来多出一百多倍。早期configure如下:
@@ -152,16 +154,11 @@ for opt do
     esac
 done
 ```
-其中
-```
-optval="${opt#*=}"
-```
-是bash的扩展语法，功能是取opt中=符号左边的内容，然后分别匹配，并使用函数逐个处理。这里结构上与初始版本一致，
+其中`optval="${opt#*=}"`是bash的扩展语法，功能是取opt中=符号左边的内容，然后分别匹配，并使用函数逐个处理。这里结构上与初始版本一致，
 但实际上这里复杂的多，因为这里的每个case已经不单单是一个具体的选项，而是一类选项，具体的工作在case中的函数中实现。
 
 之后通过一系列操作，得到配置参数后，把配置参数写入到ffbuild目录下的config.mak及config.h中，config.mak会被Makefile文件包含，
 config.h则被一系列的c文件包含，最终对编译及代码都产生影响。
-
 
 ### Makefile 介绍
 
@@ -198,7 +195,7 @@ tar:
     (cd .. ; tar zcvf ffmpeg-0.3.tgz ffmpeg --exclude CVS --exclude TAGS )
 ```
 
-第一个使用了configure脚本的Makefile如下,位于libavcodec下(commit de6d9b6404bfd1c589799142da5a95428f146edd,Fabrice Bellard,Sun Jul 22 14:18:56):
+第一个使用了configure脚本的Makefile如下,位于libavcodec下(Fabrice Bellard,Sun Jul 22 14:18:56):
 ```
 include ../config.mk
 CFLAGS= -O2 -Wall -g
@@ -459,11 +456,14 @@ $(sort $(OUTDIRS)):
 .PHONY: *clean install* uninstall*
 
 ```
-这里强调两个地方，第一个是所有跟include有关的地方，这部分内容最终包含进来的话实际Makefile也是相当庞大的，
+这里强调两个地方，第一个是所有跟include有关的地方，这部分内容最终包含进来的话实际Makefile也是相当庞大的。
+
 第二个是Makefile的入口`all: all-yes`这个地方。查遍整个ffmpeg，也查不到这个叫做`all-yes`的依赖在哪里，
 查看log记录可以发现，最初这行代码其实是在tools/Makefile内部的，不过tools/Makefile内部依然没有all-yes这个依赖.
-log中作者说把这样移动到这里是为了保证这个地方是整个编译到开始。实际上这里的all-yes没有任何实际意义，
-纯粹是一个记号，把它去掉也不影响编译。原因是tools/Makefile内部也有all这个target，根据Makefile的语法规则，
+log中作者说把这样移动到这里是为了保证这个地方是整个编译到开始。
+
+实际上这里的all-yes没有任何实际意义，纯粹是一个记号，把它去掉也不影响编译。
+原因是tools/Makefile内部也有all这个target，根据Makefile的语法规则，
 如果有不同的依赖但是生成相同的目标，则make只会执行最后出现的目标，所以这里`all:all-yes`只是表示make从all开始，
 但是首先执行的却是tools/Makefile中的all，即`all: $(AVPROGS)`这行代码。
 

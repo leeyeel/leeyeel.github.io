@@ -13,11 +13,9 @@ mathjax: true
 ffmpeg configure选项及Makefile介绍(ffmpeg 版本n4.5-dev)
 
 ### configure 介绍
-
-    从目前可查询到的记录(Fabrice Bellard, Wed Dec 20 00:02:47)可以看到，最早期的ffmpeg是没有configure文件的。
+从目前可查询到的记录(Fabrice Bellard, Wed Dec 20 00:02:47)可以看到，最早期的ffmpeg是没有configure文件的。
 后来大概是出于配置项可扩展性的考虑，于2001年的7月22首次添加了configure文件。首版内容如下，仅有75行。
 对比当前版本有7000多行，二十年来多出一百多倍。早期configure如下:
-
 ```
 #!/bin/sh
 
@@ -97,7 +95,6 @@ if [ "$gprof" = "yes" ] ; then
   echo "#define CONFIG_GPROF 1" >> config.h
 fi
 ```
-
 我们先来分析初版configure的思路。
 1. 设置一些变量
 稍微注意的一点是这里的cpu是直接通过获取当前主机的类型获取到的，
@@ -161,9 +158,7 @@ done
 config.h则被一系列的c文件包含，最终对编译及代码都产生影响。
 
 ### Makefile 介绍
-
-    最初的Makefile非常简短，只有短短几十行，用来编译可执行文件ffmpeg、ffserver及库文件。此时还没有用到configure 脚本。
-
+最初的Makefile非常简短，只有短短几十行，用来编译可执行文件ffmpeg、ffserver及库文件。此时还没有用到configure 脚本。
 ```
 CFLAGS= -O2 -Wall -g -I./libav
 LDFLAGS= -g -L./libav
@@ -456,7 +451,7 @@ $(sort $(OUTDIRS)):
 .PHONY: *clean install* uninstall*
 
 ```
-这里强调两个地方，第一个是所有跟include有关的地方，这部分内容最终包含进来的话实际Makefile也是相当庞大的。
+这里强调两个地方，第一个是所有跟include有关的地方，这部分内容最终包含进来的话实际Makefile也相当庞大。
 
 第二个是Makefile的入口`all: all-yes`这个地方。查遍整个ffmpeg，也查不到这个叫做`all-yes`的依赖在哪里，
 查看log记录可以发现，最初这行代码其实是在tools/Makefile内部的，不过tools/Makefile内部依然没有all-yes这个依赖.

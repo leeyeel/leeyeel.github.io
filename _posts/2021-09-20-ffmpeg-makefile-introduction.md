@@ -14,7 +14,7 @@ ffmpeg configure选项及Makefile介绍(ffmpeg 版本n4.5-dev)
 从目前可查询到的记录(Fabrice Bellard, Wed Dec 20 00:02:47)可以看到，最早期的ffmpeg是没有configure文件的。
 后来大概是出于配置项可扩展性的考虑，于2001年的7月22首次添加了configure文件。首版内容如下，仅有75行。
 对比当前版本有7000多行，二十年来多出一百多倍。早期configure如下:
-```
+```bash
 #!/bin/sh
 
 # default parameters
@@ -124,7 +124,7 @@ avdevice相关的,依赖库相关的等等，并使用了类似结构体的定�
 对于支持多平台及交叉编译，ffmpeg的方式是定义了大量的函数(上百个函数,几乎整个configure都是在定义函数)，尽量把不同平台之间的区别限制在小函数内部。
 
 当前版本configure依然保留了`for opt do`的结构，此处代码片段如下：
-```
+```bash
 for opt do
     optval="${opt#*=}"
     case "$opt" in
@@ -157,7 +157,7 @@ config.h则被一系列的c文件包含，最终对编译及代码都产生影�
 
 ### Makefile 介绍
 最初的Makefile非常简短，只有短短几十行，用来编译可执行文件ffmpeg、ffserver及库文件。此时还没有用到configure 脚本。
-```
+```Makefile
 CFLAGS= -O2 -Wall -g -I./libav
 LDFLAGS= -g -L./libav
 
@@ -255,7 +255,7 @@ dct-test: dct-test.o jfdctfst.o i386/fdct_mmx.o i386/fdctdata.o fdctref.o
 因为这是编译的开始。后来的Makefile虽然更复杂，但是总体也是这个思路。
 
 现在版本的Makefile主文件也不过一百多行，是因为占数量最多的配置文件在ffbuild/config.mak中，现在的Makefile:
-```
+```Makefile
 MAIN_MAKEFILE=1
 include ffbuild/config.mak
 

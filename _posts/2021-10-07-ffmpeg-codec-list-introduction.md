@@ -14,7 +14,7 @@ ffmpeg 编解码器介绍(ffmpeg 版本n4.5-dev)
 
 ffmpeg中获取编解码器的函数主要是用`avcodec_find_encoder/decoder`,`avcodec_find_encoder/decoder_by_name`这几个函数，
 我们以解码为例，来分析下是如何找到解码器的。先来分析`avcodec_find_decoder`函数。源码如下:
-```
+```c
 AVCodec *avcodec_find_decoder(enum AVCodecID id)
 {
     return find_codec(id, av_codec_is_decoder);
@@ -47,7 +47,7 @@ static AVCodec *find_codec(enum AVCodecID id, int (*x)(const AVCodec *))
 然后比较每个编解码器的ID是否与输入的id一致，直到找到与id一致的那个编解码器并返回。
 
 至此用户便通过传入的AVCodecID得到了编解码器，那到底有哪些编解码器，或者说这些编解码器是哪里来的？继续来看`av_codec_iterate`函数:
-```
+```c
 const AVCodec *av_codec_iterate(void **opaque)
 {
     uintptr_t i = (uintptr_t)*opaque;
@@ -72,18 +72,18 @@ const AVCodec *av_codec_iterate(void **opaque)
 
 codec_list.c中生成了codec_list[]这个大数组，其中的元素是预先使用`extern AVCodec ff_xxx_decoder`的格式在allcodecs.c文件声明好的，
 但是决定哪些解码器真正的放入codec_list.c中则是由configure脚本决定的。configure脚本中有`CODEC_LIST`这个变量:
-```
+```bash
 CODEC_LIST="
     $ENCODER_LIST
     $DECODER_LIST
 "
 ```
 只看解码器它是由`DECODER_LIST`来的，而`DECODER_LIST`又是来自于这条命令:
-```
+```bash
 DECODER_LIST=$(find_things_extern decoder AVCodec libavcodec/allcodecs.c)
 ```
 其中`find_things_extern`源码:
-```
+```bash
 find_things_extern(){
     thing=$1
     pattern=$2
@@ -94,7 +94,7 @@ find_things_extern(){
 ```
 这个函数的前三条命令很好理解不做解释，
 第四行`out=${4:-$thing}`使用了bash的扩展表达式的这个语法[${parameter:-word}](https://www.gnu.org/software/bash/manual/bash.html):
-```
+```bash
 ${parameter:-word}
 If parameter is unset or null, the expansion of word is substituted. Otherwise, the value of parameter is substituted.
 ```
@@ -107,7 +107,7 @@ sed命令中`-n`为安静模式，只打印相关的那行,`^[^#]`表示开头�
 语法方面感兴趣可以参考[bash手册](https://www.gnu.org/software/bash/manual/bash.html)以及[sed手册](https://www.gnu.org/software/sed/manual/sed.html)。特别是sed那个，里面又用了正则表达式。
 
 在获取到`CODEC_LIST`之后，又通过`print_enabled_components libavcodec/codec_list.c AVCodec codec_list $CODEC_LIST`这条命令把开启解码器写到codec_list.c中。
-```
+```bash
 print_enabled_components(){
     file=$1
     struct_name=$2
@@ -146,7 +146,7 @@ print_enabled_components(){
 ### 硬件编解码器的生效流程
 
 我们以h264解码器为例，首先看下codec_list.c中h264解码器的结构体定义:
-```
+```c
 AVCodec ff_h264_decoder = {
     .name                  = "h264",
     .long_name             = NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),

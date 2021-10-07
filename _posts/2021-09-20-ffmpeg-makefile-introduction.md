@@ -157,7 +157,7 @@ config.h则被一系列的c文件包含，最终对编译及代码都产生影�
 
 ### Makefile 介绍
 最初的Makefile非常简短，只有短短几十行，用来编译可执行文件ffmpeg、ffserver及库文件。此时还没有用到configure 脚本。
-```Makefile
+```bash
 CFLAGS= -O2 -Wall -g -I./libav
 LDFLAGS= -g -L./libav
 
@@ -255,7 +255,7 @@ dct-test: dct-test.o jfdctfst.o i386/fdct_mmx.o i386/fdctdata.o fdctref.o
 因为这是编译的开始。后来的Makefile虽然更复杂，但是总体也是这个思路。
 
 现在版本的Makefile主文件也不过一百多行，是因为占数量最多的配置文件在ffbuild/config.mak中，现在的Makefile:
-```Makefile
+```bash
 MAIN_MAKEFILE=1
 include ffbuild/config.mak
 

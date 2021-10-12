@@ -197,4 +197,53 @@ hw_configs表明了支持的硬件加速方案，只不过configure脚本执行�
 相当于AVCodecHWConfigInternal是个空数组。如果configure脚本执行时启用了对应的硬件解码器，则最终宏会变为开启状态，
 用户就可以使用硬件解码器，这里以nvidia硬件解码来举例这个流程是如何生效的。
 
-(未完待续）
+### nvidia硬件加速开启流程
+
+开启流程参考nvidia官方教程[Using FFmpeg with NVIDIA GPU Hardware Acceleration](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/index.html),此教程针对的是x86平台，对linux系统大致分为以下几步：
+
+1. Clone ffnvcodec
+```
+git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+```
+2. Install ffnvcodec
+```
+cd nv-codec-headers && sudo make install && cd –
+```
+3. Clone FFmpeg's public GIT repository.
+```
+git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/
+```
+4. Install necessary packages.
+```
+sudo apt-get install build-essential yasm cmake libtool libc6 libc6-dev unzip wget libnuma1 libnuma-dev
+```
+5. Configure
+```
+./configure --enable-nonfree -–enable-cuda-sdk –enable-libnpp --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64
+```
+6. Compile
+```
+make -j 8
+```
+7. Install the libraries.
+```
+sudo make install
+```
+
+其中第一步跟第二步，下载头文件，因为nvida的驱动并非开源,ffmpeg自然也没法也不会集成对应的头文件，
+所以需要下载头文件，下载之后安装头文件到/usr/local/cuda/include目录。
+
+后面的步骤为安装ffmpeg，区别就是使用了多个参数选项，分别解释下，`--enable-nonfree`即表示会使用第三方的库，`-–enable-cuda-sdk –enable-libnpp`这两个都是cuda相关的库,`--extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64`分别指定了头文件与库，说明头文件里函数的实现就在这些库内部。这也是为什么启用硬件加速需要安装cuda的原因。
+
+此处需要注意,ffmpeg目前版本更新后，不再使用`-–enable-cuda-sdk`这个选项，
+而是使用`--enable-cuda-nvcc`,下面统一用`--enable-cuda-nvcc`。
+
+接下来看一下添加这两个参数`--enable-cuda-nvcc –enable-libnpp`后发生了什么。configure脚本发现这两个参数后，
+会在`for opt do`使能nvcc及libnpp这两个选项，
+最终在输出到`ffbuild/config.mak`的文件中会变为`CONFIG_CUDA_NVCC=yes`及`CONFIG_LIBNPP=yes`,
+同时在config.h中会有`#define CONFIG_CUDA_NVCC 1`, `#define CONFIG_LIBNPP 1`, `#define CONFIG_H264_NVDEC_HWACCEL 1`等相关的宏。
+
+现在回到codec_list.c中h264解码器的结构体定义处，
+可以看到`.hw_configs`字段刚好有与`CONFIG_H264_NVDEC_HWACCEL`相关的的字段,定义为HWACCEL_NVDEC(h264)。
+这些宏展开后最终定义了一个AVCodecHWConfigInternal结构体，这些参数也会通过avcodec_get_hw_config()接口返回给用户。
+

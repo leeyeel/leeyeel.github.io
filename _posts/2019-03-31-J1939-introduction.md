@@ -76,7 +76,7 @@ PF用来确定PDU的格式，两种格式计算得到PGN的方式不同，我们
 
 - PDU特定域(PS)
 
-PS的定义取决于PF, 它可能表示目标地址(Source Address, SA)，可能表示组扩展(Group Extension,GE), 如果PF < 0xF0则表示为DA，否则表示为GE。如下图所示:
+PS的定义取决于PF, 它可能表示目标地址(Destination Address, SA)，可能表示组扩展(Group Extension,GE), 如果PF < 0xF0则表示为DA，否则表示为GE。如下图所示:
 
 ![]({{site.url}}/assets/J1939/PDUFormat.png)
 

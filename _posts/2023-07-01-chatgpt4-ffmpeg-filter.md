@@ -81,7 +81,7 @@ chatgpt-4写代码要比chatgpt3.5谨慎很多，使用chatgpt3.5时，它会给
 
 代码部分如下：
 
-```C
+```c
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavfilter/avfilter.h>
@@ -139,6 +139,7 @@ avfilter_link(overlay_ctx, 0, buffersink_ctx, 0);
 avfilter_graph_config(filter_graph, NULL);
 
 // ... 这里应该是读取，解码，发送到过滤器，从过滤器接收，编码和写入的循环。
+
 ```
 
 这段代码基本把filter的使用流程展示出来了，但是不够完整。我们这里有三个输入，应该有三个buffersrc的过滤器，但实际只有一个。这里显示出了chatgpt4的不足，它自己还不足以完成功能，如果我对filter一无所知，我是看不出这些问题的。但如果我运行这段代码，必然会提示错误，逻辑上我也可以在报错之后继续追问，让chatgpt自行修改。
@@ -149,7 +150,8 @@ avfilter_graph_config(filter_graph, NULL);
 
 为了方便阅读，我们代码放在这里：
 
-```C
+```c
+
 #include <libavformat/avformat.h>
 #include <libavfilter/buffersink.h>
 #include <libavfilter/buffersrc.h>
@@ -194,6 +196,7 @@ avfilter_link(overlay_ctx, 0, buffersink_ctx, 0);
 
 // 初始化过滤器图
 avfilter_graph_config(filter_graph, NULL);
+
 ```
 
 到这里为止，代码依然有错误，主要有两个，首先是我虽然称呼为buffer src过滤器，其实ffmpeg代码中并没有buffersrc过滤器，

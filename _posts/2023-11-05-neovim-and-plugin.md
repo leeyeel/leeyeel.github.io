@@ -1,0 +1,160 @@
+---
+layout: post
+title:  "2023年vim转neovim,及基础插件安装"
+date:   2023-11-05 22:37:00
+categories: 教程
+tags: vim neovim plugins
+excerpt: 适用于熟悉vim但不熟悉neovim同时又想转向neovim的小伙伴
+mathjax: true
+---
+
+### 历史，以及优缺点
+
+全是废话，可以直接略过。
+
+9年前第一次使用vim,从此vim一直是我Linux上的唯一编辑器. 
+不喜欢花里胡哨的配置，且绝部分时间都在写c/c++,
+这么多年基本就是ctag,cscope,tlist这几个主要插件，主题一直是molokai，最多再配置以下补全功能ycm.
+今年加入新团队后发现已经落伍了，主要是vim8上的LSP体验已经非常强了，已经原超ctag跟cscope的跳转功能，
+而且补全功能也要比之前ycm的配置方便很多，大受震撼，果然闭门造车是行不通的，当天即从ctag转向LSP。
+
+
+在使用一段时间后，一些问题逐渐暴露出来。
+首先就是当前的插件对vim8的支持不够友好，插件有版本不兼容的问题，需要我升级vim9。
+升级vim9话又会带来问题：首先我一直用的是ubuntu LTS版本，22.04目前默认的版本是vim8,
+其次是vim9是作者生前重构过的版本，升级后之前用的很多插件也不兼容，且还要重新适应vim9新的脚本语言。
+升级vim9的话，原先大量的已有插件的优势相对neovim来说就不够明显了。
+
+neovim目前最大的问题就是仍然在快速迭代，特别是插件，过几个月可能就需要更换一批，比如之前的packer,null-ls等。
+尽管如此，我还是希望尝试neovim。neovim的社区太活跃了。
+
+
+### neovim入门介绍
+
+neovim作为vim的重构版本，用户使用上与vim并没有什么区别，区别主要是软件本身的区别。
+
+尽管neovim也兼容vim的配置，不过个人更倾向于更neo的配置。neovim配置文件默认位于~/.config/nvim/中
+默认会加载目录下的init.vim或init.lua,init.vim支持vimscript语法，init.lua是lua语法。
+所以使用init.vim更容易从.vimrc迁移过来，没有任何成本。尽管如此我更倾向于直接使用init.lua。
+
+init.lua内即可按照lua语法进行配置，为了模块化条理化，通常都会把配置分层。
+
+### 基本插件及作用介绍 
+
+跳转，补全，颜色主体，及按键映射这几个应该是必不可少。
+
+- lazy.nvim
+
+当前(2023年)neovim最推荐的插件管理工具，类似于vim-plug或者vundle, lazy.nvim之前是packer.nvim,
+packer.nvim已经停更了，所以推荐packer的blog已经过时了。
+安装方法参考[官方说明](https://github.com/folke/lazy.nvim):
+
+```lua
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+```
+想要使用lazy安装其他插件就再添加一行即可（替换yourplugin为你要添加的插件):
+
+```lua
+require("lazy").setup("yourplugin")
+```
+
+比如我安装了下面介绍的插件，可以使用:
+
+```lua
+  require("lazy").setup({    
+      "neovim/nvim-lspconfig",    
+      "williamboman/mason.nvim",    
+      "williamboman/mason-lspconfig.nvim",    
+      "hrsh7th/cmp-nvim-lsp",    
+      "hrsh7th/cmp-buffer",    
+      "hrsh7th/cmp-path",    
+      "hrsh7th/cmp-cmdline",    
+      "hrsh7th/nvim-cmp",    
+      "hrsh7th/cmp-vsnip",    
+      "hrsh7th/vim-vsnip"    
+  })
+```
+
+之后保存退出，再在终端输入nvim启动，即可自动安装
+
+- neovim/nvim-lspconfig
+
+从名字可以看出来是neovim官方的lsp服务配置插件
+
+- williamboman/mason.nvim
+
+lsp server的管理插件，可以用来下载安装各种server
+
+- williamboman/mason-lspconfig.nvim
+
+连接mason.nvim与lspconfig的插件,与mason是一个作者
+
+- hrsh7th/nvim-cmp
+
+补全插件，根据作者的说明，还要几个辅助插件用于设置补全来源，
+来源我只用了作者这一个，可以根据作者说明添加其他的.依赖的插件如下：
+
+```bash
+"hrsh7th/cmp-nvim-lsp",
+"hrsh7th/cmp-buffer",
+"hrsh7th/cmp-path",
+"hrsh7th/cmp-cmdline",
+"hrsh7th/cmp-vsnip",
+"hrsh7th/vim-vsnip"
+```
+
+- 主题颜色
+
+我没用插件，手动下载`molokai.vim`后放到.config/nvim/colors文件夹内，
+然后在init.lua中添加`vim.cmd('colorscheme '..'molokai')`即可。
+
+这样其实是使用的vim script。
+
+- 按键映射
+
+基本只设置了一些跟lsp跳转相关的映射:
+
+```lua
+map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opt)    
+map("n", "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", opt)    
+map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opt)    
+map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opt)    
+map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opt)    
+-- diagnostic           
+map("n", "gp", "<cmd>lua vim.diagnostic.open_float()<CR>", opt)    
+map("n", "gk", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opt)    
+map("n", "gj", "<cmd>lua vim.diagnostic.goto_next()<CR>", opt)    
+map("n", "<leader>f", "<cmd>lua vim.lsp.buf.format()<CR>", opt) 
+```
+
+至此基本配置已经完成，有几点需要注意，`require.("lazy").setup(...)`这步只是使用lazy下载了插件，
+具体要加载插件也需要对具体的插件使用`require`，比如：
+
+```
+ require("mason").setup()    
+  require("mason-lspconfig").setup({    
+      ensure_installed = {    
+      "lua_ls",           
+      "bashls",           
+      "clangd",           
+      "pyright",          
+      "gopls",            
+      }                   
+  })
+```
+至于具体require的名字及参数，可参考各自的插件主页。
+
+我自己的配置主页非常简陋，也缺乏条理，不推荐，
+不过希望学习如何配置的话，倒是可以参考[vim-config](https://github.com/leeyeel/vim-config)
+

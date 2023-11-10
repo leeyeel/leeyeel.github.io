@@ -22,11 +22,12 @@ mathjax: true
 在使用一段时间后，一些问题逐渐暴露出来。
 首先就是当前的插件对vim8的支持不够友好，插件有版本不兼容的问题，需要我升级vim9。
 升级vim9话又会带来问题：首先我一直用的是ubuntu LTS版本，22.04目前默认的版本是vim8,
-其次是vim9是作者生前重构过的版本，升级后之前用的很多插件也不兼容，且还要重新适应vim9新的脚本语言。
-升级vim9的话，原先大量的已有插件的优势相对neovim来说就不够明显了。
+其次是vim9是作者生前重构过的版本，升级后有些插件也不兼容，且还要重新适应vim9新的脚本语言。
+还有就是Mac上已经默认是vim9,但是我使用的ubuntu 22.04LTS还是vim8,需要手动升级，
+否则一套配置就无法在多个平台共用。
 
-neovim目前最大的问题就是仍然在快速迭代，特别是插件，过几个月可能就需要更换一批，比如之前的packer,null-ls等。
-尽管如此，我还是希望尝试neovim。neovim的社区太活跃了。
+neovim目前最大的问题就是仍然在快速迭代，特别是插件，过几个月可能就需要更换一批，
+比如之前的packer,null-ls等。尽管如此，我还是希望尝试neovim,neovim的社区太活跃了。
 
 
 ### neovim入门介绍
@@ -156,5 +157,5 @@ map("n", "<leader>f", "<cmd>lua vim.lsp.buf.format()<CR>", opt)
 至于具体require的名字及参数，可参考各自的插件主页。
 
 我自己的配置主页非常简陋，也缺乏条理，不推荐，
-不过希望学习如何配置的话，倒是可以参考[vim-config](https://github.com/leeyeel/vim-config)
+不过从没接触过neovim,希望学习如何配置的话，倒是可以稍作参考[vim-config](https://github.com/leeyeel/vim-config)
 

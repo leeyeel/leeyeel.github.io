@@ -159,3 +159,119 @@ map("n", "<leader>f", "<cmd>lua vim.lsp.buf.format()<CR>", opt)
 我自己的配置主页非常简陋，也缺乏条理，不推荐，
 不过从没接触过neovim,希望学习如何配置的话，倒是可以稍作参考[vim-config](https://github.com/leeyeel/vim-config)
 
+### 其他插件补充
+
+以下插件是我在使用中逐渐添加的插件，原则上还是以避免花里胡哨为主。
+
+- nvim-tree
+
+用于展示文件列表，方便查找文件,类似的插件有neo-tree及nvim-tree,
+尽管实际上发现自动加载显示文件列表有些多余。
+总之喜欢哪个都可以，初体验的话区别不大，我选用的是nvim-tree。
+
+使用nvim-tree需要在lazy中添加对应名称:
+```lua
+  require("lazy").setup({                                                                                                                                                                                                                                                    │~
+        ...
+      "nvim-tree/nvim-tree.lua",                                                                                                                                                                                                                                             │~
+      {                                                                                                                                                                                                                                                                      │~
+          'akinsho/bufferline.nvim',                                                                                                                                                                                                                                         │~
+          version = "*",                                                                                                                                                                                                                                                     │~
+          dependencies = 'nvim-tree/nvim-web-devicons'                                                                                                                                                                                                                       │~
+      }                                                                                                                                                                                                                                                                      │~
+  })
+```
+还需要启用nvim-tree,使用默认配置即可:
+
+```lua
+require("nvim-tree").setup() 
+```
+
+到这里重启nvim后就可使用了，输入":NvimTreeOpen"即可显示文件，为了更方便，可定义个快捷键:
+```lua
+map("n", "<A-m>", ":NvimTreeToggle<CR>", opt) 
+```
+这样按键`alt + m`即可打开或关闭文件浏览，很方便。
+
+- stevearc/aerial.nvim
+
+类似于之前的taglist的功能，不再使用taglist的原因是taglist是基于静态扫描的，不是基于lsp的。
+
+显示大纲的候选插件有[symbols-outline.nvim](https://github.com/simrat39/symbols-outline.nvim#configuration)
+及[aerial.nvim](https://github.com/stevearc/aerial.nvim),但是前者没有内置选项可以在加载文件时自动显示大纲，
+issues中有人提到这个问题，尽管有回复说是可以通过在lsp`on_attach`中调用`open_outline()`可实现自动显示，
+但尝试过在多个时机调用`open_outline()`均无法在打开文件时自动显示大纲。
+
+选择aerial.nvim插件，它的配置更丰富，使用也更简单，不过注意该插件依赖`nvim-treesitter/nvim-treesitter`,
+及`nvim-tree/nvim-web-devicons`,因此需要先安装这两个，使用lazy管理插件可直接安装这三个:
+
+```lua
+  require("lazy").setup({    
+    ...
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-tree/nvim-web-devicons",
+    "stevearc/aerial.nvim",
+  })
+```
+
+需要注意的是，如果希望打开文件时自动显示大纲，需要开启`open_automatic`,即：
+
+```lua
+require("aerial").setup({
+    open_automatic = true,
+})
+```
+
+还有需要注意的是,aerial使用了很多特殊字符，在通常的字体中可能没有，会表现为乱码。
+解决方法是安装个[nerd font](https://www.nerdfonts.com/font-downloads),我使用UbuntuMono nerd font,
+下载安装后，在Terminal中设置为这个字体即可。
+
+同时还希望可以方便的打开关闭，可添加个快捷键，我使用的是`alt + l`，方法如下:
+
+```lua
+map("n", "<A-l>", ":AerialToggle<CR>", opt)
+```
+
+- bufferline.nvim
+
+主要作用是把buffer中的文件像Terminal中的tab一样显示,类似于SourceInsight从3.5进化到4.0，跳转时有标签页
+
+使用layz安装:
+
+```lua
+require("lazy").setup({
+        ...
+      {                                                                                                                                                                                                                                     │~
+          'akinsho/bufferline.nvim',                                                                                                                                                                                                        │~
+          version = "*",                                                                                                                                                                                                                    │~
+          dependencies = 'nvim-tree/nvim-web-devicons'                                                                                                                                                                                      │~
+      } 
+```
+使用下面的选项跳过左侧nvimtree:
+
+```lua
+  require("bufferline").setup {                                                                                                                                                                                                             │~
+      options = {                                                                                                                                                                                                                           │~
+          diagnostics = "nvim_lsp",                                                                                                                                                                                                         │~
+          offsets = {{                                                                                                                                                                                                                      │~
+              filetype = "NvimTree",                                                                                                                                                                                                        │~
+              text = "File Explorer",                                                                                                                                                                                                       │~
+              highlight = "Directory",                                                                                                                                                                                                      │~
+              text_align = "left"                                                                                                                                                                                                           │~
+          }}                                                                                                                                                                                                                                │~
+      }                                                                                                                                                                                                                                     │~
+  }
+```
+
+为了方便跳转Tab,可使用几个快捷键:
+
+```lua
+  map("n", "<C-h>", ":BufferLineCyclePrev<CR>", opt)                                                                                                                                                                         │~
+  map("n", "<C-l>", ":BufferLineCycleNext<CR>", opt)
+```
+这样按`ctl + h`可以向左查看tab,按`ctl + l`可以向右查看tab。
+
+最终效果如图:
+
+![]({{site.url}}assets/nvim/1.png)
+

@@ -171,14 +171,14 @@ map("n", "<leader>f", "<cmd>lua vim.lsp.buf.format()<CR>", opt)
 
 使用nvim-tree需要在lazy中添加对应名称:
 ```lua
-  require("lazy").setup({                                                                                                                                                                                                                                                    │~
+  require("lazy").setup({
         ...
-      "nvim-tree/nvim-tree.lua",                                                                                                                                                                                                                                             │~
-      {                                                                                                                                                                                                                                                                      │~
-          'akinsho/bufferline.nvim',                                                                                                                                                                                                                                         │~
-          version = "*",                                                                                                                                                                                                                                                     │~
-          dependencies = 'nvim-tree/nvim-web-devicons'                                                                                                                                                                                                                       │~
-      }                                                                                                                                                                                                                                                                      │~
+      "nvim-tree/nvim-tree.lua",
+      {
+          'akinsho/bufferline.nvim',
+          version = "*",
+          dependencies = 'nvim-tree/nvim-web-devicons'
+      }
   })
 ```
 还需要启用nvim-tree,使用默认配置即可:
@@ -206,7 +206,7 @@ issues中有人提到这个问题，尽管有回复说是可以通过在lsp`on_a
 及`nvim-tree/nvim-web-devicons`,因此需要先安装这两个，使用lazy管理插件可直接安装这三个:
 
 ```lua
-  require("lazy").setup({    
+  require("lazy").setup({
     ...
     "nvim-treesitter/nvim-treesitter",
     "nvim-tree/nvim-web-devicons",
@@ -241,32 +241,32 @@ map("n", "<A-l>", ":AerialToggle<CR>", opt)
 ```lua
 require("lazy").setup({
         ...
-      {                                                                                                                                                                                                                                     │~
-          'akinsho/bufferline.nvim',                                                                                                                                                                                                        │~
-          version = "*",                                                                                                                                                                                                                    │~
-          dependencies = 'nvim-tree/nvim-web-devicons'                                                                                                                                                                                      │~
+      {
+          'akinsho/bufferline.nvim',
+          version = "*",
+          dependencies = 'nvim-tree/nvim-web-devicons'
       } 
 ```
 使用下面的选项跳过左侧nvimtree:
 
 ```lua
-  require("bufferline").setup {                                                                                                                                                                                                             │~
-      options = {                                                                                                                                                                                                                           │~
-          diagnostics = "nvim_lsp",                                                                                                                                                                                                         │~
-          offsets = {{                                                                                                                                                                                                                      │~
-              filetype = "NvimTree",                                                                                                                                                                                                        │~
-              text = "File Explorer",                                                                                                                                                                                                       │~
-              highlight = "Directory",                                                                                                                                                                                                      │~
-              text_align = "left"                                                                                                                                                                                                           │~
-          }}                                                                                                                                                                                                                                │~
-      }                                                                                                                                                                                                                                     │~
+  require("bufferline").setup {
+      options = {
+          diagnostics = "nvim_lsp",
+          offsets = {{
+              filetype = "NvimTree",
+              text = "File Explorer",
+              highlight = "Directory",
+              text_align = "left"
+          }}
+      }
   }
 ```
 
 为了方便跳转Tab,可使用几个快捷键:
 
 ```lua
-  map("n", "<C-h>", ":BufferLineCyclePrev<CR>", opt)                                                                                                                                                                         │~
+  map("n", "<C-h>", ":BufferLineCyclePrev<CR>", opt)
   map("n", "<C-l>", ":BufferLineCycleNext<CR>", opt)
 ```
 这样按`ctl + h`可以向左查看tab,按`ctl + l`可以向右查看tab。

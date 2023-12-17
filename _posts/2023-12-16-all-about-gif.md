@@ -83,32 +83,32 @@ LZW是被Unisys这家公司申请了专利的，但是当时没人注意到这�
 
 数据为`0A 00 0A 00 91 00 00`, 逻辑屏幕描述符紧随标题之后,总共7个字节。
 
-    - Canvas width, Canvas height
+* Canvas width, Canvas height
 
-        这里的宽度跟高度不一定就是整个图像的宽度跟高度，如果分块的话，就是分块的宽度跟高度，这个字段的目的就是给分块提供可能。
+    这里的宽度跟高度不一定就是整个图像的宽度跟高度，如果分块的话，就是分块的宽度跟高度，这个字段的目的就是给分块提供可能。
 
-    - Packed Filed
+* Packed Filed
 
-        - global color table flag 
-        全局颜色表标志,为0，表示没有全局颜色表。为1，表示有全局颜色表(我们的例子中有一个全局颜色表）。
++ global color table flag 
+全局颜色表标志,为0，表示没有全局颜色表。为1，表示有全局颜色表(我们的例子中有一个全局颜色表
 
-        - color resolution.
++ color resolution.
         它代表的是颜色位深。只有在有全局颜色表时才有意义。如果这个字段的值是N，则位深为N+1, 能表示的颜色种类总数目将是2^(N+1)。
         样本图像中的001代表2位/像素；111将代表8位/像素。
-    
-        - sort flag
+
++ sort flag
         非必须，如果为1,则表示全局颜色表中的颜色按照重要性递减的顺序排序，即图像中出现的频次递减。
         对解码有帮助，但不是必须的。
 
-        - size of Global Color Table
++ size of Global Color Table
         全局颜色表中的颜色个数，比如值为N，则颜色表个数为2^(N+1)
 
 
-    - background color index
++ background color index
 
     背景颜色的索引，这个索引对应的全局颜色表中的颜色，将会被认为为背景
 
-    - pixel aspect ratio
++ pixel aspect ratio
 
     像素宽度与高度的比值。这个参数几乎被所有现代浏览器忽略,具体用处可能与当年的模拟电视图像有关。
 
@@ -127,19 +127,19 @@ Animation](https://giflib.sourceforge.net/whatsinagif/animation_and_transparency
 
 ![]({{site.url}}assets/gif/graphic_control_ext.gif)
 
-    - extension introducer
+    * extension introducer
 
     固定为0x21
 
-    - graphic control label
+    * graphic control label
 
     固定为0xF9
 
-    - block size 
+    * block size 
 
     总共的字节数,通常四个字节
 
-    - Packed Filed
+    * Packed Filed
     共1个字节,其中前三位保留，接下来的三位为disposal method, 用来制定切换到下一幅图像应该如何处理，共可表示0-7,
     动画图像的值是 1，这表明解码器应该保持当前图像不变，并在其上绘制下一幅图像。如果是 2，就意味着画布应恢复到背景色；3 则表示画布应恢复到绘制当前图像之前的状态。
     据我所知，这个值并不被广泛支持。对于 4 到 7 的值，其行为还没有定义。如果这个图像不是动画，这些位通常会被设为 0，表示没有特定的处理方法。
@@ -148,14 +148,14 @@ Animation](https://giflib.sourceforge.net/whatsinagif/animation_and_transparency
 
     最后一位是透明度标志。如果需要透明度，则需要设置为1,否则设置为0
 
-    - delay time
+    * delay time
     用来控制动态图的帧率，单位是百分之一秒，即10毫秒。
 
-    - Transparent Color index
+    * Transparent Color index
 
     透明颜色索引。指定哪个颜色为透明，哪个颜色就像涂了隐身药水变透明
 
-    - Block terminator
+    * Block terminator
 
     块结束符号，通常00
 
@@ -172,17 +172,17 @@ Animation](https://giflib.sourceforge.net/whatsinagif/animation_and_transparency
 
 最后一个字节又是一个Packed Filed。在我们的示例文件中，这个字节是 0，因此所有的子值都将是零。
 
-    -  local color table flag
-    局部颜色表标志。将这个标志设置为 1 允许您指定随后的图像数据使用的颜色表与全局颜色表不同。
+*  local color table flag
+局部颜色表标志。将这个标志设置为 1 允许您指定随后的图像数据使用的颜色表与全局颜色表不同。
 
-    - interlace flag
-    交错标志。交错改变了图像呈现在屏幕上的方式，可以减少令人讨厌的视觉闪烁,视觉闪烁的原因，又要追溯到上世纪模拟显示器的扫描方式。
-    交错在显示器上的效果是，先显示图像其中一部分，这样观众可以先看到一个模糊的图像，然后逐渐清晰，最后完全显示，也是在那个宽带极其有限的情况下的产物。
-    防止屏闪可以不考虑，因为现在的显示器不会有这个问题。关于显示效果举个例子一看就明白了，左边是顺序显示，右边是交错显示。
+* interlace flag
+交错标志。交错改变了图像呈现在屏幕上的方式，可以减少令人讨厌的视觉闪烁,视觉闪烁的原因，又要追溯到上世纪模拟显示器的扫描方式。
+交错在显示器上的效果是，先显示图像其中一部分，这样观众可以先看到一个模糊的图像，然后逐渐清晰，最后完全显示，也是在那个宽带极其有限的情况下的产物。
+防止屏闪可以不考虑，因为现在的显示器不会有这个问题。关于显示效果举个例子一看就明白了，左边是顺序显示，右边是交错显示。
 
 ![]({{site.url}}assets/gif/no-interlaced.gif)![]({{site.url}}assets/gif/interlaced.gif)
 
-    - 其余sort flag, size of local color table
+* 其余sort flag, size of local color table
     与前文描述一致，只不过是局域颜色表
 
 - Local Color Table
@@ -241,7 +241,7 @@ GIF89 规范中的最后一个扩展类型是评论扩展。这允许你在 GIF 
 
 在n4.0中，palattegen filter中开始添加透明通道
 
-```diff&patch
+```patch
 diff --git a/libavfilter/vf_palettegen.c b/libavfilter/vf_palettegen.c
 index 03de317348..5ff73e6b2b 100644
 --- a/libavfilter/vf_palettegen.c

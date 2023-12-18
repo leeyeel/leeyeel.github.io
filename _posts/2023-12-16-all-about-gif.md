@@ -67,9 +67,13 @@ LZW是被Unisys这家公司申请了专利的，但是当时没人注意到这�
 
 注意实线框为必须项，虚线框为可选项。
 
-![]({{site.url}}assets/gif/sample_1.gif)![]({{site.url}}assets/gif/binary-raw.png)
+![]({{site.url}}assets/gif/sample_1.gif)
 
-上图是个极其简单的GIF图，右侧是它的二进制数据，我们分别来看GIF的各个字段:
+上图是个极其简单的GIF图，它的分辨率只有10x10，最多只支持4种颜色，每种颜色用2位二进制数表示。
+
+![]({{site.url}}assets/gif/binary-raw.png)
+
+上面是这个GIF图的二进制数据，我们分别来看GIF的各个字段:
 
 - Header Bloack
 

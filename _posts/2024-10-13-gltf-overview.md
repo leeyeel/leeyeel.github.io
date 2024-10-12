@@ -16,9 +16,10 @@ mathjax: true
 
 翻译项目地址位于[leeyeel/gltfOverview项目](https://github.com/leeyeel/gltfOverview),
 如有任何错误、建议、或者意见欢迎及时反馈。
-PDF格式文件可[点此下载](https://github.com/leeyeel/gltfOverview/releases/download/v2.0.0d/gltfOverview2.0-cn.pdf)
-高清png图片可[点此下载](https://github.com/leeyeel/gltfOverview/releases/download/v2.0.0d/gltfOverview2.0-cn.png)
 
+PDF格式文件可[点此下载](https://github.com/leeyeel/gltfOverview/releases/download/v2.0.0d/gltfOverview2.0-cn.pdf)
+
+高清png图片可[点此下载](https://github.com/leeyeel/gltfOverview/releases/download/v2.0.0d/gltfOverview2.0-cn.png)
 
 ### 概览内容
 

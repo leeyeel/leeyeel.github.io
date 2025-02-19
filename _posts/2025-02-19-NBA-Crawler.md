@@ -4,7 +4,7 @@ title:  "NBA球员数据爬虫"
 date:   2025-02-19 18:40:00
 categories: 教程
 tags: 爬虫 nodejs
-excerpt:从ESPN爬取NBA比赛信息,包括球队数据，球员数据，比赛过程以及比赛概况 
+excerpt: 从ESPN爬取NBA比赛信息,包括球队数据，球员数据，比赛过程以及比赛概况 
 mathjax: true
 ---
 

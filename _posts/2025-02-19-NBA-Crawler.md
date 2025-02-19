@@ -48,6 +48,7 @@ node yourscript.js 13 //13为湖人队teamId     
 ### 使用示例
 
 ##### 🏀 比赛信息
+
 **比赛 ID:** 401705297
 
 **主队:** Los Angeles Lakers  **得分:** 120
@@ -55,12 +56,14 @@ node yourscript.js 13 //13为湖人队teamId     
 **客队:** Golden State Warriors  **得分:** 112
 
 ##### 📊 球队统计
+
 | 球队 | 得分 | 命中-出手数 | 投篮命中率 | 三分命中率 | 罚球命中率 | 篮板 | 助攻 | 失误 |
 |------|------|------------|-------------|-----------|------------|------|------|------|
 | Golden State Warriors | 112 | 41-101 | 40.6 | 30.2 | 70.0 | 40 | 29 | 12 |
 | Los Angeles Lakers | 120 | 39-78 | 50.0 | 37.1 | 80.6 | 47 | 26 | 13 |
 
 ##### 🏀 球员统计 🏀
+
 | team | name | short_name | position | jersey | MIN | FG | 3PT | FT | OREB | DREB | REB | AST | STL | BLK | TO | PF | +/- | PTS |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Golden State Warriors | Draymond Green | D. Green | Power Forward | 23 | 33 | 5-7 | 2-2 | 1-3 | 0 | 5 | 5 | 4 | 2 | 1 | 0 | 5 | -1 | 13 |
@@ -74,11 +77,13 @@ node yourscript.js 13 //13为湖人队teamId     
 
 
 ##### 📜 recap 比赛概述 
+
 LOS ANGELES -- — <a href="http://www.espn.com/nba/player/_/id/1966/lebron-james">LeBron James</a> had 42 points, 17 rebounds and eight assists, and the <a href="http://www.espn.com/nba/team/_/name/lal/los-angeles-lakers">Los Angeles Lakers</a> blew most of a 26-point lead before hanging on to beat the <a href="http://www.espn.com/nba/team/_/name/gs/golden-state-warriors">Golden State Warriors</a> 120-112 on Thursday night.
 
 ……
 
 ##### 🎭 Play-by-Play  完整比赛 
+
 - **[1st Quarter - 12:00]** Quinten Post vs. Jaxson Hayes (LeBron James gains possession)
 - **[1st Quarter - 11:41]** LeBron James bad pass (Stephen Curry steals)
 - **[1st Quarter - 11:37]** Jaxson Hayes blocks Stephen Curry 's 4-foot two point shot

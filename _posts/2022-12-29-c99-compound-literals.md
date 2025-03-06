@@ -2,8 +2,8 @@
 layout: post
 title:  "c99 Compound Literals语法介绍"
 date:   2022-12-29 19:38:00
-categories: 总结
-tags: ffmpeg
+categories: 音视频 
+tags: ffmpeg C/C++
 excerpt: c99 Compound Literals 介绍
 mathjax: true
 ---

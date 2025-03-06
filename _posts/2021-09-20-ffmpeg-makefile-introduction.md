@@ -2,7 +2,7 @@
 layout: post
 title:  "ffmpeg从入门到放弃(一):编译流程介绍"
 date:   2021-09-21 16:11:00
-categories: 总结
+categories: 音视频 
 tags: ffmpeg 
 excerpt: ffmpeg编译流程,congfigure及Makefile介绍
 mathjax: true

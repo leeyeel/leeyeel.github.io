@@ -2,8 +2,8 @@
 layout: post
 title:  "单片机开发与linux驱动区别要点" 
 date:   2019-03-26 00:21:00
-categories: 笔记心得
-tags: 单片机 MCU Linux 驱动 区别
+categories: 学习总结
+tags: 单片机 MCU 驱动 
 excerpt: 本文适用于有单片机开发基础，但对Linux驱动开发没经验的小伙伴
 mathjax: true
 ---

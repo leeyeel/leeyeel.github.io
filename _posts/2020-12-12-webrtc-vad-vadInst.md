@@ -2,8 +2,8 @@
 layout: post
 title:  "webrtc vad 源码解析(一)"
 date:   2020-12-23 23:35:00
-categories: 笔记心得
-tags: webrtc vad 源码
+categories: 音视频
+tags: webrtc vad 音频 
 excerpt: webrtc vad 源码阅读中对VadInst结构体的说明
 mathjax: true
 ---

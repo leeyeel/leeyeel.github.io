@@ -2,8 +2,8 @@
 layout: post
 title:  "AUTOSAR框架介绍（二）" 
 date:   2017-09-26 00:29:54
-categories: 汽车
-tags: autosar 
+categories: 学习总结
+tags: autosar 汽车
 excerpt: 上一部分主要介绍AUTOSAR的构架，下面继续
 mathjax: true
 ---

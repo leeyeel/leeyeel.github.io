@@ -2,7 +2,7 @@
 layout: post
 title:  "ffmpeg历史垃圾桶中的AVFifoBuffer源码分析"
 date:   2023-01-02 13:44:00
-categories: 总结
+categories: 音视频 
 tags: ffmpeg
 excerpt: ffmpeg n4.4版本的AVFifoBuffer实现源码解析
 mathjax: true

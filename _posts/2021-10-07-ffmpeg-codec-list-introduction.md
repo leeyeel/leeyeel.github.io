@@ -2,7 +2,7 @@
 layout: post
 title:  "ffmpeg从入门到放弃(二):编解码器是如何生效的"
 date:   2021-10-07 17:01:00
-categories: 总结
+categories: 音视频 
 tags: ffmpeg 
 excerpt: ffmpeg中的编码器是如何生效的，包括软件编码及硬件编解码器的原理
 mathjax: true

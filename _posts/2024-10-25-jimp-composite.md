@@ -2,8 +2,8 @@
 layout: post
 title:  "jimp composite 方法详解"
 date:   2024-10-25 15:59:00
-categories: 笔记心得
-tags: jimp js nodejs 接口 
+categories: 学习总结
+tags: jimp nodejs 图形学 
 excerpt: jimp库中有个composite函数，其中有个options选项，本文主要分析options选项
 mathjax: true
 ---

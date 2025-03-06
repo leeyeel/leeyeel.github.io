@@ -2,8 +2,8 @@
 layout: post
 title:  "rockchip px30 buildroot 编译修改说明"
 date:   2020-06-15 01:56:00
-categories: 笔记心得
-tags: linux 
+categories: 学习总结
+tags: 笔记  rockchip
 excerpt: rockchip px30 huildroot 在ubuntu 18.04 编译说明
 mathjax: true
 ---

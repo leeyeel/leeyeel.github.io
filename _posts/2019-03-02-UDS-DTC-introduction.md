@@ -2,8 +2,8 @@
 layout: post 
 title: "UDS诊断之读DTC信息(19 hex)服务(Part I)"
 date: 2019-03-02 20:36:20
-categories: 汽车
-tags: 汽车电子 UDS DTC ISO1429 
+categories: 学习总结
+tags: 汽车 UDS DTC ISO1429 
 excerpt: 读DTC信息服务是UDS诊断中比较复杂的一个服务，所以首先介绍它。
 mathjax: false
 ---

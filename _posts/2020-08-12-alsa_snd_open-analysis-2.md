@@ -2,8 +2,8 @@
 layout: post
 title:  "linux alsa-lib snd_pcm_open函数源码分析（二)"
 date:   2020-08-12 23:56:00
-categories: 笔记心得
-tags: audio linux alsa
+categories: 音视频 
+tags: alsa 驱动 音频
 excerpt: snd_pcm_open源码分析的第二篇，对子函数snd_config_update_ref的分析，其中主要是对snd_config_update_ref的子函数snd_config_load函数的分析。
 mathjax: true
 ---

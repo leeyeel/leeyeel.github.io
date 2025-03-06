@@ -2,8 +2,8 @@
 layout: post
 title:  "劳特巴赫(Lauterbach)——Trace32工具的简单介绍" 
 date:   2018-11-25 00:42:00
-categories: 汽车
-tags: 笔记 lauterbach
+categories: 学习总结
+tags: lauterbach 汽车
 excerpt: Lauterbach的仿真器真的做到了极致，功能强大到令人发指。
 mathjax: true
 ---

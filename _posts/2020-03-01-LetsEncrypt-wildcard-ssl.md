@@ -2,8 +2,8 @@
 layout: post
 title:  "LetsEncrypt申请泛域名" 
 date:   2020-03-01 20:56:00
-categories: 笔记心得
-tags: 网络
+categories: 实践记录 
+tags: letsencrypt
 excerpt: VPS上的上网服务以及申请ssl证书中查阅到的一些文档及方法总结
 mathjax: true
 ---

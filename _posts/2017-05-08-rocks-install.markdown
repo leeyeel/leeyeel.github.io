@@ -2,8 +2,8 @@
 layout: post
 title:  "rocks cluster 安装过程"
 date:   2017-05-08 00:48:54
-categories: 笔记心得
-tags: rocks cluster 教程
+categories: 实践记录
+tags: 教程 rocks
 excerpt: 主要记录我安装rocks cluster 的过程，包括后续的一些配置    
 mathjax: true
 ---

@@ -2,8 +2,8 @@
 layout: post
 title:  "掘地三尺分析ffmpeg中av_freep函数及C标准的strict aliasing rule介绍"
 date:   2023-06-21 17:44:00
-categories: 总结
-tags: ffmpeg
+categories: 音视频 
+tags: ffmpeg C/C++
 excerpt: ffmpeg 中的av_freep函数深度解析，以及C语言的strict aliasing rule介绍
 mathjax: true
 ---

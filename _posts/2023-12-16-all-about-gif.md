@@ -2,8 +2,8 @@
 layout: post
 title:  "GIF图片格式简史"
 date:   2023-12-16 23:31:00
-categories: 教程
-tags: gif 音视频 图像
+categories: 学习总结
+tags: gif 图形学 图像
 excerpt: GIF图片格式的历史，格式介绍，以及ffmpeg等对gif的处理
 mathjax: true
 ---

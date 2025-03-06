@@ -2,8 +2,8 @@
 layout: post
 title:  "2023年vim转neovim,及基础插件安装"
 date:   2023-11-05 22:37:00
-categories: 教程
-tags: vim neovim plugins
+categories: 实践记录
+tags: vim neovim 
 excerpt: 适用于熟悉vim但不熟悉neovim同时又想转向neovim的小伙伴
 mathjax: true
 ---

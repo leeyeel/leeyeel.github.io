@@ -2,8 +2,8 @@
 layout: post
 title:  "linux下使用python-jenkins后台提交任务"
 date:   2020-07-31 01:56:00
-categories: 笔记心得
-tags: linux python
+categories: 实践记录
+tags:  笔记 python
 excerpt: 本文重点是提供一个后台提交任务及查询的逻辑框架
 mathjax: true
 ---

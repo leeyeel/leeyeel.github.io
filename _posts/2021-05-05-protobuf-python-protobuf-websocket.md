@@ -2,8 +2,8 @@
 layout: post
 title:  "python使用protobuf接收websockets数据"
 date:   2021-05-05 18:11:00
-categories: 笔记心得
-tags: python protobuf websocket javascript
+categories: 学习总结
+tags: python protobuf 
 excerpt: python使用protobuf接收websocket数据
 mathjax: true
 ---

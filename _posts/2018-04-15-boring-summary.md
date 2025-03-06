@@ -2,9 +2,9 @@
 layout: post
 title:  "从高能物理到程序猿" 
 date:   2018-04-15 00:42:00
-categories: 高能物理
-tags: 乱七八糟
-excerpt: 是，我就是高能物理转行程序猿的
+categories: 个人感想
+tags: 高能物理 
+excerpt: 从高能物理转行写代码
 mathjax: true
 ---
 * TOC

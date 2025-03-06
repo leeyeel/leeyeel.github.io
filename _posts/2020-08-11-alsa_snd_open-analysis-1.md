@@ -2,8 +2,8 @@
 layout: post
 title:  "linux alsa-lib snd_pcm_open函数源码分析（一)"
 date:   2020-08-11 11:56:00
-categories: 笔记心得
-tags: audio linux alsa
+categories: 音视频 
+tags: alsa 驱动 音频
 excerpt: snd_pcm_open分析系列的第一篇，介绍函数原型，作用，以及使用中的位置
 mathjax: true
 ---

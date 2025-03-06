@@ -2,8 +2,8 @@
 layout: post
 title:  "一次流产的微信红包分配策略分析"
 date:   2021-02-19 16:11:00
-categories: 笔记心得
-tags: 微信 红包
+categories: 个人感想 
+tags: 微信 感想
 excerpt: 微信红包分配策略分析
 mathjax: true
 ---

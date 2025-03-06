@@ -2,8 +2,8 @@
 layout: post
 title:  "linux下calibre使用http代理" 
 date:   2017-11-02 12:12:12
-categories: 笔记心得
-tags: calibre linux ubuntu kindle 代理
+categories: 实践记录
+tags: calibre kindle 
 excerpt: 利用calibre抓取《经济学人》等杂志并自动推送到kindle
 mathjax: true
 ---

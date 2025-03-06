@@ -2,8 +2,8 @@
 layout: post
 title:  "Linux下安装CERN ROOT全过程"
 date:   2014-11-20 16:54:39
-categories: 高能物理
-tags: cern root install 教程 ubuntu 20.04
+categories: 高能物理 
+tags: root  高能物理
 excerpt: cern root6 的安装教程
 mathjax: true
 ---

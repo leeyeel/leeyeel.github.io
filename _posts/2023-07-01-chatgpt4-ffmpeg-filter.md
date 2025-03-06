@@ -2,7 +2,7 @@
 layout: post
 title:  "chatgpt4.0辅助编程:人类还能苟活多久"
 date:   2023-07-02 20:37:00
-categories: 总结
+categories: 个人感想 
 tags: ffmpeg chatgpt
 excerpt: 使用chatgpt辅助开发ffmpeg应用，以及对chatgpt4的使用感想
 mathjax: true

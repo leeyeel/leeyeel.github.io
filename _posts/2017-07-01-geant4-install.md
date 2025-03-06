@@ -2,8 +2,8 @@
 layout: post
 title:  "linux下安装Geant4.10全过程"
 date: 2014-10-07 15:12:10
-categories: 高能物理
-tags: geant4 install 教程
+categories:  高能物理 
+tags: geant4  高能物理
 excerpt: geant4 的安装教程
 mathjax: true
 ---

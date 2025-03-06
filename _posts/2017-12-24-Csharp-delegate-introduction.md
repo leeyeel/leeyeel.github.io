@@ -2,8 +2,8 @@
 layout: post
 title: "C#中的委托delegate与C/C++中的函数指针"
 date: 2017-12-24 00:43
-categories: 笔记心得
-tags: C# 委托　函数指针
+categories: 学习总结
+tags: C# delegate
 excerpt: 通过对比C#中委托与C/C++中函数指针，来更好的理解委托
 mathjax: false
 ---

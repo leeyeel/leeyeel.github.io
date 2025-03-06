@@ -2,8 +2,8 @@
 layout: post
 title:  "glTF 基础概览"
 date:   2024-10-13 01:37:00
-categories: 教程
-tags: glTF 3D 模型 翻译
+categories: 个人项目
+tags: glTF 3D 模型 翻译 图形学
 excerpt: glTF 基础概览,快速了解glTF格式
 mathjax: true
 ---

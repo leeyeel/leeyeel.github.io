@@ -2,8 +2,8 @@
 layout: post
 title:  "wake on lan plus——升级版本的网络唤醒"
 date:   2025-03-05 16:02:00
-categories: 教程
-tags: 工具 
+categories: 个人项目
+tags: wol
 excerpt: openwrt上可用的远程唤醒与远程关机工具
 mathjax: true
 ---

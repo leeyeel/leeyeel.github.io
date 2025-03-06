@@ -19,6 +19,10 @@ mathjax: true
 
 [WOL plus仓库地址](https://github.com/leeyeel/WOL-plus).
 
+![]({{site.url}}assets/wolp/wolp2.png)
+
+### 软件解析
+
 1. openwrt中luci框架
 
 在 OpenWrt 的 Web 界面（LuCI）中，采用了一种 MVC（Model-View-Controller） 设计模式，
@@ -63,7 +67,16 @@ if (has_ewk && has_wol) {
 ```
 完整的脚本位于：`/www/luci-static/resources/view/`
 
-2. LuCI文本国际化
+2. openwrt中的etherwake及wol介绍
+
+在 OpenWRT 中，主要有两个软件用于 Wake-on-LAN（WOL）：etherwake与wol
+
+etherwake 是一个 C 语言编写的工具，用于通过 MAC 地址 发送 Wake-on-LAN 数据包。
+它只能通过mac地址直接发送,所以无法跨网段，但是可以指定网卡。而wol支持指定ip及端口，所以实际上可以跨网段唤醒。
+
+不过默认安装的话，openwrt采用的是ethernet。
+
+3. LuCI文本国际化
 
 所有中文包都放置在`/usr/lib/lua/luci/i18n/ `这个目录，
 luci使用语言翻译的方式与Qt有些类似，实际加载的是二进制文件而不是文本文件。
@@ -81,7 +94,7 @@ cd luci/modules/luci-base
 make po2lmo
 ```
 
-3. WOL协议 
+4. WOL协议 
 
 Wake-on-LAN（简称 **WoL**）是一种 **远程网络唤醒技术**，允许用户通过 **网络** 唤醒处于 **待机** 或 **休眠** 状态的计算机。WoL 主要用于远程管理、节能应用和服务器维护，支持通过局域网（LAN）或互联网（WAN）唤醒计算机。
 
@@ -107,6 +120,12 @@ WoL 依赖 **魔法包 (Magic Packet)** 进行远程计算机唤醒。魔法包�
 | 前导同步码 | 6 | `FF:FF:FF:FF:FF:FF`，用于同步和识别 |
 | 目标 MAC 地址 | 16 × 6 = 96 | 目标计算机的 **MAC 地址重复 16 次** |
 
+所以目标MAC地址，源MAC地址，以太网帧类型，以及 WoL数据，已经116字节，
+同时WoL数据还支持附加数据作为密码，我们选为6字节，所以总共为122字节。
+
+使用关机功能时，就是通过对比服务端发送的关机信号中的密码，
+是否与客户端的密码相同，相同的话才会执行关机指令。
+
 - WoL 传输方式
 
 WoL 数据帧可以通过 **以太网 (Ethernet)** 或 **UDP 广播** 传输：
@@ -121,6 +140,80 @@ WoL 数据帧可以通过 **以太网 (Ethernet)** 或 **UDP 广播** 传输：
    - 默认使用 **UDP 端口 9（discard）或 7（echo）** 进行广播。
    - UDP 载荷部分仍然是标准 **WoL 魔法包** 格式。
 
-4. 监听以太帧
+由于需要唤醒设备，唤醒设备通常是直接网卡的硬件唤醒，所以直接使用以太网帧，
+即原始帧数据。
 
-5. 添加守护
+5. WOL数据中的源地址，目标地址
+
+实际使用过程中，发现是这个顺序：`目标 MAC | 目标 MAC | 帧类型 | WOL 数据`，
+即源 MAC 地址丢失，变成了目标 MAC 地址,如图，开头的数据都是目标地址。
+![]({{site.url}}assets/wolp/wolp1.png)
+
+这通常发生在 br-lan 发送 WOL 数据帧时。至于为什么br-lan让源MAC变成目标MAC，
+是因为在Linux Bridge 的默认行为下：
+    -   如果数据包是广播/组播
+        - br-lan 可能会覆盖源 MAC 地址
+        - 使其 看起来像来自目标设备
+        - 主要用于 防止环路 和 广播风暴
+    - 如果 WOL 数据包是单播
+        - 可能不会出现这个问题
+        - 但如果是广播，则源 MAC 可能会被修改
+
+当然也有解决方案，但这个通常没什么影响，除非希望设计更严格的验证。
+偷懒的话，就不验证这个MAC地址了。
+
+6. 添加守护
+
+无论linux还是windows，如果想保证持续运行监听关机信号，就需要添加守护。
+相比较来说，在ubuntu上添加守护很简单，只需要配置好systemctl的配置即可。
+重点是windows的守护。
+
+windows守护常见的就是添加到windows服务中，但是添加windows服务有太多太多方案，
+我希望的是尽可能与linux下的代码兼容。
+
+windows服务中不像 Linux 那样直接监听 SIGTERM 或 SIGKILL 信号，
+Windows 服务的 启动、关闭 是通过 Service Control Manager (SCM) 进行管理的，
+而不是通过 UNIX 信号机制。
+这就导致如果需要监听信号的话，需要使用`golang.org/x/sys/windows/svc`这样的三方库，
+当然使用三方库也不是不可以，比较不好的是没法与linux兼容。
+
+那有没有更好的解决方案，当然有，v2raya就是很好的案例。
+网络上找不到v2raya的打包方案介绍，只能看源码，这里顺便介绍下v2raya的打包方案。
+
+- v2raya的go代码在service文件夹中
+
+go代码部分并没有使用类似`golang.org/x/sys/windows/svc`这样的三方库`来监听服务控制消息，
+甚至就没有专门处理系统消息，相当于写代码时不需要考虑守护这回事。
+
+- 使用Inno setup打包
+
+当然也可以不使用inno setup打包，但是inno确实很方便，v2raya对于windows提供两种方案，
+这里只参考inno setup打包的方案。
+
+- inno 脚本中使用了winsw包装windows服务
+
+winSW包装windows服务的好处就是，winSW能把普通应用直接包装为windows服务，
+而不需要处理windows服务相关的控制消息。在v2raya的iss脚本中，可以看到如下代码：
+
+```bash
+[Run]
+Filename: "{app}\{#MyAppExeName}"; Parameters: "install";
+Filename: "{app}\{#MyAppExeName}"; Parameters: "start";
+```
+这里的`MyAppExeName`定义为`#define MyAppExeName "v2rayA-service.exe"`。
+
+这里很具有隐蔽性，实际`v2rayA-service.exe`就是`winSW.exe`,之所以要改名字，
+是因为winSW会根据本身的名字来默认创造一些服务名字，使用`v2rayA-service.exe`就可以省略掉一些参数。
+
+这部分工作是在github的工作流中完成的，在`.github/workflows/./release_main.yml`中有如下代码片段：
+
+```bash
+ Invoke-WebRequest $Url_WinSW -OutFile "D:\WinSW.exe"                                                                        
+ Copy-Item -Path "D:\WinSW.exe" -Destination "D:\v2raya-x86_64-windows\v2rayA-service.exe"
+```
+
+也就是这里把winSW拷贝为了`v2rayA-service.exe`
+
+还有一点，使用inno 脚本打包为exe的时候，用户直接运行exe就可以安装应用程序，
+是因为inno 打包工具直接把winSW也打包进去了。
+

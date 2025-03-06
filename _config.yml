@@ -7,7 +7,7 @@
 
 # Site settings
 title: Just4U
-brief-intro: 不会算圈图的程序猿不是个好厨子
+brief-intro: 真正的问题，从来不会被搜索引擎收录
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://blog.whatsroot.xyz/" # the base hostname & protocol for your site
 future: true

@@ -24,14 +24,14 @@ mathjax: true
 
 #### 排查流程
 
-1. 登录进入微信后，排查是否有开机自启动选项勾选。发现没有。
+###### 1.登录进入微信后，排查是否有开机自启动选项勾选。发现没有。
 
 ![]({{site.url}}assets/wechat/wechat2.png)
 
 大概是测试版，刚开始，乱七八糟的功能还没带过来，
 所以看着还是挺简洁的。
 
-2. 排查常用的开机自启动方法中是否有微信。
+###### 2.排查常用的开机自启动方法中是否有微信。
 
 通常情况下，Linux下的应用自启动常见于以下位置：
 
@@ -42,31 +42,30 @@ mathjax: true
 其中我的`~/.config/autostart/`这个目录是空的，其他两个虽然有很多项，
 但是通过查找wechat关键字，都没有找到任何相关项。
 
-3. 查看微信安装包中是否有什么可疑似行为。
+###### 3.查看微信安装包中是否有什么可疑似行为。那只能通过微信安装包本身来排查了，
 
-那只能通过微信安装包本身来排查了，
+1. 使用`ar x`命令解压WeChatLinux_x86_64.deb
 
-    1. 使用`ar x`命令解压WeChatLinux_x86_64.deb
+```
+➜  wechat ls
+control.tar.xz  data.tar.xz  debian-binary 
+```
+其中control.tar.xz 为包控制信息，data.tar.xz  是真正的安装文件，debian-binary 为版本标识。
 
-    ```bash
-    ➜  wechat ls
-    control.tar.xz  data.tar.xz  debian-binary 
-    ```
-    其中control.tar.xz 为包控制信息，data.tar.xz  是真正的安装文件，debian-binary 为版本标识。
+2. 使用`tar -xf`解压control.tar.xz 及data.tar.xz
 
-    2. 使用`tar -xf`解压control.tar.xz 及data.tar.xz
+```
+➜  wechat ls
+control  control.tar.xz  data.tar.xz  debian-binary  opt  postinst  postrm  prerm  usr 
+```
+有价值的主要是`postinst`以及`usr`文件夹，前者是个安装脚本，里面可以进行设置，
+后者是个文件夹，里面可能有相关的设置。
 
-    ```bash
-    ➜  wechat ls
-    control  control.tar.xz  data.tar.xz  debian-binary  opt  postinst  postrm  prerm  usr 
-    ```
-    有价值的主要是`postinst`以及`usr`文件夹，前者是个安装脚本，里面可以进行设置，
-    后者是个文件夹，里面可能有相关的设置。
+3. 分别排查`postinst`以及`usr/share/applications/wechat.desktop`文件。
 
-    3. 分别排查`postinst`以及`usr/share/applications/wechat.desktop`文件：
-    都没发现与自启动相关的内容，`postinst`是个脚本，太长了就不贴了,
-    wechat.desktop中也没有与`Autostart`相关的设置。也可以排除。
-    ```
+都没发现与自启动相关的内容，`postinst`是个脚本，太长了就不贴了,
+wechat.desktop中也没有与`Autostart`相关的设置。也可以排除。
+```
     [Desktop Entry]
     Name=wechat
     Name[zh_CN]=微信
@@ -78,8 +77,9 @@ mathjax: true
     Categories=Utility;
     Comment=Wechat Desktop
     Comment[zh_CN]=微信桌面版
-    ```
-4. 排除所有不可能，那么
+```
+
+###### 4.排除所有不可能，那么
 
 以上都是微信客户端主动能做的常规操作，如果微信客户端确实没做，
 那就是只剩下被动自启动了，就是系统的会话恢复机制。

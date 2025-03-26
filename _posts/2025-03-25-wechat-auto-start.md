@@ -18,7 +18,9 @@ mathjax: true
 最近使用时发现，每次开机微信总是会自动启动。联想到国内软件的一贯作风后，
 本能的就以为是腾讯的问题。然后在设置中查找是否默认开了开机自启，发现没有，
 
-如下图:![]({{site.url}}assets/wechat/wechat1.png)
+如下图:
+
+![]({{site.url}}assets/wechat/wechat1.png)
 
 考虑到国内软件的一贯作风，觉得还是软件问题，于是又进行了下面的一系列排查。
 
@@ -44,15 +46,15 @@ mathjax: true
 
 ###### 3.查看微信安装包中是否有什么可疑似行为。那只能通过微信安装包本身来排查了，
 
-1. 使用`ar x`命令解压WeChatLinux_x86_64.deb
+1.使用`ar x`命令解压WeChatLinux_x86_64.deb
 
 ```
 ➜  wechat ls
 control.tar.xz  data.tar.xz  debian-binary 
 ```
-其中control.tar.xz 为包控制信息，data.tar.xz  是真正的安装文件，debian-binary 为版本标识。
+其中`control.tar.xz`为包控制信息，`data.tar.xz` 是真正的安装文件，`debian-binary` 为版本标识。
 
-2. 使用`tar -xf`解压control.tar.xz 及data.tar.xz
+2.使用`tar -xf`解压control.tar.xz 及data.tar.xz
 
 ```
 ➜  wechat ls
@@ -61,10 +63,10 @@ control  control.tar.xz  data.tar.xz  debian-binary  opt  postinst  postrm  prer
 有价值的主要是`postinst`以及`usr`文件夹，前者是个安装脚本，里面可以进行设置，
 后者是个文件夹，里面可能有相关的设置。
 
-3. 分别排查`postinst`以及`usr/share/applications/wechat.desktop`文件。
+3.分别排查`postinst`以及`usr/share/applications/wechat.desktop`文件。
 
 都没发现与自启动相关的内容，`postinst`是个脚本，太长了就不贴了,
-wechat.desktop中也没有与`Autostart`相关的设置。也可以排除。
+`wechat.desktop`中也没有与`Autostart`相关的设置。也可以排除。
 ```
     [Desktop Entry]
     Name=wechat
@@ -100,5 +102,5 @@ gsettings set org.gnome.SessionManager auto-save-session false
 
 #### 对不起，腾讯
 
-竟然不是软件自己的逻辑，真的要对腾讯说声对不起，虽然，但是这次冤枉你了。
+竟然不是软件自己的逻辑，真的要对腾讯说声对不起，虽然xxx，但是这次冤枉你了。
 

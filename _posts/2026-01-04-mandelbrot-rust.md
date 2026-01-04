@@ -192,8 +192,12 @@ fn pixel_to_point(bounds: (usize, usize), pixel: (usize, usize),
 我们只需要：固定图像比例为 4:3,比如我是4000x3000, 依次用这些复平面窗口渲染,
 每一张图适当提高最大迭代次数即可绘制, 就能清晰看到分形结构逐步展开。
 
+![]({{site.url}}assets/mandelbrot/mandelbrot-1.webp)
+
 ![]({{site.url}}assets/mandelbrot/mandelbrot-2.webp)
 
 ![]({{site.url}}assets/mandelbrot/mandelbrot-3.webp)
 
 ![]({{site.url}}assets/mandelbrot/mandelbrot-4.webp)
+
+![]({{site.url}}assets/mandelbrot/mandelbrot-5.webp)

@@ -37,7 +37,9 @@ mathjax: true
 而是把已有历史 items 作为前缀完整携带，再把本次新增的 items 追加到末尾，
 重新发起一次 Responses API 调用。
 
+
 ![]({{site.url}}assets/openai/codex1/codex1.jpg)
+
 
 主流的Agent都是这么做的，而且为了应对越来越多的上下文累积，
 客户端不得不去做一些诸如上下文压缩的这种工作。

@@ -90,15 +90,16 @@ layout: default
         </div>
     </div>
 </div>
+<script src="{{ "/js/pageContent.js " | prepend: site.baseurl }}" charset="utf-8" defer></script>
 <script>
 /**
  * target _blank
  */
-(function() {
+window.addEventListener('DOMContentLoaded', function() {
     var aTags = document.querySelectorAll('article a:not([id])')
     for (var i = 0; i < aTags.length; i++) {
         aTags[i].setAttribute('target', '_blank')
+        aTags[i].setAttribute('rel', 'noopener noreferrer')
     }
-}());
+});
 </script>
-<script src="{{ "/js/pageContent.js " | prepend: site.baseurl }}" charset="utf-8"></script>

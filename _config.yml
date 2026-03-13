@@ -26,8 +26,15 @@ description_footer:
 # comments
 # two ways to comment, only choose one, and use your own short name
 # 两种评论插件，选一个就好了，使用自己的 short_name
-livere_shortname: leo 
+# 来必力会显示广告，已禁用
+livere_shortname: # leo
 disqus_shortname: #leeyeel
+
+# Giscus 评论系统配置（推荐，基于 GitHub Discussions，无广告）
+giscus_repo: leeyeel/leeyeel.github.io
+giscus_repo_id: MDEwOlJlcG9zaXRvcnk4NDkwOTMxOA==
+giscus_category: Announcements
+giscus_category_id: DIC_kwDOBQ-dBs4C4TCs
 
 # statistic analysis 统计代码
 # 百度统计 id，将统计代码替换为自己的百度统计id，即

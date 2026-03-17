@@ -18,7 +18,7 @@
             <a href=" https://dribbble.com/{{site.dribbble_username}}" title="Dribbble"><i class="fa-brands fa-dribbble" aria-hidden="true"></i></a> {% endif %}
         </p>
         <p>
-            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+            本站总访问量<span id="site_pv">...</span>次，本站访客数<span id="site_uv">...</span>人次，本文总阅读量<span id="page_pv">...</span>次
         </p>
         <p class="power">
             <span>
@@ -27,4 +27,45 @@
         </p>
     </div>
 </footer>
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+(async function(){
+  try {
+    const url = location.origin + location.pathname;
+
+    // 发送计数事件（不等待响应，避免阻塞）
+    fetch("https://stats.whatsroot.xyz/event", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({url})
+    }).catch(err => console.warn('Stats event failed:', err));
+
+    // 获取计数数据（设置5秒超时）
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const r = await fetch(
+      "https://stats.whatsroot.xyz/count?url=" + encodeURIComponent(url),
+      { signal: controller.signal }
+    );
+
+    clearTimeout(timeoutId);
+
+    if (!r.ok) throw new Error('Stats API error: ' + r.status);
+
+    const data = await r.json();
+
+    // 更新显示
+    document.getElementById("page_pv").textContent = data.page_pv || 0;
+    document.getElementById("site_pv").textContent = data.site_pv || 0;
+    document.getElementById("site_uv").textContent = data.site_uv || 0;
+
+  } catch (error) {
+    console.error('Failed to load stats:', error);
+    // 失败时显示默认值
+    document.getElementById("page_pv").textContent = "-";
+    document.getElementById("site_pv").textContent = "-";
+    document.getElementById("site_uv").textContent = "-";
+  }
+})();
+</script>

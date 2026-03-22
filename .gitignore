@@ -9,3 +9,13 @@ Gemfile.lock
 # Jekyll
 .jekyll-cache/
 .jekyll-metadata
+
+# Logs
+*.log
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo

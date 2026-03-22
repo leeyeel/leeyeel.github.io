@@ -1,0 +1,35 @@
+name: Submit IndexNow URLs
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Submit changed URLs to IndexNow
+        env:
+          INDEXNOW_BASE_URL: https://blog.whatsroot.xyz
+          INDEXNOW_KEY_FILE: c0b8a0805b6846729f5d0e69605f44c6.txt
+          INDEXNOW_FROM_REF: ${{ github.event.before }}
+          INDEXNOW_TO_REF: ${{ github.sha }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ruby scripts/indexnow_submit.rb --full
+          else
+            ruby scripts/indexnow_submit.rb
+          fi

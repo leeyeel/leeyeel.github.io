@@ -100,17 +100,22 @@ layout: default
                 </ul>
             </div>
             <!-- 其他div框放到这里 -->
-            <div class="side">
-                <div>
-                    <i class="fa fa-tags"></i>
-                    Tags
+            <div class="side tags-side">
+                <div class="side-head">
+                    <div>
+                        <i class="fa fa-tags"></i>
+                        Tags
+                    </div>
+                    <a class="side-head-link" href="{{ "/tag/" | prepend: site.baseurl }}">All</a>
                 </div>
                 <div class="tags-cloud">
+                    {% assign homepage_tag_limit = 36 %}
                     {% assign sorted_tags = site.tags | sort %}
-                    {% assign first = sorted_tags.first %}
+                    {% assign tags_by_popularity = site.tags | sort: "last" | reverse %}
+                    {% assign first = tags_by_popularity.first %}
                     {% assign max = first[1].size %}
                     {% assign min = max %}
-                    {% for tag in sorted_tags offset:1 %}
+                    {% for tag in tags_by_popularity offset:1 %}
                       {% if tag[1].size > max %}
                         {% assign max = tag[1].size %}
                       {% elsif tag[1].size < min %}
@@ -124,7 +129,7 @@ layout: default
                         {% assign diff = max | minus: min %}
                     {% endif %}
 
-                    {% for tag in sorted_tags %}
+                    {% for tag in tags_by_popularity limit: homepage_tag_limit %}
                       {% assign temp = tag[1].size | minus: min | times: 36 | divided_by: diff %}
                       {% assign base = temp | divided_by: 4 %}
                       {% assign remain = temp | modulo: 4 %}
@@ -143,6 +148,12 @@ layout: default
                       <a href="{{ root_url }}/{{ site.tag_dir }}#{{ tag[0] }}" style="font-size: {{ size }}pt; color: #{{ color }}{{ color }}{{ color }};">{{ tag[0] }}</a>
                     {% endfor %}
                 </div>
+                {% if sorted_tags.size > homepage_tag_limit %}
+                <div class="side-note">
+                    Showing {{ homepage_tag_limit }} of {{ sorted_tags.size }} tags.
+                    <a href="{{ "/tag/" | prepend: site.baseurl }}">View all</a>
+                </div>
+                {% endif %}
             </div>
 
             <!-- <div class="side">

@@ -41,13 +41,18 @@ class IndexNowSubmitter
     @full_scan = options[:full_scan]
     @dry_run = options[:dry_run]
     @verbose = options[:verbose]
+    @wait_url_list_file = options[:wait_url_list_file]
     @key = File.read(@key_file, encoding: 'utf-8').strip
     @key_location = "#{@base_url}/#{File.basename(@key_file)}"
     @site_config = load_site_config
   end
 
   def run
-    urls = changed_urls
+    urls = submission_urls
+    wait_urls = waitable_urls
+
+    write_wait_url_list(wait_urls)
+
     if urls.empty?
       puts 'No routable content changes detected for IndexNow.'
       return
@@ -73,7 +78,7 @@ class IndexNowSubmitter
 
   private
 
-  def changed_urls
+  def submission_urls
     return full_site_urls if @full_scan || sitewide_change?
 
     urls = Set.new
@@ -85,6 +90,21 @@ class IndexNowSubmitter
         add_url(urls, entry[:path], ref: @from_ref)
       when 'R'
         add_url(urls, entry[:old_path], ref: @from_ref)
+        add_url(urls, entry[:path], ref: @to_ref)
+      end
+    end
+    urls
+  end
+
+  def waitable_urls
+    return full_site_urls if @full_scan || sitewide_change?
+
+    urls = Set.new
+    diff_entries.each do |entry|
+      case entry[:status]
+      when 'A', 'M'
+        add_url(urls, entry[:path], ref: @to_ref)
+      when 'R'
         add_url(urls, entry[:path], ref: @to_ref)
       end
     end
@@ -295,6 +315,13 @@ class IndexNowSubmitter
     ref
   end
 
+  def write_wait_url_list(urls)
+    return unless @wait_url_list_file
+
+    File.write(@wait_url_list_file, urls.to_a.sort.join("\n"))
+    File.write(@wait_url_list_file, "#{File.read(@wait_url_list_file)}\n") unless urls.empty?
+  end
+
   def post_payload(payload)
     uri = URI('https://api.indexnow.org/indexnow')
     request = Net::HTTP::Post.new(uri)
@@ -322,7 +349,8 @@ options = {
   to_ref: ENV['INDEXNOW_TO_REF'] || 'HEAD',
   full_scan: false,
   dry_run: false,
-  verbose: false
+  verbose: false,
+  wait_url_list_file: nil
 }
 
 OptionParser.new do |parser|
@@ -333,6 +361,7 @@ OptionParser.new do |parser|
   parser.on('--full') { options[:full_scan] = true }
   parser.on('--dry-run') { options[:dry_run] = true }
   parser.on('--verbose') { options[:verbose] = true }
+  parser.on('--write-wait-url-list PATH') { |value| options[:wait_url_list_file] = value }
 end.parse!
 
 IndexNowSubmitter.new(options).run

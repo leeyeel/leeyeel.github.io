@@ -6,9 +6,18 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: indexnow-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   submit:
     runs-on: ubuntu-latest
+    env:
+      INDEXNOW_BASE_URL: https://blog.whatsroot.xyz
+      INDEXNOW_KEY_FILE: c0b8a0805b6846729f5d0e69605f44c6.txt
+      INDEXNOW_FROM_REF: ${{ github.event.before }}
+      INDEXNOW_TO_REF: ${{ github.sha }}
 
     steps:
       - name: Check out repository
@@ -21,12 +30,94 @@ jobs:
         with:
           ruby-version: '3.3'
 
+      - name: Build IndexNow payload
+        id: payload
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ruby scripts/indexnow_submit.rb --full --dry-run --write-wait-url-list indexnow_wait_urls.txt > indexnow_payload.json
+          else
+            ruby scripts/indexnow_submit.rb --dry-run --write-wait-url-list indexnow_wait_urls.txt > indexnow_payload.json
+          fi
+
+          if ruby -rjson -e 'JSON.parse(File.read(ARGV[0]))' indexnow_payload.json >/dev/null 2>&1; then
+            echo "has_urls=true" >> "$GITHUB_OUTPUT"
+            total_urls="$(ruby -rjson -e 'payload = JSON.parse(File.read(ARGV[0])); puts payload.fetch("urlList").size' indexnow_payload.json)"
+            echo "Prepared ${total_urls} URL(s) for IndexNow."
+          else
+            cat indexnow_payload.json
+            echo "has_urls=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wait for Cloudflare Pages deployment
+        if: steps.payload.outputs.has_urls == 'true'
+        run: |
+          set -eu
+
+          check_url() {
+            url="$1"
+            code="$(curl -sS -L -o /dev/null -w '%{http_code}' "$url")"
+            case "$code" in
+              200|204) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
+
+          attempts=40
+          sleep_seconds=30
+
+          : > indexnow_probe_urls.txt
+          if [ -s indexnow_wait_urls.txt ]; then
+            wait_count="$(grep -c . indexnow_wait_urls.txt || true)"
+            if [ "$wait_count" -le 10 ]; then
+              cp indexnow_wait_urls.txt indexnow_probe_urls.txt
+            else
+              {
+                head -n 5 indexnow_wait_urls.txt
+                tail -n 5 indexnow_wait_urls.txt
+              } | awk 'NF && !seen[$0]++' > indexnow_probe_urls.txt
+            fi
+          fi
+
+          echo "Probe URL count: $(grep -c . indexnow_probe_urls.txt || true)"
+
+          for attempt in $(seq 1 "$attempts"); do
+            missing=0
+
+            for url in \
+              "$INDEXNOW_BASE_URL/robots.txt" \
+              "$INDEXNOW_BASE_URL/sitemap.xml" \
+              "$INDEXNOW_BASE_URL/$(basename "$INDEXNOW_KEY_FILE")"
+            do
+              if ! check_url "$url"; then
+                echo "Waiting for required URL: $url"
+                missing=1
+              fi
+            done
+
+            while IFS= read -r url; do
+              [ -n "$url" ] || continue
+              if ! check_url "$url"; then
+                echo "Waiting for deployed content URL: $url"
+                missing=1
+              fi
+            done < indexnow_probe_urls.txt
+
+            if [ "$missing" -eq 0 ]; then
+              echo "Deployment is reachable. Proceeding with IndexNow submission."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt "$attempts" ]; then
+              echo "Deployment not ready yet. Retry $attempt/$attempts after ${sleep_seconds}s."
+              sleep "$sleep_seconds"
+            fi
+          done
+
+          echo "Timed out waiting for deployed URLs to become reachable."
+          exit 1
+
       - name: Submit changed URLs to IndexNow
-        env:
-          INDEXNOW_BASE_URL: https://blog.whatsroot.xyz
-          INDEXNOW_KEY_FILE: c0b8a0805b6846729f5d0e69605f44c6.txt
-          INDEXNOW_FROM_REF: ${{ github.event.before }}
-          INDEXNOW_TO_REF: ${{ github.sha }}
+        if: steps.payload.outputs.has_urls == 'true'
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             ruby scripts/indexnow_submit.rb --full

@@ -48,7 +48,15 @@ https://blog.whatsroot.xyz
 
 行为说明：
 
-- 向 `master` 推送后，会自动提交本次变更涉及的文章和页面 URL
+- 向 `master` 推送后，工作流会先计算本次要提交的 URL，再等待 Cloudflare Pages 上的线上 URL 可访问，然后才提交 IndexNow
+- 等待阶段会检查这几个基础 URL：
+  - `https://blog.whatsroot.xyz/robots.txt`
+  - `https://blog.whatsroot.xyz/sitemap.xml`
+  - `https://blog.whatsroot.xyz/c0b8a0805b6846729f5d0e69605f44c6.txt`
+- 对本次变更涉及的页面，工作流会做线上可访问性探测：
+  - 少量变更时，检查全部新增/更新 URL
+  - 大量变更或全站提交时，只抽样检查前 5 个和后 5 个 URL，避免等待过久
+- 删除的页面不会参与“等待上线”检查，但仍会按 IndexNow 规范提交给搜索引擎
 - 在 GitHub Actions 中手动运行 `Submit IndexNow URLs`，会执行一次全站 URL 提交
 
 手动本地 dry-run：
@@ -56,4 +64,11 @@ https://blog.whatsroot.xyz
 ```bash
 ruby scripts/indexnow_submit.rb --dry-run
 ruby scripts/indexnow_submit.rb --dry-run --full
+```
+
+如需同时输出“等待上线检查”用的 URL 列表，可使用：
+
+```bash
+ruby scripts/indexnow_submit.rb --dry-run --write-wait-url-list indexnow_wait_urls.txt
+ruby scripts/indexnow_submit.rb --dry-run --full --write-wait-url-list indexnow_wait_urls.txt
 ```

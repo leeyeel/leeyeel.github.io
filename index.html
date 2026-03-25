@@ -111,11 +111,10 @@ layout: default
                 <div class="tags-cloud">
                     {% assign homepage_tag_limit = 36 %}
                     {% assign sorted_tags = site.tags | sort %}
-                    {% assign tags_by_popularity = site.tags | sort: "last" | reverse %}
-                    {% assign first = tags_by_popularity.first %}
+                    {% assign first = sorted_tags.first %}
                     {% assign max = first[1].size %}
                     {% assign min = max %}
-                    {% for tag in tags_by_popularity offset:1 %}
+                    {% for tag in sorted_tags offset:1 %}
                       {% if tag[1].size > max %}
                         {% assign max = tag[1].size %}
                       {% elsif tag[1].size < min %}
@@ -129,23 +128,29 @@ layout: default
                         {% assign diff = max | minus: min %}
                     {% endif %}
 
-                    {% for tag in tags_by_popularity limit: homepage_tag_limit %}
-                      {% assign temp = tag[1].size | minus: min | times: 36 | divided_by: diff %}
-                      {% assign base = temp | divided_by: 4 %}
-                      {% assign remain = temp | modulo: 4 %}
-                      {% if remain == 0 %}
-                        {% assign size = base | plus: 9 %}
-                      {% elsif remain == 1 or remain == 2 %}
-                        {% assign size = base | plus: 9 | append: '.5' %}
-                      {% else %}
-                        {% assign size = base | plus: 10 %}
-                      {% endif %}
-                      {% if remain == 0 or remain == 1 %}
-                        {% assign color = 9 | minus: base %}
-                      {% else %}
-                        {% assign color = 8 | minus: base %}
-                      {% endif %}
-                      <a href="{{ root_url }}/{{ site.tag_dir }}#{{ tag[0] }}" style="font-size: {{ size }}pt; color: #{{ color }}{{ color }}{{ color }};">{{ tag[0] }}</a>
+                    {% assign rendered_tag_count = 0 %}
+                    {% for tag_size in (1..max) reversed %}
+                      {% for tag in sorted_tags %}
+                        {% if rendered_tag_count < homepage_tag_limit and tag[1].size == tag_size %}
+                          {% assign temp = tag[1].size | minus: min | times: 36 | divided_by: diff %}
+                          {% assign base = temp | divided_by: 4 %}
+                          {% assign remain = temp | modulo: 4 %}
+                          {% if remain == 0 %}
+                            {% assign size = base | plus: 9 %}
+                          {% elsif remain == 1 or remain == 2 %}
+                            {% assign size = base | plus: 9 | append: '.5' %}
+                          {% else %}
+                            {% assign size = base | plus: 10 %}
+                          {% endif %}
+                          {% if remain == 0 or remain == 1 %}
+                            {% assign color = 9 | minus: base %}
+                          {% else %}
+                            {% assign color = 8 | minus: base %}
+                          {% endif %}
+                          <a href="{{ root_url }}/{{ site.tag_dir }}#{{ tag[0] }}" style="font-size: {{ size }}pt; color: #{{ color }}{{ color }}{{ color }};">{{ tag[0] }}</a>
+                          {% assign rendered_tag_count = rendered_tag_count | plus: 1 %}
+                        {% endif %}
+                      {% endfor %}
                     {% endfor %}
                 </div>
                 {% if sorted_tags.size > homepage_tag_limit %}

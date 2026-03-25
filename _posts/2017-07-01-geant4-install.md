@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "linux下安装Geant4.10全过程"
+title:  "Linux 安装 Geant4.10 全过程"
 date: 2014-10-07 15:12:10
-categories:  高能物理 
-tags: geant4  高能物理
-excerpt: geant4 的安装教程
+categories: "物理与数学"
+tags:
+  - "Geant4"
+  - "高能物理"
+  - "Linux安装"
+  - "仿真软件"
+description: "整理 Geant4.10 在 Linux 环境下的安装流程，适合高能物理与粒子模拟相关学习场景。"
+keywords: "Geant4 安装, Linux 安装 Geant4, 高能物理仿真, 粒子模拟"
+excerpt: "整理 Geant4.10 在 Linux 下的安装流程，适合作为高能物理仿真环境搭建参考。"
 mathjax: true
 ---
 * TOC

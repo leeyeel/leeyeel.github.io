@@ -2,17 +2,16 @@
 layout: post
 title:  "GitHub Pages 博客无法被百度收录的解决方案：Coding 镜像、域名绑定与 Jekyll Sitemap"
 date:   2019-03-17 18:42:00
-categories: 博客搭建
+categories: "博客与建站"
 tags:
-  - GitHub Pages
-  - 百度收录
-  - Jekyll
-  - 博客SEO
-  - Sitemap
-  - LiveRe
-description: 记录 GitHub Pages 博客无法被百度收录时的处理过程，包括使用 Coding Pages 镜像、绑定自定义域名、申请 SSL 证书、替换 LiveRe 评论系统，以及为 Jekyll 配置 sitemap。
-keywords: GitHub Pages, 百度收录, GitHub 博客 SEO, Jekyll sitemap, Coding Pages, 自定义域名, SSL 证书, LiveRe
-excerpt: 记录 GitHub Pages 博客无法被百度收录时的处理过程，包括 Coding Pages 镜像、自定义域名、SSL 证书和 Jekyll sitemap 配置。
+  - "GitHub-Pages"
+  - "百度SEO"
+  - "Jekyll"
+  - "Sitemap"
+  - "LiveRe"
+description: "记录 GitHub Pages 博客无法被百度收录时的处理过程，包括使用 Coding Pages 镜像、绑定自定义域名、申请 SSL 证书、替换 LiveRe 评论系统，以及为 Jekyll 配置 sitemap。"
+keywords: "GitHub Pages, 百度收录, GitHub 博客 SEO, Jekyll sitemap, Coding Pages, 自定义域名, SSL 证书, LiveRe"
+excerpt: "记录 GitHub Pages 博客无法被百度收录时的处理过程，包括 Coding Pages 镜像、自定义域名、SSL 证书和 Jekyll sitemap 配置。"
 mathjax: true
 ---
 * TOC

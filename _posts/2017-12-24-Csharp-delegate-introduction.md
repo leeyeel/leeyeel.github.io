@@ -1,10 +1,16 @@
 ---
 layout: post
-title: "C#中的委托delegate与C/C++中的函数指针"
+title: "C# 委托与 C/C++ 函数指针的区别与联系"
 date: 2017-12-24 00:43
-categories: 学习总结
-tags: C# delegate
-excerpt: 通过对比C#中委托与C/C++中函数指针，来更好的理解委托
+categories: "编程语言与工具"
+tags:
+  - "CSharp"
+  - "Delegate"
+  - "CPP"
+  - "函数指针"
+description: "通过对比 C# 中的委托与 C/C++ 中的函数指针，帮助理解委托机制的设计思路与使用方式。"
+keywords: "C# 委托, delegate 介绍, C++ 函数指针, 委托与函数指针对比"
+excerpt: "通过对比 C# 委托与 C/C++ 函数指针，帮助理解委托机制的设计思路。"
 mathjax: false
 ---
 * TOC

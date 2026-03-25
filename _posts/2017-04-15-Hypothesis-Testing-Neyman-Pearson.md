@@ -1,10 +1,15 @@
 ---
 layout: post
-title:  "假设检验(1)——假设检验的基本思想" 
+title:  "假设检验入门（1）：Neyman-Pearson 思想与基本概念"
 date:   2017-04-15 23:54:54
-categories: 概率与统计
-tags: 统计 
-excerpt: 打算做一个统计学系列的博客，主要记录自己的学习过程。
+categories: "物理与数学"
+tags:
+  - "假设检验"
+  - "统计学"
+  - "Neyman-Pearson"
+description: "介绍假设检验的基本思想，从 Neyman-Pearson 框架入手梳理统计学入门中的核心概念。"
+keywords: "假设检验, Neyman-Pearson, 统计学入门, 显著性检验"
+excerpt: "从 Neyman-Pearson 思想出发，介绍假设检验的基本概念与统计学入门思路。"
 mathjax: true
 ---
 * TOC

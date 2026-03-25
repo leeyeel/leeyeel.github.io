@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "jimp composite 方法详解"
+title:  "Jimp composite 方法详解：图像合成 options 参数分析"
 date:   2024-10-25 15:59:00
-categories: 学习总结
-tags: jimp nodejs 图形学 
-excerpt: jimp库中有个composite函数，其中有个options选项，本文主要分析options选项
+categories: "图形图像与3D"
+tags:
+  - "Jimp"
+  - "Node.js"
+  - "图像处理"
+  - "图像合成"
+description: "围绕 Jimp 库中的 composite 方法展开分析，重点说明 options 参数在图像合成中的作用。"
+keywords: "Jimp composite, Node.js 图像处理, 图像合成 options, Jimp 教程"
+excerpt: "围绕 Jimp 库中的 composite 方法展开分析，重点说明 options 参数的作用。"
 mathjax: true
 ---
 
@@ -251,4 +257,3 @@ Hard light 模式的效果取决于叠加颜色的密度。使用亮色会产生
 上面小熊图是白色背景，换一张透明背景的二维码看效果:
 
 ![]({{site.url}}assets/jimp/composite/overall2.png)
-

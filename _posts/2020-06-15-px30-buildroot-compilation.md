@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "rockchip px30 buildroot 编译修改说明"
+title:  "Rockchip PX30 Buildroot 编译与修改说明"
 date:   2020-06-15 01:56:00
-categories: 学习总结
-tags: 笔记  rockchip
-excerpt: rockchip px30 huildroot 在ubuntu 18.04 编译说明
+categories: "嵌入式与汽车"
+tags:
+  - "Rockchip"
+  - "PX30"
+  - "Buildroot"
+  - "嵌入式Linux"
+description: "整理 Rockchip PX30 平台在 Ubuntu 18.04 下进行 Buildroot 编译与修改的关键步骤。"
+keywords: "Rockchip PX30 Buildroot, PX30 编译, Buildroot 修改, 嵌入式 Linux"
+excerpt: "整理 Rockchip PX30 平台在 Ubuntu 18.04 下进行 Buildroot 编译与修改的关键步骤。"
 mathjax: true
 ---
 * TOC

@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（四)"
+title:  "ALSA-lib snd_pcm_open 源码分析（四）：snd_pcm_open_noupdate 实现分析"
 date:   2020-08-14 23:56:00
-categories: 音视频 
-tags: alsa 驱动 音频
-excerpt: snd_pcm_open分析系列的第四篇，介绍snd_pcm_open_noupdate子函数
+categories: "音视频与多媒体"
+tags:
+  - "ALSA"
+  - "alsa-lib"
+  - "PCM"
+  - "Linux音频"
+  - "源码分析"
+description: "ALSA-lib snd_pcm_open 源码分析系列第四篇，介绍 snd_pcm_open_noupdate 子函数的实现细节。"
+keywords: "ALSA snd_pcm_open_noupdate, snd_pcm_open 源码, alsa-lib 分析"
+excerpt: "介绍 snd_pcm_open_noupdate 子函数的实现细节与在整体调用流程中的位置。"
 mathjax: true
 ---
 * TOC
@@ -439,4 +446,3 @@ void *snd_dlsym(void *handle, const char *name, const char *version)
 露出了插件系统的冰山一角。
 
 后续的文章会继续对插件的加载做详细分析
-

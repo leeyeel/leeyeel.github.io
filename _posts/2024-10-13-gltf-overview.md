@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "glTF 基础概览"
+title:  "glTF 入门：3D 模型格式基础概览"
 date:   2024-10-13 01:37:00
-categories: 个人项目
-tags: glTF 3D 模型 翻译 图形学
-excerpt: glTF 基础概览,快速了解glTF格式
+categories: "图形图像与3D"
+tags:
+  - "glTF"
+  - "3D"
+  - "模型格式"
+  - "Khronos"
+description: "从入门视角快速概览 glTF 格式的核心概念，帮助理解 3D 模型交换格式的基本结构。"
+keywords: "glTF 入门, 3D 模型格式, glTF 概览, Khronos glTF"
+excerpt: "从入门视角快速概览 glTF 格式的核心概念，帮助理解 3D 模型交换格式。"
 mathjax: true
 ---
 

@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "iSYSTEM winIDEA 入门教程" 
+title:  "iSYSTEM winIDEA 入门：仿真器调试配置与基本使用"
 date:   2019-03-14 18:42:00
-categories: 学习总结
-tags: winIDEA iSYSTEM 教程
-excerpt: 介绍一下如何使用iSYSTEM 仿真器与 winIDEA 进行代码调试
+categories: "嵌入式与汽车"
+tags:
+  - "winIDEA"
+  - "iSYSTEM"
+  - "仿真器"
+  - "嵌入式调试"
+description: "介绍如何结合 iSYSTEM 仿真器与 winIDEA 进行代码调试，适合作为嵌入式调试入门参考。"
+keywords: "winIDEA 教程, iSYSTEM 仿真器, 嵌入式调试, winIDEA 入门"
+excerpt: "介绍如何结合 iSYSTEM 仿真器与 winIDEA 进行代码调试，适合作为入门参考。"
 mathjax: true
 ---
 * TOC

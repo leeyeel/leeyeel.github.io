@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "linux下calibre使用http代理" 
+title:  "Calibre 抓取杂志并推送到 Kindle：Linux 下 HTTP 代理配置"
 date:   2017-11-02 12:12:12
-categories: 实践记录
-tags: calibre kindle 
-excerpt: 利用calibre抓取《经济学人》等杂志并自动推送到kindle
+categories: "Linux与系统"
+tags:
+  - "Calibre"
+  - "Kindle"
+  - "HTTP代理"
+  - "杂志推送"
+description: "介绍在 Linux 下为 Calibre 配置 HTTP 代理，以抓取《经济学人》等杂志并自动推送到 Kindle。"
+keywords: "Calibre Kindle 推送, Linux HTTP 代理, 经济学人 Kindle, Calibre 抓取杂志"
+excerpt: "介绍在 Linux 下为 Calibre 配置 HTTP 代理，实现杂志抓取并自动推送到 Kindle。"
 mathjax: true
 ---
 * TOC

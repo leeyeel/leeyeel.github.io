@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "python使用protobuf接收websockets数据"
+title:  "Python 使用 Protobuf 接收 WebSocket 数据"
 date:   2021-05-05 18:11:00
-categories: 学习总结
-tags: python protobuf 
-excerpt: python使用protobuf接收websocket数据
+categories: "编程语言与工具"
+tags:
+  - "Python"
+  - "Protobuf"
+  - "WebSocket"
+  - "数据解析"
+description: "介绍如何在 Python 中使用 Protobuf 解析并接收 WebSocket 数据，适合实时数据处理场景。"
+keywords: "Python Protobuf WebSocket, websocket protobuf 解析, Python 实时数据"
+excerpt: "介绍如何在 Python 中使用 Protobuf 解析并接收 WebSocket 数据。"
 mathjax: true
 ---
 * TOC

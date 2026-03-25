@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "NBA球员数据爬虫"
+title:  "使用 Node.js 抓取 ESPN NBA 比赛与球员数据：爬虫项目实践"
 date:   2025-02-19 18:40:00
-categories: 个人项目
-tags: 爬虫 nodejs
-excerpt: 从ESPN爬取NBA比赛信息,包括球队数据，球员数据，比赛过程以及比赛概况 
+categories: "个人项目"
+tags:
+  - "NBA"
+  - "爬虫"
+  - "Node.js"
+  - "ESPN"
+  - "数据采集"
+description: "介绍一个使用 Node.js 抓取 ESPN NBA 比赛、球队与球员数据的爬虫项目实践。"
+keywords: "NBA 数据爬虫, ESPN 爬虫, Node.js 爬虫, 球员数据抓取"
+excerpt: "介绍一个使用 Node.js 抓取 ESPN NBA 比赛、球队与球员数据的爬虫项目实践。"
 mathjax: true
 ---
 

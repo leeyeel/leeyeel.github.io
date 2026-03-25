@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "webrtc vad 源码解析(一)"
+title:  "WebRTC VAD 源码解析（一）：VadInst 结构体说明"
 date:   2020-12-23 23:35:00
-categories: 音视频
-tags: webrtc vad 音频 
-excerpt: webrtc vad 源码阅读中对VadInst结构体的说明
+categories: "音视频与多媒体"
+tags:
+  - "WebRTC"
+  - "VAD"
+  - "音频处理"
+  - "源码分析"
+description: "WebRTC VAD 源码解析系列第一篇，聚焦 VadInst 结构体及其在语音活动检测中的作用。"
+keywords: "WebRTC VAD, VadInst 结构体, 语音活动检测, 音频处理源码"
+excerpt: "聚焦 VadInst 结构体及其在 WebRTC 语音活动检测中的作用。"
 mathjax: true
 ---
 * TOC

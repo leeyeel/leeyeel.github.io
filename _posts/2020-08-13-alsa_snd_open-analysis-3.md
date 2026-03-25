@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（三)"
+title:  "ALSA-lib snd_pcm_open 源码分析（三）：snd_config_hooks 机制解析"
 date:   2020-08-13 00:56:00
-categories: 音视频 
-tags: alsa 驱动 音频
-excerpt: snd_pcm_open源码分析的第三篇，对子函数snd_config_update_ref的分析，其中主要是对snd_config_update_ref的子函数snd_config_hooks函数的分析。
+categories: "音视频与多媒体"
+tags:
+  - "ALSA"
+  - "alsa-lib"
+  - "PCM"
+  - "Linux音频"
+  - "源码分析"
+description: "ALSA-lib snd_pcm_open 源码分析系列第三篇，重点分析 snd_config_hooks 的配置钩子机制。"
+keywords: "ALSA snd_config_hooks, snd_pcm_open 分析, alsa-lib 钩子机制"
+excerpt: "重点分析 snd_config_hooks 在 ALSA 配置加载过程中的作用与机制。"
 mathjax: true
 ---
 * TOC

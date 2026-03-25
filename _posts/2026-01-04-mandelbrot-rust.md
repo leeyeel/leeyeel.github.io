@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "Rust绘制曼德博集合Mandelbrot set" 
+title:  "Rust 绘制 Mandelbrot Set：从数学定义到图像生成"
 date:   2026-01-04 16:42:00
-categories: 学习总结
-tags: rust 
-excerpt: Mandelbrot 集：从数学定义到使用Rust绘制图形
+categories: "编程语言与工具"
+tags:
+  - "Rust"
+  - "Mandelbrot"
+  - "分形"
+  - "图形生成"
+description: "从 Mandelbrot 集的数学定义出发，介绍如何使用 Rust 生成对应的分形图像。"
+keywords: "Rust Mandelbrot, 分形图像生成, Mandelbrot Set, Rust 图形绘制"
+excerpt: "从 Mandelbrot 集的数学定义出发，介绍如何使用 Rust 生成分形图像。"
 mathjax: true
 ---
 * TOC

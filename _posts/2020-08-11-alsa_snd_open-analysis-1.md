@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（一)"
+title:  "ALSA-lib snd_pcm_open 源码分析（一）：函数原型与调用位置"
 date:   2020-08-11 11:56:00
-categories: 音视频 
-tags: alsa 驱动 音频
-excerpt: snd_pcm_open分析系列的第一篇，介绍函数原型，作用，以及使用中的位置
+categories: "音视频与多媒体"
+tags:
+  - "ALSA"
+  - "alsa-lib"
+  - "PCM"
+  - "Linux音频"
+  - "源码分析"
+description: "ALSA-lib snd_pcm_open 源码分析系列第一篇，介绍函数原型、作用以及在实际使用中的位置。"
+keywords: "ALSA snd_pcm_open, alsa-lib 源码分析, Linux 音频, PCM 打开流程"
+excerpt: "ALSA-lib snd_pcm_open 源码分析系列第一篇，介绍函数原型、作用与调用位置。"
 mathjax: true
 ---
 * TOC

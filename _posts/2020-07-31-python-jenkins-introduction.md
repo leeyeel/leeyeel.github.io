@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "linux下使用python-jenkins后台提交任务"
+title:  "Python-Jenkins 实战：后台提交任务与查询结果"
 date:   2020-07-31 01:56:00
-categories: 实践记录
-tags:  笔记 python
-excerpt: 本文重点是提供一个后台提交任务及查询的逻辑框架
+categories: "编程语言与工具"
+tags:
+  - "Python"
+  - "Jenkins"
+  - "自动化"
+  - "CI"
+description: "介绍如何使用 Python-Jenkins 在后台提交任务并查询结果，提供一套可复用的逻辑框架。"
+keywords: "python-jenkins, Jenkins 后台任务, Python 自动化, CI 接口调用"
+excerpt: "介绍如何使用 Python-Jenkins 在后台提交任务并查询结果，提供可复用的逻辑框架。"
 mathjax: true
 ---
 * TOC

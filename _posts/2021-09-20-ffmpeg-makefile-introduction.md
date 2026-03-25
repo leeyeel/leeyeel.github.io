@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "ffmpeg从入门到放弃(一):编译流程介绍"
+title:  "FFmpeg 编译流程解析（一）：configure 与 Makefile 机制"
 date:   2021-09-21 16:11:00
-categories: 音视频 
-tags: ffmpeg 
-excerpt: ffmpeg编译流程,congfigure及Makefile介绍
+categories: "音视频与多媒体"
+tags:
+  - "FFmpeg"
+  - "configure"
+  - "Makefile"
+  - "源码分析"
+description: "从源码角度介绍 FFmpeg 的编译流程，重点分析 configure 与 Makefile 的生成和作用机制。"
+keywords: "FFmpeg 编译流程, configure, Makefile, FFmpeg 源码分析"
+excerpt: "从源码角度介绍 FFmpeg 的编译流程，重点分析 configure 与 Makefile 的作用机制。"
 mathjax: true
 ---
 * TOC

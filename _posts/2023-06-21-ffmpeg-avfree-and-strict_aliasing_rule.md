@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "掘地三尺分析ffmpeg中av_freep函数及C标准的strict aliasing rule介绍"
+title:  "FFmpeg av_freep 源码分析与 C 语言 Strict Aliasing Rule"
 date:   2023-06-21 17:44:00
-categories: 音视频 
-tags: ffmpeg C/C++
-excerpt: ffmpeg 中的av_freep函数深度解析，以及C语言的strict aliasing rule介绍
+categories: "音视频与多媒体"
+tags:
+  - "FFmpeg"
+  - "av_freep"
+  - "strict-aliasing"
+  - "C语言"
+description: "深度分析 FFmpeg 中 av_freep 的实现方式，并结合 C 语言的 strict aliasing rule 解释相关细节。"
+keywords: "FFmpeg av_freep, strict aliasing rule, C 语言别名规则, FFmpeg 源码分析"
+excerpt: "深度分析 FFmpeg 中 av_freep 的实现方式，并结合 C 语言 strict aliasing rule 解释相关细节。"
 mathjax: true
 ---
 
@@ -300,6 +306,5 @@ int main(){
 - [3] [举例如何避免违规则](https://stackoverflow.com/questions/98340/what-are-the-common-undefined-unspecified-behavior-for-c-that-you-run-into)
 - [4] [c++,附带网站可以选择编译器版本](https://gist.github.com/shafik/848ae25ee209f698763cffee272a58f8)
 - [5] [C90与C99标准关于strict aliasing 的规定对比](http://kristerw.blogspot.com/2017/07/strict-aliasing-in-c90-vs-c99-and-how.html)
-
 
 

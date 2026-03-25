@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "ffmpeg历史垃圾桶中的AVFifoBuffer源码分析"
+title:  "FFmpeg AVFifoBuffer 源码分析：N4.4 版本实现细节"
 date:   2023-01-02 13:44:00
-categories: 音视频 
-tags: ffmpeg
-excerpt: ffmpeg n4.4版本的AVFifoBuffer实现源码解析
+categories: "音视频与多媒体"
+tags:
+  - "FFmpeg"
+  - "AVFifoBuffer"
+  - "源码分析"
+  - "缓冲区"
+description: "围绕 FFmpeg N4.4 版本中的 AVFifoBuffer 实现展开源码分析，梳理其设计与历史变更。"
+keywords: "FFmpeg AVFifoBuffer, FFmpeg 源码分析, N4.4 缓冲区实现"
+excerpt: "围绕 FFmpeg N4.4 版本中的 AVFifoBuffer 实现展开源码分析。"
 mathjax: true
 ---
 

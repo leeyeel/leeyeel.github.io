@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "劳特巴赫(Lauterbach)——Trace32工具的简单介绍" 
+title:  "Lauterbach Trace32 工具入门：功能与调试场景介绍"
 date:   2018-11-25 00:42:00
-categories: 学习总结
-tags: lauterbach 汽车
-excerpt: Lauterbach的仿真器真的做到了极致，功能强大到令人发指。
+categories: "嵌入式与汽车"
+tags:
+  - "Lauterbach"
+  - "Trace32"
+  - "嵌入式调试"
+  - "汽车电子"
+description: "介绍 Lauterbach Trace32 调试工具的基本功能与常见使用场景，适合嵌入式开发入门参考。"
+keywords: "Lauterbach Trace32, 嵌入式调试工具, 汽车电子调试, 仿真器介绍"
+excerpt: "介绍 Lauterbach Trace32 调试工具的基本功能与常见使用场景。"
 mathjax: true
 ---
 * TOC

@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "From Sketch to Motion — Turn Your Drawings Into Animated Videos" 
+title:  "Sketch to Motion：将手绘草图一键转换为动画视频"
 date:   2025-08-10 13:10:00
-categories: tutorial
-tags: tutorial
-excerpt: Turn Your Drawings Into Animated Videos 
+categories: "个人项目"
+tags:
+  - "Sketch2Motion"
+  - "Manim"
+  - "SVG"
+  - "动画生成"
+  - "Python"
+description: "介绍 Sketch to Motion 这个小工具，演示如何把手绘草图转换成 SVG 并生成动态视频。"
+keywords: "Sketch to Motion, 手绘草图转动画, Manim 视频生成, SVG 动画"
+excerpt: "介绍 Sketch to Motion 这个小工具，演示如何把手绘草图转换成动态视频。"
 mathjax: true
 ---
 * TOC
@@ -38,5 +45,4 @@ python app.py
 
 With Sketch to Motion, your static sketches can become smooth, engaging animations in seconds. 
 Perfect for educators, illustrators, or anyone who loves seeing their art in motion.
-
 

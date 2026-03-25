@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "2023年vim转neovim,及基础插件安装"
+title:  "从 Vim 转向 Neovim：基础配置与常用插件安装"
 date:   2023-11-05 22:37:00
-categories: 实践记录
-tags: vim neovim 
-excerpt: 适用于熟悉vim但不熟悉neovim同时又想转向neovim的小伙伴
+categories: "编程语言与工具"
+tags:
+  - "Neovim"
+  - "Vim"
+  - "LSP"
+  - "编辑器配置"
+description: "面向熟悉 Vim 但准备切换到 Neovim 的用户，介绍基础配置思路与常用插件安装方案。"
+keywords: "Vim 转 Neovim, Neovim 配置, Neovim 插件安装, LSP 配置"
+excerpt: "面向熟悉 Vim 但准备切换到 Neovim 的用户，介绍基础配置思路与常用插件安装方案。"
 mathjax: true
 ---
 
@@ -277,4 +283,3 @@ require("lazy").setup({
 最终效果如图:
 
 ![]({{site.url}}assets/nvim/1.png)
-

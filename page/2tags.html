@@ -10,17 +10,12 @@ type: page
     <div class="left">
         <h1>{{page.title}}</h1>
         <hr>
-        {% capture tags %}
-          {% for tag in site.tags %}
-            {{ tag[0] }}
-          {% endfor %}
-        {% endcapture %}
-        {% assign sortedtags = tags | split:' ' | sort %}
+        {% assign sorted_tags = site.tags | sort %}
 
         <ul>
-        {% for tag in sortedtags %}
-          <h2 id="{{ tag }}">{{ tag }}</h2>
-          {% for post in site.tags[tag] %}
+        {% for tag in sorted_tags %}
+          <h2 id="{{ tag[0] }}">{{ tag[0] }}</h2>
+          {% for post in tag[1] %}
             <li>
                 <time>
                 {{ post.date | date:"%F" }} {{ post.date | date: "%a" }}.
@@ -45,10 +40,10 @@ type: page
                     Content
                 </div>
                 <ul id="content-side" class="content-ul">
-                    {% for tag in sortedtags %}
+                    {% for tag in sorted_tags %}
                     <li>
-                        <a data-scroll href="#{{ tag }}">
-                            {{ tag }} ({{ site.tags[tag].size }})
+                        <a data-scroll href="#{{ tag[0] }}">
+                            {{ tag[0] }} ({{ tag[1].size }})
                         </a>
                     </li>
                     {% endfor %}

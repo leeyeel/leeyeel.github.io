@@ -2,9 +2,14 @@
 layout: post
 title:  "作为博客的开始"
 date:   2017-04-12 00:48:54
-categories: 个人感想 
-tags: 感想 
-excerpt: 学了好多年的物理之后转行写代码 
+categories: "职业与随笔"
+tags:
+  - "职业转型"
+  - "博客起步"
+  - "程序员成长"
+description: "这篇文章是个人博客的开篇，记录自己从高能物理转向编程的背景与写作起点。"
+keywords: "高能物理转行编程, 博客开篇, 程序员成长, 职业转型"
+excerpt: "记录自己从高能物理转向编程的经历，以及这个博客开始写作的缘由。"
 mathjax: true
 ---
 * TOC

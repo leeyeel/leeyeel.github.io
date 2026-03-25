@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "AUTOSAR框架介绍（一）" 
+title:  "AUTOSAR 框架入门（一）：整体架构与基础概念"
 date:   2017-09-22 17:55:54
-categories: 学习总结
-tags: autosar 汽车 
-excerpt: 最近在自学AUTOSAR的一些内容，把学习中收集到的一些资料整理及心得总结一下，作为学习笔记，若有错误及建议，请一定要告诉我，不胜感激。    
+categories: "嵌入式与汽车"
+tags:
+  - "AUTOSAR"
+  - "汽车电子"
+  - "软件架构"
+  - "协议入门"
+description: "从入门视角介绍 AUTOSAR 的整体架构与基础概念，整理汽车软件分层框架的学习笔记。"
+keywords: "AUTOSAR 入门, AUTOSAR 架构, 汽车电子软件, 车载软件分层"
+excerpt: "从入门视角介绍 AUTOSAR 的整体架构与基础概念，梳理汽车软件分层框架。"
 mathjax: true
 ---
 * TOC
@@ -64,5 +70,4 @@ AL与另外两层不同，它是基础成分且没有标准化，SWC是这层以
 
 因为RTE使得它之上的层独立于硬件，比如ECU以及微控制器，除了极个别情况，AL只依赖于RTE. 
 比如传感器-执行器 SWC 依赖于硬件但是 SWC的通讯并不依赖于硬件.
-
 

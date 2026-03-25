@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "OpenAI/Codex为什么不使用previous_response_id?"
+title:  "OpenAI Codex 为什么不使用 previous_response_id：无状态 Agent Loop 的原因"
 date:   2026-01-29 16:02:00
-categories: 学习总结
-tags: OpenAI Codex Agent 
-excerpt: OpenAI/Codex中为什么要保持模型对话无状态?
+categories: "AI与Agent"
+tags:
+  - "OpenAI"
+  - "Codex"
+  - "Responses-API"
+  - "Stateless"
+  - "Prompt-Caching"
+description: "结合官方博客与工程实现，分析 OpenAI Codex 在 Responses API 中不使用 previous_response_id 的原因。"
+keywords: "previous_response_id, OpenAI Codex, Responses API, 无状态 Agent, prompt caching"
+excerpt: "结合官方博客与工程实现，分析 OpenAI Codex 为什么选择保持无状态对话。"
 mathjax: true
 ---
 * TOC

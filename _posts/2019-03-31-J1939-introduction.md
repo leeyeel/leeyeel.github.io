@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "J1939 入门教程" 
+title:  "J1939 入门：协议基础与汽车总线应用"
 date:   2019-03-31 22:05:00
-categories: 学习总结
-tags: 汽车 J1939 
-excerpt: 本文特别适合于对CAN有了解，对J1939不了解但是想了解的小伙伴。
+categories: "嵌入式与汽车"
+tags:
+  - "J1939"
+  - "CAN总线"
+  - "汽车电子"
+  - "协议入门"
+description: "面向已有 CAN 基础的读者介绍 J1939 协议，帮助理解其在汽车总线通信中的常见应用。"
+keywords: "J1939 入门, CAN 总线, 汽车电子协议, J1939 教程"
+excerpt: "面向已有 CAN 基础的读者介绍 J1939 协议及其在汽车总线通信中的应用。"
 mathjax: true
 ---
 * TOC 

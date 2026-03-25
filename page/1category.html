@@ -11,8 +11,9 @@ type: page
     <div class="left">
         <h1>{{page.title}}</h1>
         <hr>
+        {% assign sorted_categories = site.categories | sort %}
         <ul>
-            {% for category in site.categories %}
+            {% for category in sorted_categories %}
             <h2 id="{{category | first}}">{{category | first}}</h2>
             {% for posts in category  %}
             {% for post in posts %}
@@ -42,7 +43,7 @@ type: page
                     Content
                 </div>
                 <ul id="content-side" class="content-ul">
-                    {% for category in site.categories%}
+                    {% for category in sorted_categories %}
                     <li>
                         <a data-scroll href="#{{ category | first }}">
                             {{ category | first }} ({{ category | last | size }})

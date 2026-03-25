@@ -1,10 +1,16 @@
 ---
 layout: post 
-title: "UDS诊断之读DTC信息(19 hex)服务(Part I)"
+title: "UDS 诊断入门：读 DTC 信息服务 0x19 详解（Part I）"
 date: 2019-03-02 20:36:20
-categories: 学习总结
-tags: 汽车 UDS DTC ISO1429 
-excerpt: 读DTC信息服务是UDS诊断中比较复杂的一个服务，所以首先介绍它。
+categories: "嵌入式与汽车"
+tags:
+  - "UDS"
+  - "DTC"
+  - "ISO14229"
+  - "汽车诊断"
+description: "介绍 UDS 诊断中读取 DTC 信息的 0x19 服务，帮助理解汽车诊断协议中的常见难点。"
+keywords: "UDS DTC, 0x19 服务, ISO14229, 汽车诊断协议"
+excerpt: "介绍 UDS 诊断中读取 DTC 信息的 0x19 服务，帮助理解汽车诊断协议难点。"
 mathjax: false
 ---
 * TOC
@@ -403,5 +409,4 @@ DTCSeverityMask的使用方法也与StatusMask类似，只不过除了要满足D
 
 服务端响应客户端内容如下
 ![]({{site.url}}assets/UDS/DTC/reportNumberOfDTCBySeverityMaskRecord_response.png)
-
 

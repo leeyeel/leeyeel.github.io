@@ -85,8 +85,9 @@ layout: default
                     <i class="fa fa-th-list"></i>
                     Categories
                 </div>
+                {% assign sorted_categories = site.categories | sort %}
                 <ul class="content-ul" cate>
-                    {% for category in site.categories %}
+                    {% for category in sorted_categories %}
                     <li>
                         <a href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}" class="categories-list-item" cate="{{ category | first }}">
                             <span class="name">
@@ -105,10 +106,11 @@ layout: default
                     Tags
                 </div>
                 <div class="tags-cloud">
-                    {% assign first = site.tags.first %}
+                    {% assign sorted_tags = site.tags | sort %}
+                    {% assign first = sorted_tags.first %}
                     {% assign max = first[1].size %}
                     {% assign min = max %}
-                    {% for tag in site.tags offset:1 %}
+                    {% for tag in sorted_tags offset:1 %}
                       {% if tag[1].size > max %}
                         {% assign max = tag[1].size %}
                       {% elsif tag[1].size < min %}
@@ -122,7 +124,7 @@ layout: default
                         {% assign diff = max | minus: min %}
                     {% endif %}
 
-                    {% for tag in site.tags %}
+                    {% for tag in sorted_tags %}
                       {% assign temp = tag[1].size | minus: min | times: 36 | divided_by: diff %}
                       {% assign base = temp | divided_by: 4 %}
                       {% assign remain = temp | modulo: 4 %}

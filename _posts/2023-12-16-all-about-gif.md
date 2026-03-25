@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "GIF图片格式简史"
+title:  "GIF 图片格式简史：格式原理与处理方法"
 date:   2023-12-16 23:31:00
-categories: 学习总结
-tags: gif 图形学 图像
-excerpt: GIF图片格式的历史，格式介绍，以及ffmpeg等对gif的处理
+categories: "图形图像与3D"
+tags:
+  - "GIF"
+  - "图像格式"
+  - "FFmpeg"
+  - "动画图像"
+description: "介绍 GIF 图片格式的发展历史、基本原理，以及 FFmpeg 等工具对 GIF 的常见处理方式。"
+keywords: "GIF 图片格式, GIF 历史, GIF 原理, FFmpeg 处理 GIF"
+excerpt: "介绍 GIF 图片格式的发展历史、基本原理，以及 FFmpeg 等工具对 GIF 的处理方式。"
 mathjax: true
 ---
 

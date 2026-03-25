@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "c99 Compound Literals语法介绍"
+title:  "C99 Compound Literals 语法详解与用法"
 date:   2022-12-29 19:38:00
-categories: 音视频 
-tags: ffmpeg C/C++
-excerpt: c99 Compound Literals 介绍
+categories: "编程语言与工具"
+tags:
+  - "C语言"
+  - "C99"
+  - "Compound-Literals"
+  - "语法"
+description: "介绍 C99 中 Compound Literals 语法的基本概念、使用方式与实际示例。"
+keywords: "C99 Compound Literals, C 语言语法, Compound Literals 用法"
+excerpt: "介绍 C99 中 Compound Literals 语法的基本概念、使用方式与实际示例。"
 mathjax: true
 ---
 

@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "Linux下安装CERN ROOT全过程"
+title:  "Linux 安装 CERN ROOT 全过程"
 date:   2014-11-20 16:54:39
-categories: 高能物理 
-tags: root  高能物理
-excerpt: cern root6 的安装教程
+categories: "物理与数学"
+tags:
+  - "ROOT"
+  - "CERN"
+  - "高能物理"
+  - "Linux安装"
+description: "记录 CERN ROOT 在 Linux 环境中的安装流程，适合作为 ROOT6 环境搭建与入门参考。"
+keywords: "CERN ROOT 安装, ROOT6 Linux, 高能物理软件, ROOT 教程"
+excerpt: "记录 CERN ROOT 在 Linux 下的安装流程，适合作为 ROOT6 环境搭建参考。"
 mathjax: true
 ---
 * TOC

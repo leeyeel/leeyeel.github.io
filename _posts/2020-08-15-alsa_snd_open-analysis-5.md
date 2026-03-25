@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "linux alsa-lib snd_pcm_open函数源码分析（五)"
+title:  "ALSA-lib snd_pcm_open 源码分析（五）：ALSA 插件系统如何被调用"
 date:   2020-08-15 00:56:00
-categories: 音视频 
-tags: alsa 驱动 音频
-excerpt: snd_pcm_open分析系列的第五篇，介绍alsa的插件系统是如何被调用的
+categories: "音视频与多媒体"
+tags:
+  - "ALSA"
+  - "alsa-lib"
+  - "PCM"
+  - "Linux音频"
+  - "源码分析"
+description: "ALSA-lib snd_pcm_open 源码分析系列第五篇，介绍 ALSA 插件系统在打开音频设备时的调用过程。"
+keywords: "ALSA 插件系统, snd_pcm_open 分析, alsa-lib 插件调用"
+excerpt: "介绍 ALSA 插件系统在 snd_pcm_open 调用过程中的工作方式。"
 mathjax: true
 ---
 * TOC

@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "WOL plus——升级版本的网络唤醒(Vibe Coding翻新)"
+title:  "WOL Plus 重构记录：OpenWrt 远程唤醒与关机工具升级"
 date:   2026-03-01 16:02:00
-categories: 个人项目
-tags: wol
-excerpt: openwrt适用的远程唤醒与远程关机工具
+categories: "个人项目"
+tags:
+  - "OpenWrt"
+  - "Wake-on-LAN"
+  - "GitHub-Actions"
+  - "WebUI"
+  - "项目重构"
+description: "记录 WOL Plus 的一次重构升级，包括 WebUI、认证、取消关机与 GitHub Actions 打包流程优化。"
+keywords: "WOL Plus 重构, OpenWrt 远程关机, Wake on LAN 工具, GitHub Actions 打包"
+excerpt: "记录 WOL Plus 的一次重构升级，包括 WebUI、认证与打包流程优化。"
 mathjax: true
 ---
 

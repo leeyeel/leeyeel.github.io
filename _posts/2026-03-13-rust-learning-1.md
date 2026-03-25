@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "《RUST 程序设计》阅读体会"
+title:  "《Rust 程序设计》阅读体会：所有权、Trait 与工程思维"
 date:   2026-03-13 16:02:00
-categories: 学习总结
-tags: rust
-excerpt: Jim Blandy Rust程序设计 第一版阅读体会 
+categories: "编程语言与工具"
+tags:
+  - "Rust"
+  - "读书笔记"
+  - "所有权"
+  - "Trait"
+description: "结合《Rust 程序设计》一书，记录对所有权、Trait 以及 Rust 工程思维的一些阅读体会。"
+keywords: "Rust 程序设计, Rust 读书笔记, 所有权, Trait"
+excerpt: "结合《Rust 程序设计》一书，记录对所有权、Trait 与 Rust 工程思维的阅读体会。"
 mathjax: true
 ---
 

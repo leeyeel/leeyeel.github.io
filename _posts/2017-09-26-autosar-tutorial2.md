@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "AUTOSAR框架介绍（二）" 
+title:  "AUTOSAR 框架入门（二）：架构细节与延伸说明"
 date:   2017-09-26 00:29:54
-categories: 学习总结
-tags: autosar 汽车
-excerpt: 上一部分主要介绍AUTOSAR的构架，下面继续
+categories: "嵌入式与汽车"
+tags:
+  - "AUTOSAR"
+  - "汽车电子"
+  - "软件架构"
+  - "分层设计"
+description: "继续介绍 AUTOSAR 框架的架构细节与延伸内容，帮助理解车载软件平台的分层设计。"
+keywords: "AUTOSAR 进阶, AUTOSAR 分层架构, 汽车电子软件, 车载软件平台"
+excerpt: "继续介绍 AUTOSAR 的架构细节与延伸内容，帮助理解车载软件平台的分层设计。"
 mathjax: true
 ---
 * TOC

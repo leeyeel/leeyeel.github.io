@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "wake on lan plus——升级版本的网络唤醒"
+title:  "WOL Plus：OpenWrt 上支持远程唤醒与远程关机的工具"
 date:   2025-03-05 16:02:00
-categories: 个人项目
-tags: wol
-excerpt: openwrt上可用的远程唤醒与远程关机工具
+categories: "个人项目"
+tags:
+  - "OpenWrt"
+  - "Wake-on-LAN"
+  - "远程关机"
+  - "LuCI"
+description: "介绍 WOL Plus 这个面向 OpenWrt 的远程唤醒与远程关机工具，并分析其实现涉及的相关技术。"
+keywords: "OpenWrt Wake on LAN, 远程关机工具, WOL Plus, LuCI 应用"
+excerpt: "介绍 WOL Plus 这个面向 OpenWrt 的远程唤醒与远程关机工具。"
 mathjax: true
 ---
 

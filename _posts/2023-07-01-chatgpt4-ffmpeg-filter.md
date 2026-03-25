@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "chatgpt4.0辅助编程:人类还能苟活多久"
+title:  "ChatGPT 4 辅助 FFmpeg 开发实践：体验与思考"
 date:   2023-07-02 20:37:00
-categories: 个人感想 
-tags: ffmpeg chatgpt
-excerpt: 使用chatgpt辅助开发ffmpeg应用，以及对chatgpt4的使用感想
+categories: "AI与Agent"
+tags:
+  - "ChatGPT"
+  - "FFmpeg"
+  - "AI编程"
+  - "开发体验"
+description: "记录使用 ChatGPT 4 辅助开发 FFmpeg 应用的过程，并结合实际效果分享对 AI 编程的观察。"
+keywords: "ChatGPT 4 FFmpeg, AI 辅助编程, ChatGPT 开发体验, FFmpeg 实践"
+excerpt: "记录使用 ChatGPT 4 辅助开发 FFmpeg 应用的过程，并分享对 AI 编程的观察。"
 mathjax: true
 ---
 

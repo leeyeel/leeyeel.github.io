@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "rocks cluster 安装过程"
+title:  "Rocks Cluster 安装与基础配置记录"
 date:   2017-05-08 00:48:54
-categories: 实践记录
-tags: 教程 rocks
-excerpt: 主要记录我安装rocks cluster 的过程，包括后续的一些配置    
+categories: "Linux与系统"
+tags:
+  - "Rocks-Cluster"
+  - "集群部署"
+  - "Linux"
+  - "安装配置"
+description: "记录 Rocks Cluster 的安装过程与基础配置步骤，适合作为 Linux 集群部署的实践参考。"
+keywords: "Rocks Cluster 安装, Linux 集群部署, Rocks 配置, 集群管理"
+excerpt: "记录 Rocks Cluster 的安装过程与后续基础配置，作为 Linux 集群部署实践参考。"
 mathjax: true
 ---
 * TOC

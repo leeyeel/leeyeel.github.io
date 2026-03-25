@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "ffmpeg从入门到放弃(二):编解码器是如何生效的"
+title:  "FFmpeg 编解码器机制解析（二）：编解码器如何生效"
 date:   2021-10-07 17:01:00
-categories: 音视频 
-tags: ffmpeg 
-excerpt: ffmpeg中的编码器是如何生效的，包括软件编码及硬件编解码器的原理
+categories: "音视频与多媒体"
+tags:
+  - "FFmpeg"
+  - "Codec"
+  - "编解码"
+  - "源码分析"
+description: "介绍 FFmpeg 中编解码器的生效机制，包括软件编码器与硬件编解码器的基本原理。"
+keywords: "FFmpeg 编解码器, FFmpeg codec, 硬件编解码, FFmpeg 源码分析"
+excerpt: "介绍 FFmpeg 中编解码器的生效机制，包括软件编码器与硬件编解码原理。"
 mathjax: true
 ---
 * TOC
@@ -246,4 +252,3 @@ sudo make install
 现在回到codec_list.c中h264解码器的结构体定义处，
 可以看到`.hw_configs`字段刚好有与`CONFIG_H264_NVDEC_HWACCEL`相关的的字段,定义为HWACCEL_NVDEC(h264)。
 这些宏展开后最终定义了一个AVCodecHWConfigInternal结构体，这些参数也会通过avcodec_get_hw_config()接口返回给用户。
-

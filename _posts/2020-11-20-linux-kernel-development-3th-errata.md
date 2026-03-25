@@ -1,10 +1,16 @@
 ---
 layout: post
-title:  "《linux 内核设计与实现(原书第3版)》翻译问题" 
+title:  "《Linux 内核设计与实现（原书第3版）》勘误与翻译问题记录"
 date:   2020-11-20 23:06:00
-categories: 翻译纠错 
-tags: errata
-excerpt: 阅读《linux内核设计与实现(原书第三版)》时发现的翻译问题
+categories: "Linux与系统"
+tags:
+  - "Linux内核"
+  - "勘误"
+  - "翻译"
+  - "读书笔记"
+description: "整理阅读《Linux 内核设计与实现（原书第3版）》过程中发现的翻译问题与勘误内容。"
+keywords: "Linux 内核设计与实现 勘误, Linux 内核书籍翻译问题, Linux 内核读书笔记"
+excerpt: "整理阅读《Linux 内核设计与实现（原书第3版）》过程中发现的翻译问题与勘误内容。"
 mathjax: true
 ---
 * TOC

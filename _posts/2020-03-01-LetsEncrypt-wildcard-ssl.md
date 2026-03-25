@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "LetsEncrypt申请泛域名" 
+title:  "Let's Encrypt 申请泛域名 SSL 证书实战"
 date:   2020-03-01 20:56:00
-categories: 实践记录 
-tags: letsencrypt
-excerpt: VPS上的上网服务以及申请ssl证书中查阅到的一些文档及方法总结
+categories: "博客与建站"
+tags:
+  - "LetsEncrypt"
+  - "泛域名证书"
+  - "SSL"
+  - "HTTPS"
+  - "DNS"
+description: "记录使用 Let's Encrypt 申请泛域名 SSL 证书时查阅的资料与配置方法，适合个人站点部署参考。"
+keywords: "Let's Encrypt 泛域名证书, SSL 证书申请, HTTPS 配置, DNS 验证"
+excerpt: "记录使用 Let's Encrypt 申请泛域名 SSL 证书时查阅的资料与配置方法。"
 mathjax: true
 ---
 * TOC

@@ -49,6 +49,7 @@ https://blog.whatsroot.xyz
 行为说明：
 
 - 向 `master` 推送后，工作流会先计算本次要提交的 URL，再等待 Cloudflare Pages 上的线上 URL 可访问，然后才提交 IndexNow
+- 手动运行 `Submit IndexNow URLs` 时，默认只提交最新一次 commit 涉及的可索引 URL；只有勾选 `full_scan` 时才执行全站提交
 - 等待阶段会检查这几个基础 URL：
   - `https://blog.whatsroot.xyz/robots.txt`
   - `https://blog.whatsroot.xyz/sitemap.xml`
@@ -57,7 +58,7 @@ https://blog.whatsroot.xyz
   - 少量变更时，检查全部新增/更新 URL
   - 大量变更或全站提交时，只抽样检查前 5 个和后 5 个 URL，避免等待过久
 - 删除的页面不会参与“等待上线”检查，但仍会按 IndexNow 规范提交给搜索引擎
-- 在 GitHub Actions 中手动运行 `Submit IndexNow URLs`，会执行一次全站 URL 提交
+- 标记为 `robots: noindex,follow` 或 `sitemap: false` 的页面不会被提交到 IndexNow
 
 手动本地 dry-run：
 

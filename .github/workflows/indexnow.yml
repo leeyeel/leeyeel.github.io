@@ -5,6 +5,12 @@ on:
     branches:
       - master
   workflow_dispatch:
+    inputs:
+      full_scan:
+        description: Submit all indexable URLs instead of only the latest commit changes
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: indexnow-${{ github.ref }}
@@ -21,7 +27,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -33,16 +39,24 @@ jobs:
       - name: Build IndexNow payload
         id: payload
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.full_scan }}" = "true" ]; then
+            echo "Manual run mode: full site submission"
             ruby scripts/indexnow_submit.rb --full --dry-run --write-wait-url-list indexnow_wait_urls.txt > indexnow_payload.json
           else
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              echo "Manual run mode: latest commit changes only"
+            else
+              echo "Push run mode: changed URLs for this push"
+            fi
             ruby scripts/indexnow_submit.rb --dry-run --write-wait-url-list indexnow_wait_urls.txt > indexnow_payload.json
           fi
 
           if ruby -rjson -e 'JSON.parse(File.read(ARGV[0]))' indexnow_payload.json >/dev/null 2>&1; then
             echo "has_urls=true" >> "$GITHUB_OUTPUT"
             total_urls="$(ruby -rjson -e 'payload = JSON.parse(File.read(ARGV[0])); puts payload.fetch("urlList").size' indexnow_payload.json)"
-            echo "Prepared ${total_urls} URL(s) for IndexNow."
+            echo "Prepared ${total_urls} URL(s) for IndexNow submission."
+            echo "IndexNow submission payload preview:"
+            ruby -rjson -e 'payload = JSON.parse(File.read(ARGV[0])); puts "host=#{payload.fetch("host")}"; puts "keyLocation=#{payload.fetch("keyLocation")}"; payload.fetch("urlList").first(10).each_with_index { |url, idx| puts "  [#{idx + 1}] #{url}" }; remaining = payload.fetch("urlList").size - 10; puts "  ... and #{remaining} more URL(s)" if remaining > 0' indexnow_payload.json
           else
             cat indexnow_payload.json
             echo "has_urls=false" >> "$GITHUB_OUTPUT"
@@ -79,9 +93,17 @@ jobs:
           fi
 
           echo "Probe URL count: $(grep -c . indexnow_probe_urls.txt || true)"
+          if [ -s indexnow_probe_urls.txt ]; then
+            echo "Probe URL list:"
+            nl -ba indexnow_probe_urls.txt
+          else
+            echo "Probe URL list is empty; only required URLs will be checked."
+          fi
 
           for attempt in $(seq 1 "$attempts"); do
             missing=0
+
+            echo "Deployment readiness check ${attempt}/${attempts}"
 
             for url in \
               "$INDEXNOW_BASE_URL/robots.txt" \
@@ -89,37 +111,42 @@ jobs:
               "$INDEXNOW_BASE_URL/$(basename "$INDEXNOW_KEY_FILE")"
             do
               if ! check_url "$url"; then
-                echo "Waiting for required URL: $url"
+                echo "  [pending] required URL not ready: $url"
                 missing=1
+              else
+                echo "  [ready] required URL: $url"
               fi
             done
 
             while IFS= read -r url; do
               [ -n "$url" ] || continue
               if ! check_url "$url"; then
-                echo "Waiting for deployed content URL: $url"
+                echo "  [pending] content URL not ready: $url"
                 missing=1
+              else
+                echo "  [ready] content URL: $url"
               fi
             done < indexnow_probe_urls.txt
 
             if [ "$missing" -eq 0 ]; then
-              echo "Deployment is reachable. Proceeding with IndexNow submission."
+              echo "Deployment readiness check passed on attempt ${attempt}/${attempts}."
+              echo "Proceeding with IndexNow submission."
               exit 0
             fi
 
             if [ "$attempt" -lt "$attempts" ]; then
-              echo "Deployment not ready yet. Retry $attempt/$attempts after ${sleep_seconds}s."
+              echo "Deployment not ready yet. Retrying after ${sleep_seconds}s."
               sleep "$sleep_seconds"
             fi
           done
 
-          echo "Timed out waiting for deployed URLs to become reachable."
+          echo "Timed out waiting for deployed URLs to become reachable after ${attempts} attempts."
           exit 1
 
       - name: Submit changed URLs to IndexNow
         if: steps.payload.outputs.has_urls == 'true'
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.full_scan }}" = "true" ]; then
             ruby scripts/indexnow_submit.rb --full
           else
             ruby scripts/indexnow_submit.rb

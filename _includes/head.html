@@ -4,11 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% assign seo_title = page.title | default: site.title %}
     {% assign seo_description = page.description | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 %}
+    {% assign seo_robots = page.robots %}
+    {% if paginator and paginator.page and paginator.page > 1 %}
+    {% assign seo_robots = "noindex,follow" %}
+    {% endif %}
 
     <title>{{ seo_title | escape }}</title>
     <meta name="description" content="{{ seo_description }}">
     {% if page.keywords %}
     <meta name="keywords" content="{{ page.keywords }}">
+    {% endif %}
+    {% if seo_robots %}
+    <meta name="robots" content="{{ seo_robots }}">
     {% endif %}
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">

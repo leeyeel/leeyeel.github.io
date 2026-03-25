@@ -180,6 +180,8 @@ class IndexNowSubmitter
     content = read_file_at_ref(path, ref)
     if post_path?(path)
       front_matter, _, raw_front_matter = split_front_matter(content)
+      return nil unless indexable_resource?(front_matter)
+
       permalink = front_matter['permalink']
       return normalize_public_path(permalink) if permalink
 
@@ -190,6 +192,8 @@ class IndexNowSubmitter
     return nil unless page_path?(path)
 
     front_matter, = split_front_matter(content)
+    return nil unless indexable_resource?(front_matter)
+
     permalink = front_matter['permalink']
     return normalize_public_path(permalink) if permalink
     return nil unless content&.start_with?("---\n")
@@ -313,6 +317,16 @@ class IndexNowSubmitter
     return nil if ref.match?(/\A0+\z/)
 
     ref
+  end
+
+  def indexable_resource?(front_matter)
+    return true unless front_matter.is_a?(Hash)
+    return false if front_matter['sitemap'] == false
+
+    robots = front_matter['robots'].to_s.downcase.gsub(/\s+/, '')
+    return false if robots.split(',').include?('noindex')
+
+    true
   end
 
   def write_wait_url_list(urls)

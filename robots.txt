@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /tag/
+Disallow: /category/
+Disallow: /archive/
+Disallow: /page
+Disallow: /*?*
 
 Sitemap: https://blog.whatsroot.xyz/sitemap.xml

@@ -46,7 +46,7 @@ layout: default
                         <ul>
                         {% endif %}
                         <li class="relatedPost">
-                            <a href="{{ site.url }}{{ post.url }}">{{ post.title }}
+                            <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}
                             {% if post.series %}
                                 (Series: {{ post.series }})
                             {% endif %}
@@ -90,7 +90,7 @@ layout: default
         </div>
     </div>
 </div>
-<script src="{{ "/js/pageContent.js " | prepend: site.baseurl }}" charset="utf-8" defer></script>
+<script src="{{ "/js/pageContent.js" | prepend: site.baseurl }}" charset="utf-8" defer></script>
 <script>
 /**
  * target _blank

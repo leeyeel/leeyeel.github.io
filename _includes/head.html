@@ -5,6 +5,9 @@
     {% assign seo_title = page.title | default: site.title %}
     {% assign seo_description = page.description | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 %}
     {% assign seo_robots = page.robots %}
+    {% assign page_path = page.url | replace:'index.html','' | prepend: site.baseurl %}
+    {% assign canonical_url = site.url | append: page_path | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
+    {% assign feed_url = site.url | append: '/feed.xml' | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
     {% if paginator and paginator.page and paginator.page > 1 %}
     {% assign seo_robots = "noindex,follow" %}
     {% endif %}
@@ -18,18 +21,18 @@
     <meta name="robots" content="{{ seo_robots }}">
     {% endif %}
 
-    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
-    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="{{ "/css/main.css " | prepend: site.baseurl }}">
-    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml " | prepend: site.baseurl | prepend: site.url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ feed_url }}">
 
     <!-- SEO Meta Tags -->
     <meta property="og:title" content="{{ seo_title | escape }}">
     <meta property="og:description" content="{{ seo_description }}">
     <meta property="og:type" content="{% if page.date %}article{% else %}website{% endif %}">
-    <meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:site_name" content="{{ site.title }}">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="{{ seo_title | escape }}">

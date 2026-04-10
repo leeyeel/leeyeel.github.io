@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Linux 微信开机自启动问题排查与解决"
+title:  "Linux 版微信禁止开机自启动，排查及解决"
 date:   2025-03-25 11:12:00
 categories: "Linux与系统"
 tags:
@@ -11,7 +11,7 @@ tags:
   - "故障排查"
 description: "记录 Linux 原生微信出现开机自启动问题时的排查过程，并解释 GNOME 会话恢复机制带来的影响。"
 keywords: "Linux 微信开机自启动, Ubuntu 微信自启动, GNOME Session Restore, 微信 Linux 版"
-excerpt: "记录 Linux 原生微信出现开机自启动问题时的排查过程，并给出解决方法。"
+excerpt: "记录 Linux 原生微信出现开机自启动问题时的排查过程，并给出禁止开机启动的方法。"
 mathjax: true
 ---
 * TOC

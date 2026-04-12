@@ -8,6 +8,7 @@
 # Site settings
 title: Just4U
 brief-intro: 真正的问题，从来不会被搜索引擎收录
+lang: zh-CN
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://blog.whatsroot.xyz/" # the base hostname & protocol for your site
 future: true

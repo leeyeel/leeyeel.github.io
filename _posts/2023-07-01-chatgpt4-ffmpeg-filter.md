@@ -45,15 +45,15 @@ mathjax: true
 
 一个2160p的视频做背景，文件名background.mp4，视频内容看起来这样:
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v2.gif)
+![]({{site.url}}assets/ffmpeg/chatgpt/v2.webp)
 
 任务的目的就是先把图片mask.png与video.mp4融合变为这样, 透明的地方不显示，只显示原来图片中椭圆部门：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v3.gif)
+![]({{site.url}}assets/ffmpeg/chatgpt/v3.webp)
 
 然后把这个结果覆盖到背景视频上变成这样：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v4.gif)
+![]({{site.url}}assets/ffmpeg/chatgpt/v4.webp)
 
 
 下面我们来用chatgpt求解
@@ -224,7 +224,7 @@ avfilter_graph_config(filter_graph, NULL);
 
 到目前为止filter部分的功能已经完成，我补足读取以及发送数据到filter的代码，尝试运行。
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v5.gif)
+![]({{site.url}}assets/ffmpeg/chatgpt/v5.webp)
 
 效果达成。(这里为了简单，所有工作都在一个线程内，且没有启用硬件解码，所以会有点卡顿，由于我的显示器是2k显示器，所以无法完整显示4k视频。)
 

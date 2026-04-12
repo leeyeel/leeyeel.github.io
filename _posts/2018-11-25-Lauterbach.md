@@ -100,7 +100,7 @@ Data.List g_u32Var	;
 2) 修改内存内容
 修改内存内容只需要鼠标指向想要修改的内容然后双击即可。同时命令框中会自动出现对应的命令。见下图:  
 
-![]({{site.url}}assets/lauterbach/4_modifiedMemory.png)
+![]({{site.url}}assets/lauterbach/4_modifiedMemory.webp)
 
 使用命令修改内存内容有如下格式:
 ```
@@ -130,14 +130,14 @@ Data.Set 0x6814 %LE %Long 0xaaaa    ; Write 0xaaaa as a 32 bit value to the addr
 软件断点如下图所示,在想要设置断点的地方双击,出现红色小方块(比如428行附近)表示断点设置成功，在**Break**中点击**List**可以查看所有断点，
 其中**SOFT**表示这是一个软件断点。
 
-![]({{site.url}}assets/lauterbach/5_softBreakPoint.png)
+![]({{site.url}}assets/lauterbach/5_softBreakPoint.webp)
 
 - 设置硬件断点
 
 硬件断点是通过监测地址来实现的，所以在任何地方均可设置硬件断点。与软件断点不同，MCU通常只支持少量的硬件断点，具体支持的断点数量可查看*Debugger Basics - Training*。
 设置的硬件断点如下图所示，其中onChip表示硬件断点。
 
-![]({{site.url}}assets/lauterbach/6_onChipBreakPoint.png)
+![]({{site.url}}assets/lauterbach/6_onChipBreakPoint.webp)
 
 - 更改默认断点类型
 

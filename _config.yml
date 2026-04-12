@@ -44,6 +44,8 @@ giscus_category_id: DIC_kwDOBQ-dBs4C4TCs
 baidu_tongji_id: 98486c072d947dfe59fdc38c1633941a 
 # google 分析追踪id
 google_analytics_id: UA-136580640-1
+# Cloudflare Web Analytics token
+cloudflare_web_analytics_token: 8d6f1a734f324d40b8a41833d4b0837f
 # Build settings
 markdown: kramdown
 

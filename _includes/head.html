@@ -3,6 +3,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% assign seo_title = page.seo_title | default: page.title | default: site.title %}
+    {% if page.url == '/' or page.url == '/index.html' %}
+    {% assign browser_title = page.title | default: seo_title %}
+    {% else %}
+    {% assign browser_title = seo_title %}
+    {% endif %}
     {% capture raw_description %}{{ page.description | default: page.excerpt | default: page.content | default: site.description }}{% endcapture %}
     {% assign seo_description = raw_description | strip_html | strip_newlines | replace: '  ', ' ' | strip %}
     {% if seo_description == '' %}
@@ -39,7 +44,7 @@
       {% assign next_url = site.url | append: paginator.next_page_path | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
     {% endif %}
 
-    <title>{{ seo_title | escape }}</title>
+    <title>{{ browser_title | escape }}</title>
     <meta name="description" content="{{ seo_description }}">
     {% if page.keywords %}
     <meta name="keywords" content="{{ page.keywords }}">

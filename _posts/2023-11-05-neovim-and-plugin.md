@@ -258,6 +258,7 @@ require("lazy").setup({
 ```
 使用下面的选项跳过左侧nvimtree:
 
+{% raw %}
 ```lua
   require("bufferline").setup {
       options = {
@@ -271,6 +272,7 @@ require("lazy").setup({
       }
   }
 ```
+{% endraw %}
 
 为了方便跳转Tab,可使用几个快捷键:
 

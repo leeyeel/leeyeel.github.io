@@ -8,9 +8,10 @@
 # Site settings
 title: Just4U
 brief-intro: 真正的问题，从来不会被搜索引擎收录
+description: Just4U 是一个以 Linux、FFmpeg、AI Agent、OpenWrt、嵌入式与软件工程实践为核心的中文技术博客，持续记录源码分析、问题排查和个人项目经验。
 lang: zh-CN
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://blog.whatsroot.xyz/" # the base hostname & protocol for your site
+url: "https://blog.whatsroot.xyz" # the base hostname & protocol for your site
 future: true
 
 permalink: /:year/:month/:day/:title/
@@ -22,7 +23,7 @@ email: mumuli52@gmail.com
 zhihu_username:
 linkedIn_username: 
 dribbble_username:
-description_footer: 
+description_footer: 记录 Linux、FFmpeg、AI Agent、OpenWrt 与软件工程实践。
 
 # comments
 # two ways to comment, only choose one, and use your own short name

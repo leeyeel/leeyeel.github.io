@@ -2,14 +2,41 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% assign seo_title = page.title | default: site.title %}
-    {% assign seo_description = page.description | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 %}
+    {% assign seo_title = page.seo_title | default: page.title | default: site.title %}
+    {% capture raw_description %}{{ page.description | default: page.excerpt | default: page.content | default: site.description }}{% endcapture %}
+    {% assign seo_description = raw_description | strip_html | strip_newlines | replace: '  ', ' ' | strip %}
+    {% if seo_description == '' %}
+    {% assign seo_description = site.description %}
+    {% endif %}
+    {% if seo_description.size < 80 %}
+      {% capture enriched_description %}
+        {{ seo_description }}
+        {% if page.date %}
+          本文发布于 {{ page.date | date: "%Y-%m-%d" }}，来自 {{ site.title }}，聚焦{% if page.categories and page.categories.size > 0 %} {{ page.categories | join: '、' }} {% else %}技术实践{% endif %}相关内容。
+        {% else %}
+          {{ site.description }}
+        {% endif %}
+      {% endcapture %}
+      {% assign seo_description = enriched_description | strip_html | strip_newlines | replace: '  ', ' ' | strip %}
+    {% endif %}
+    {% assign seo_description = seo_description | truncate: 160 %}
     {% assign seo_robots = page.robots %}
     {% assign page_path = page.url | replace:'index.html','' | prepend: site.baseurl %}
     {% assign canonical_url = site.url | append: page_path | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
     {% assign feed_url = site.url | append: '/feed.xml' | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
     {% if paginator and paginator.page and paginator.page > 1 %}
     {% assign seo_robots = "noindex,follow" %}
+    {% endif %}
+    {% if paginator and paginator.previous_page %}
+      {% if paginator.previous_page == 1 %}
+        {% assign prev_path = '/' %}
+      {% else %}
+        {% assign prev_path = paginator.previous_page_path %}
+      {% endif %}
+      {% assign prev_url = site.url | append: prev_path | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
+    {% endif %}
+    {% if paginator and paginator.next_page %}
+      {% assign next_url = site.url | append: paginator.next_page_path | replace:'://','__PROTOCOL__' | replace:'//','/' | replace:'__PROTOCOL__','://' %}
     {% endif %}
 
     <title>{{ seo_title | escape }}</title>
@@ -27,6 +54,12 @@
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ feed_url }}">
+    {% if prev_url %}
+    <link rel="prev" href="{{ prev_url }}">
+    {% endif %}
+    {% if next_url %}
+    <link rel="next" href="{{ next_url }}">
+    {% endif %}
 
     <!-- SEO Meta Tags -->
     <meta property="og:title" content="{{ seo_title | escape }}">
@@ -34,6 +67,10 @@
     <meta property="og:type" content="{% if page.date %}article{% else %}website{% endif %}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:site_name" content="{{ site.title }}">
+    <meta property="og:locale" content="{{ site.lang | default: 'zh_CN' | replace: '-', '_' }}">
+    {% if page.date %}
+    <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+    {% endif %}
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="{{ seo_title | escape }}">
     <meta name="twitter:description" content="{{ seo_description }}">

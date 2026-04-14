@@ -1,6 +1,8 @@
 ---
 layout: page
 title: 关于
+seo_title: 关于作者与博客说明
+description: 介绍博客作者的技术背景、写作方向、联系方式，以及本站使用的 Jekyll、Giscus 和统计方案。
 permalink: /about/
 icon: heart
 type: page

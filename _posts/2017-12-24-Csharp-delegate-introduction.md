@@ -318,7 +318,7 @@ namespace delegateExample
 ```
 
 C#在编译时就会报错,
-![ErrorInfo]({{site.url}}assets/CsharpDelegate/csharpError.png)
+![ErrorInfo]({{ '/assets/CsharpDelegate/csharpError.png' | relative_url }})
 
 ### 其他
 以上代码均测试过，不同平台结果可能有差异．测试平台`Ubuntu16.04`,g++版本`5.4.0 20160609`,C#使用Mono测试,版本`5.10`

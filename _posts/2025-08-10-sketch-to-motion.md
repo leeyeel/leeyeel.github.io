@@ -26,7 +26,7 @@ Sketch to Motion is a small but powerful tool that takes a static hand-drawn ske
 Whether it’s a doodle, a line drawing, or a neat SVG-style illustration, you can bring it to life in just a few clicks.
 
 
-![]({{site.url}}assets/sketch2motion/demo.gif)
+![]({{ '/assets/sketch2motion/demo.gif' | relative_url }})
 
 - How to use
 

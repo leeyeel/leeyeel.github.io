@@ -33,10 +33,10 @@ mathjax: true
 就必须绑定自己的域名。否则百度爬的是coding.me，相当于与自己github内容完全一致的另一个网站。
 4. github上绑定自己域名的方法是在自己博客项目的根目录下创建一个CNAME的文件，并在文件中写入自己的博客域名即可。如下图所示，
 我的域名为blog.whatsroot.xyz,所以在CNAME中写入blog.whatsroot.xyz即可。
-![]({{site.url}}assets/codingBlog/githubCNAME.png)
+![]({{ '/assets/codingBlog/githubCNAME.png' | relative_url }})
 5. coding上绑定自己的域名只需要打开Page服务的设置选项,在绑定新域名处添加自己的域名即可。
 6. 此时可以设置DNS解析，我使用的是ndspod,添加CNAME记录类型，如下图所示:
-![]({{site.url}}assets/codingBlog/dnspod.png)
+![]({{ '/assets/codingBlog/dnspod.png' | relative_url }})
 6. github上的Page服务默认是可以使用https访问的，coding上访问https则需要申请SSL证书，申请方法是点击Page服务的设置，在**SSL/TLS 安全证书**节中，点击申请即可。
 这里需要特别注意，由于在第6步中设置国内跟国外指向了不同的Page，会导致coding在验证的时候得到两个ip地址，从而导致申请失败，
 解决方法是去DNS解析那里暂停掉github的解析，等申请SSL证书成功后再启用即可。申请成功后有三个月有效期，到期后需要手动再次申请。

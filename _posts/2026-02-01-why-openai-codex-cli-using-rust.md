@@ -17,7 +17,7 @@ mathjax: true
 * TOC
 {:toc}
 
-![]({{site.url}}assets/openai/codex2/codex1.webp)
+![]({{ '/assets/openai/codex2/codex1.webp' | relative_url }})
 
 尽管当今主流编程语言多达数十种，甚至上百种，但真正适合Codex这类工程级 CLI Agent 的选择其实并不多。
 在我看来，现实可行的候选语言其实只有两种：Golang与Rust。
@@ -49,11 +49,11 @@ TypeScript 为什么会成为当时主流Agent 的默认选择呢？本质原因
 无论是当时还是现在，Python CLI 在“好看”这件事上确实很难与 TypeScript 生态抗衡，
 不信可以去Linux下安装Trae-Agent CLI体验下。
 
-![]({{site.url}}assets/openai/codex2/codex2.webp)
+![]({{ '/assets/openai/codex2/codex2.webp' | relative_url }})
 
 那么问题就来了：既然 TypeScript 在如此合适，Codex 为什么又在 2025 年 6 月宣布使用 Rust 重写？
 
-![]({{site.url}}assets/openai/codex2/codex3.webp)
+![]({{ '/assets/openai/codex2/codex3.webp' | relative_url }})
 
 这是因为，所有脚本语言都难以回避的一个工程级问题：运行时依赖冲突。
 以 Claude Code 为例，它要求 Node.js ≥ 20，
@@ -69,7 +69,7 @@ TypeScript 为什么会成为当时主流Agent 的默认选择呢？本质原因
 安装体积迅速膨胀到 1GB 以上，其核心原因正是：
 在安装 Agent 的同时一并分发运行时（Runtime），以换取环境一致性。
 
-![]({{site.url}}assets/openai/codex2/codex4.webp)
+![]({{ '/assets/openai/codex2/codex4.webp' | relative_url }})
 
 但这显然是一种“用空间换兼容性”的折中方案。
 

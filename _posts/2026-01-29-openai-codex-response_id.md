@@ -45,7 +45,7 @@ mathjax: true
 重新发起一次 Responses API 调用。
 
 
-![]({{site.url}}assets/openai/codex1/codex1.jpg)
+![]({{ '/assets/openai/codex1/codex1.jpg' | relative_url }})
 
 
 主流的Agent都是这么做的，而且为了应对越来越多的上下文累积，

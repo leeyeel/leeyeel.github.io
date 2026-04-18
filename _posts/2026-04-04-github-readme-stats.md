@@ -18,7 +18,7 @@ mathjax: true
 
 ### 故事背景
 
-![我的stats]({{site.url}}assets/github-readme-stats/2.png)
+![我的stats]({{ '/assets/github-readme-stats/2.png' | relative_url }})
 
 经常逛 GitHub 的人，应该都见过个人主页上的这种统计卡片。
 这背后常见的实现方案，就是 **GitHub Readme Stats**。
@@ -28,13 +28,13 @@ mathjax: true
 但是最近，由于用户量的增加，**GitHub Readme Stats** 的公共实例在 Vercel 上面临了流量和额度超限的问题，
 导致许多用户无法加载其统计卡片。官方在其 GitHub 仓库的说明中指出：
 
-![官方声明]({{site.url}}assets/github-readme-stats/0.png)
+![官方声明]({{ '/assets/github-readme-stats/0.png' | relative_url }})
 
 这件事有多严重呢？比如下面，不仅我自己的统计无法显示，甚至 GitHub Readme Stats 官方仓库的统计也无法显示了。
 
-![我的stats无法显示了]({{site.url}}assets/github-readme-stats/1.png)
+![我的stats无法显示了]({{ '/assets/github-readme-stats/1.png' | relative_url }})
 
-![官方的也无法显示]({{site.url}}assets/github-readme-stats/3.png)
+![官方的也无法显示]({{ '/assets/github-readme-stats/3.png' | relative_url }})
 
 官方声明中提到，虽然公共实例通过缓存来提高稳定性，但由于流量高峰和 API 限制，卡片显示已经不再稳定。
 为了避免此问题，官方建议用户自行托管服务（如 Vercel 或其他平台），
@@ -128,7 +128,7 @@ jobs:
    * 在 GitHub 首页右上角点击头像，选择 **Settings**。
    * 在左侧菜单中，选择 **Developer settings**。
 
-![生成PAT]({{site.url}}assets/github-readme-stats/4.png)
+![生成PAT]({{ '/assets/github-readme-stats/4.png' | relative_url }})
 
 3. **生成 Personal Access Token**：
 

@@ -27,7 +27,7 @@ mathjax: true
 
 如下图:
 
-![]({{site.url}}assets/wechat/wechat1.png)
+![]({{ '/assets/wechat/wechat1.png' | relative_url }})
 
 考虑到国内软件的一贯作风，觉得还是软件问题，于是又进行了下面的一系列排查。
 
@@ -35,7 +35,7 @@ mathjax: true
 
 ###### 1.登录进入微信后，排查是否有开机自启动选项勾选。发现没有。
 
-![]({{site.url}}assets/wechat/wechat2.png)
+![]({{ '/assets/wechat/wechat2.png' | relative_url }})
 
 大概是测试版，刚开始，乱七八糟的功能还没带过来，
 所以看着还是挺简洁的。

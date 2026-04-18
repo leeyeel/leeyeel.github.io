@@ -284,4 +284,4 @@ require("lazy").setup({
 
 最终效果如图:
 
-![]({{site.url}}assets/nvim/1.png)
+![]({{ '/assets/nvim/1.png' | relative_url }})

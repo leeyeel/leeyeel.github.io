@@ -27,7 +27,7 @@ mathjax: true
 另一方面有好几个疑问并没有在书中找到答案。所以又在ChatGPT的帮助下梳理了疑问，
 重新组织了一篇更详细的介绍,希望能帮助其他也有疑问的小伙伴。
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-1.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-1.webp' | relative_url }})
 
 首先就是Mandelbrot集到底是什么，它的数学定义其实很简单:
 
@@ -41,7 +41,7 @@ mathjax: true
 
 以上是Mandelbrot集的数学定义，为了更容易的理解，这里直接使用书中提到的引导。
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-0.png)
+![]({{ '/assets/mandelbrot/mandelbrot-0.png' | relative_url }})
 
 对于下面的一个循环赋值,如果可以运行的话，x的值会如何变化？对于小于1的数求平方会得到一个更小的数，
 即结果趋向于0，1的平方还是1，对于大于1的数平方会得到更大的数字，即结果趋向于无穷大。
@@ -206,12 +206,12 @@ fn pixel_to_point(bounds: (usize, usize), pixel: (usize, usize),
 我们只需要：固定图像比例为 4:3,比如我是4000x3000, 依次用这些复平面窗口渲染,
 每一张图适当提高最大迭代次数即可绘制, 就能清晰看到分形结构逐步展开。
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-1.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-1.webp' | relative_url }})
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-2.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-2.webp' | relative_url }})
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-3.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-3.webp' | relative_url }})
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-4.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-4.webp' | relative_url }})
 
-![]({{site.url}}assets/mandelbrot/mandelbrot-5.webp)
+![]({{ '/assets/mandelbrot/mandelbrot-5.webp' | relative_url }})

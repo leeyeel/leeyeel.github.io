@@ -20,7 +20,7 @@ mathjax: true
 有了娃以后给床安装了围栏，然后围栏上又装了配套的蚊帐，导致整个床像个蒙古包，出入都非常不便。
 床和机箱大概就是下面这样:
 
-![]({{site.url}}assets/wolp/wolp2-12.jpg)
+![]({{ '/assets/wolp/wolp2-12.jpg' | relative_url }})
 
 有时候躺床上了发现电脑没关机。没关机倒是问题不大，毕竟之前都是常年不关机，
 但是偏偏机箱上装了三个RGB的风扇。
@@ -52,11 +52,11 @@ mathjax: true
 
 登录界面和取消关机界面如下:
 
-![]({{site.url}}assets/wolp/wolp2-34.jpg)
+![]({{ '/assets/wolp/wolp2-34.jpg' | relative_url }})
 
 #### 4. 打包流程优化
 
-![]({{site.url}}assets/wolp/wolp2-5.jpg)
+![]({{ '/assets/wolp/wolp2-5.jpg' | relative_url }})
 
 使用github action 替代了原来的windows客户端的打包。
 同时吸取用户的意见，并不是所有用户都linux操作基础，

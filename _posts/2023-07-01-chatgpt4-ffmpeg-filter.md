@@ -37,32 +37,32 @@ mathjax: true
 
 有一张图片mask.png, 尺寸大小1080p，只有中间椭圆部分是不透明的，其余都是透明的。看起来这样：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/mask.png)
+![]({{ '/assets/ffmpeg/chatgpt/mask.png' | relative_url }})
 
 有一个1080p的视频文件video.mp4,看起来这样：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v1.gif)
+![]({{ '/assets/ffmpeg/chatgpt/v1.gif' | relative_url }})
 
 一个2160p的视频做背景，文件名background.mp4，视频内容看起来这样:
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v2.webp)
+![]({{ '/assets/ffmpeg/chatgpt/v2.webp' | relative_url }})
 
 任务的目的就是先把图片mask.png与video.mp4融合变为这样, 透明的地方不显示，只显示原来图片中椭圆部门：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v3.webp)
+![]({{ '/assets/ffmpeg/chatgpt/v3.webp' | relative_url }})
 
 然后把这个结果覆盖到背景视频上变成这样：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v4.webp)
+![]({{ '/assets/ffmpeg/chatgpt/v4.webp' | relative_url }})
 
 
 下面我们来用chatgpt求解
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt1.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt1.png' | relative_url }})
 
 chatgpt使用了分步操作，当然他的步骤是正确的。还可以要求他使用一行命令行，而不是多行。
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt2.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt2.png' | relative_url }})
 
 把chatgpt-4的代码部分单独拿出来放在这里：
 
@@ -77,13 +77,13 @@ ffmpeg -i video.mp4 -i mask.png -i background.mp4 -filter_complex "[1:v]alphaext
 
 我们对chatgpt提出更多的要求:
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt3.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt3.png' | relative_url }})
 
 chatgpt-4写代码要比chatgpt3.5谨慎很多，使用chatgpt3.5时，它会给出一大串代码，但这些代码基本都无法使用，比如各种变量不统一，出现莫名其妙的函数。chatgpt-4的谨慎，说明它自己已经有了一定的评估能力，知道自己代码的可靠程度。如果chatgpt-4毫不犹豫地给出代码，多半这时候的代码是比较靠谱的。
 
 这个功能略复杂，假设我不是一个对ffmpeg完全陌生的新手，只是滤镜这部分不熟悉，只要ffmpeg给出滤镜部分的代码，也就是第4条：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt4.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt4.png' | relative_url }})
 
 代码部分如下：
 
@@ -152,7 +152,7 @@ avfilter_graph_config(filter_graph, NULL);
 
 现在我指出chatgpt的错误，让他自行改正：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt5.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt5.png' | relative_url }})
 
 为了方便阅读，我们代码放在这里：
 
@@ -208,23 +208,23 @@ avfilter_graph_config(filter_graph, NULL);
 到这里为止，代码依然有错误，主要有两个，首先是我虽然称呼为buffer src过滤器，其实ffmpeg代码中并没有buffersrc过滤器，
 只有buffer过滤器。见上述代码29行。其次buffer src类型过滤器创建时应添加参数，chatgpt没添加。关于这两个问题我们继续提问：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt6.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt6.png' | relative_url }})
 
 在这一步，chatgpt成功修改buffersrc为buffer。
 
 我把chatgpt因未提供参数，导致运行时出现的错误反馈给chatgpt,它也可以成功修复：
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt7.png)
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt8.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt7.png' | relative_url }})
+![]({{ '/assets/ffmpeg/chatgpt/gpt8.png' | relative_url }})
 
 这里依然有错误，因为png图片是rgba像素格式，视频是yuv420格式，两者不应该使用同一个args的参数，反馈给chatgpt让他改正。
 
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt9.png)
-![]({{site.url}}assets/ffmpeg/chatgpt/gpt10.png)
+![]({{ '/assets/ffmpeg/chatgpt/gpt9.png' | relative_url }})
+![]({{ '/assets/ffmpeg/chatgpt/gpt10.png' | relative_url }})
 
 到目前为止filter部分的功能已经完成，我补足读取以及发送数据到filter的代码，尝试运行。
 
-![]({{site.url}}assets/ffmpeg/chatgpt/v5.webp)
+![]({{ '/assets/ffmpeg/chatgpt/v5.webp' | relative_url }})
 
 效果达成。(这里为了简单，所有工作都在一个线程内，且没有启用硬件解码，所以会有点卡顿，由于我的显示器是2k显示器，所以无法完整显示4k视频。)
 

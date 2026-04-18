@@ -63,4 +63,4 @@ http_proxy=http://127.0.0.1:8787
 
 后重启系统，使此环境变量生效。重启后启动ss以及polipo,再运行calibre,calibre会自动检测到环境变量生效。
 运行calibre后在**Preference**--**Miscellaneous**界面可以看到代理已生效。
-![]({{site.url}}assets/calibre/calibre.png)
+![]({{ '/assets/calibre/calibre.png' | relative_url }})

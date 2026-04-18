@@ -16,7 +16,7 @@ mathjax: true
 
 ### 故事背景
 
-![Rust程序设计中文版本]({{site.url}}assets/rust/rust1.jpg)
+![Rust程序设计中文版本]({{ '/assets/rust/rust1.jpg' | relative_url }})
 
 O’REILLY的《Rust程序设计》实际已经买回来几年了，一直没有系统学习完，
 直到要阅读OpenAI Codex CLI源代码，发现Rust并不是一门不学习就能看懂的语言，
@@ -32,7 +32,7 @@ O’REILLY的《Rust程序设计》实际已经买回来几年了，一直没有
 
 举例来说，在P42:
 
-![浮点类型]({{site.url}}assets/rust/rust3.png)
+![浮点类型]({{ '/assets/rust/rust3.png' | relative_url }})
 
 作者介绍了为什么会报错，然而当我真正敲一遍代码运行时，竟然发现没有报错，
 因为新版本的rust默认浮点字面量是 f64,所以能正确编译。
@@ -42,21 +42,21 @@ O’REILLY的《Rust程序设计》实际已经买回来几年了，一直没有
 在这里中文描述：“对与变量x的引用不能比x本身还‘长寿'"这种令人难以忍受的翻译，让我不得不去翻看原书，
 尽管原文也提到诸如"outlive"这些词汇，但是直接翻译为长寿总会时刻提醒我在阅读一本译著。
 
-![长寿]({{site.url}}assets/rust/rust4.png)
+![长寿]({{ '/assets/rust/rust4.png' | relative_url }})
 
 更别提错误处理中，panic非要强行翻译为'诧异',倒是挺令我诧异的。
 
 在这点上，本书第二版的中文译本，是要比第一版译本好不少。客观的来说也不全是第二版译者水平问题，
 一个是有参考了，知道有哪些坑，另一个是第二本英文原文的语言描述也流畅不少。推荐阅读第二版。
 
-![Rust程序设计中文第二版]({{site.url}}assets/rust/rust5.webp)
+![Rust程序设计中文第二版]({{ '/assets/rust/rust5.webp' | relative_url }})
 
 ### 彩蛋
 
 我看到第二版这个译者汪志成总觉得好面熟，但是又想不起来。
 直到有一天，我又撇到了我本科时的热力学教材：
 
-![热力学]({{site.url}}assets/rust/rust6.webp)
+![热力学]({{ '/assets/rust/rust6.webp' | relative_url }})
 
 对于c/c++程序员，学习Rust最大的疑惑可能是无法形成内存排布的概念，不知道定义一个Rust变量，
 一个Rust结构体，或者函数在内存中到底是如何排布的，即不像c/c++那样有清晰的概念，大部分入门书籍又不会详细介绍这部分内容，

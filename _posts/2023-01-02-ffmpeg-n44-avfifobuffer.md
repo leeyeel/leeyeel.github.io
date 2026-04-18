@@ -33,7 +33,7 @@ typedef struct AVFifoBuffer {
 ```
 
 可参考下面的示意图：
-![]({{site.url}}assets/ffmpeg/avfifobuffer-1.png) 
+![]({{ '/assets/ffmpeg/avfifobuffer-1.png' | relative_url }}) 
 
 
 下面分析他的实现源码，主要是下面的接口：

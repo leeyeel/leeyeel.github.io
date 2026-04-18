@@ -25,7 +25,7 @@ mathjax: true
 
 [WOL plus仓库地址](https://github.com/leeyeel/WOL-plus).
 
-![]({{site.url}}assets/wolp/wolp2.png)
+![]({{ '/assets/wolp/wolp2.png' | relative_url }})
 
 ### 软件解析
 
@@ -153,7 +153,7 @@ WoL 数据帧可以通过 **以太网 (Ethernet)** 或 **UDP 广播** 传输：
 
 实际使用过程中，发现是这个顺序：`目标 MAC | 目标 MAC | 帧类型 | WOL 数据`，
 即源 MAC 地址丢失，变成了目标 MAC 地址,如图，开头的数据都是目标地址。
-![]({{site.url}}assets/wolp/wolp1.png)
+![]({{ '/assets/wolp/wolp1.png' | relative_url }})
 
 这通常发生在 br-lan 发送 WOL 数据帧时。至于为什么br-lan让源MAC变成目标MAC，
 是因为在Linux Bridge 的默认行为下：

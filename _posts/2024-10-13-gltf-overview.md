@@ -29,7 +29,7 @@ PDF格式文件可[点此下载](https://github.com/leeyeel/gltfOverview/release
 
 ### 概览内容
 
-![]({{site.url}}assets/gltf/gltfoverview/gltfOverview2.0-cn.webp)
+![]({{ '/assets/gltf/gltfoverview/gltfOverview2.0-cn.webp' | relative_url }})
 
 初学者即便看中文概览也会有大量疑问，这即不仅是翻译问题，也不光是原文问题，
 是因为作为概览文档，无法掺杂太多背景知识，想要彻底搞清楚glTF格式，
